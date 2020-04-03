@@ -12,14 +12,14 @@ public class RoutingTable {
     public RoutingTable(String name){
         this.name = name;
         this.description = name + " placeholder";
-        this.codes = "A = active ";
+        this.codes = "A - active ";
         this.entries = new ArrayList<>();
     }
 
     public RoutingTable(String name, String description, String codes){
         this.name = name;
-        this.description = name + " placeholder";
-        this.codes = "A = active ";
+        this.description = description;
+        this.codes = codes;
         this.entries = new ArrayList<>();
     }
 

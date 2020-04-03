@@ -1,21 +1,27 @@
 package eigrp_displayer;
 
 public class Cable extends Link{
-    private int brandwidth;
+    private int bandwidth;
     private int delay;
 
     public Cable(){
         this.setName("Ethernet Cable");
-        this.brandwidth = 100000;
+        this.bandwidth = 100000;
         this.delay = 100;
     }
 
-    public int getBrandwidth() {
-        return brandwidth;
+    public Cable(String name, int bandwidth, int delay){
+        this.setName(name);
+        this.bandwidth = bandwidth;
+        this.delay = delay;
     }
 
-    public void setBrandwidth(int brandwidth) {
-        this.brandwidth = brandwidth;
+    public int getBandwidth() {
+        return bandwidth;
+    }
+
+    public void setBandwidth(int bandwidth) {
+        this.bandwidth = bandwidth;
     }
 
     public int getDelay() {

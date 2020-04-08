@@ -13,7 +13,6 @@ public abstract class Link implements Addable {
         this.name = name;
     }
 
-    //TODO: tests
     public Device getDevice1() {
         return device1;
     }

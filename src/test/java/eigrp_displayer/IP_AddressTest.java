@@ -6,18 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class IP_AddressTest {
     SubnetMask mask = new SubnetMask(24);
-    IP_Address address = new IP_Address("127.0.0.1", mask);
+    IP_Address address = new IP_Address(127,0,0,1, mask);
 
-    @Test
-    void getAddress() {
-        assertEquals("127.0.0.1", address.getAddress());
-    }
-
-    @Test
-    void setAddress() {
-        address.setAddress("8.8.8.8");
-        assertEquals("8.8.8.8", address.getAddress());
-    }
 
     @Test
     void getMask() {
@@ -29,5 +19,49 @@ class IP_AddressTest {
         SubnetMask mask0 = new SubnetMask(8);
         address.setMask(mask0);
         assertEquals(mask0, address.getMask());
+    }
+
+    @Test
+    void getFirstOctet() {
+        assertEquals(127, address.getFirstOctet());
+    }
+
+    @Test
+    void setFirstOctet() {
+        assertEquals(127, address.getFirstOctet());
+    }
+
+    @Test
+    void getSecondOctet() {
+        address.setFirstOctet(1);
+        assertEquals(1, address.getSecondOctet());
+    }
+
+    @Test
+    void setSecondOctet() {
+        address.setSecondOctet(2);
+        assertEquals(2, address.getSecondOctet());
+    }
+
+    @Test
+    void getThirdOctet() {
+        assertEquals(0, address.getThirdOctet());
+    }
+
+    @Test
+    void setThirdOctet() {
+        address.setThirdOctet(3);
+        assertEquals(3, address.getThirdOctet());
+    }
+
+    @Test
+    void getFourthOctet() {
+        assertEquals(1, address.getFourthOctet());
+    }
+
+    @Test
+    void setFourthOctet() {
+        address.setFourthOctet(4);
+        assertEquals(4, address.getFourthOctet());
     }
 }

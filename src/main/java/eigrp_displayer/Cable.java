@@ -9,6 +9,7 @@ public class Cable extends Link{
         this.setName("Ethernet Cable");
         this.bandwidth = 100000;
         this.delay = 100;
+        this.load = 10;
     }
 
     public Cable(String name, int bandwidth, int delay){
@@ -31,5 +32,13 @@ public class Cable extends Link{
 
     public void setDelay(int delay) {
         this.delay = delay;
+    }
+
+    public int getLoad() {
+        return load;
+    }
+
+    public void setLoad(int load) {
+        this.load = load;
     }
 }

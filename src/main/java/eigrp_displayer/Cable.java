@@ -3,6 +3,7 @@ package eigrp_displayer;
 public class Cable extends Link{
     private int bandwidth;
     private int delay;
+    private int load;
 
     public Cable(){
         this.setName("Ethernet Cable");

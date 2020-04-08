@@ -86,4 +86,12 @@ class RoutingTableTest {
         assertEquals(entryList1, routingTable.getEntries());
         assertEquals(entryList2, neighbourTable.getEntries());
     }
+
+    @Test
+    void getIp_address() {
+    }
+
+    @Test
+    void setIp_address() {
+    }
 }

@@ -37,4 +37,44 @@ class RouterTest {
         router.setRoutingTable(routingTable0);
         assertEquals(routingTable0, router.getRoutingTable());
     }
+
+    @Test
+    void isK1() {
+    }
+
+    @Test
+    void setK1() {
+    }
+
+    @Test
+    void isK2() {
+    }
+
+    @Test
+    void setK2() {
+    }
+
+    @Test
+    void isK3() {
+    }
+
+    @Test
+    void setK3() {
+    }
+
+    @Test
+    void isK4() {
+    }
+
+    @Test
+    void setK4() {
+    }
+
+    @Test
+    void isK5() {
+    }
+
+    @Test
+    void setK5() {
+    }
 }

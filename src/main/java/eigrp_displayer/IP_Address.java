@@ -1,5 +1,7 @@
 package eigrp_displayer;
 
+import java.util.Objects;
+
 //IPv4 for simplicity's sake
 public class IP_Address {
     private Integer firstOctet;
@@ -71,5 +73,21 @@ public class IP_Address {
 
     public void setMask(SubnetMask mask) {
         this.mask = mask;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IP_Address that = (IP_Address) o;
+        return Objects.equals(getFirstOctet(), that.getFirstOctet()) &&
+                Objects.equals(getSecondOctet(), that.getSecondOctet()) &&
+                Objects.equals(getThirdOctet(), that.getThirdOctet()) &&
+                Objects.equals(getFourthOctet(), that.getFourthOctet());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFirstOctet(), getSecondOctet(), getThirdOctet(), getFourthOctet());
     }
 }

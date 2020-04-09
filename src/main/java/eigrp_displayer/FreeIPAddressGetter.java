@@ -2,7 +2,7 @@
 //
 //import java.util.List;
 //
-//public class FreeIPAdressGetter {
+//public class FreeIPAddressGetter {
 //
 //    public IP_Address getFreeAddress(IP_Address networkAddress, IP_Address broadcastAddress,
 //                                     List<IP_Address> takenAddresses){

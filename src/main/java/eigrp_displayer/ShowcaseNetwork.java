@@ -36,4 +36,13 @@ public class ShowcaseNetwork {
 //            return false;
 //        }
 //    }
+
+
+    public SubnetMask getMask() {
+        return mask;
+    }
+
+    public void setMask(SubnetMask mask) {
+        this.mask = mask;
+    }
 }

@@ -8,15 +8,13 @@ public class IP_Address {
     private Integer secondOctet;
     private Integer thirdOctet;
     private Integer fourthOctet;
-    private SubnetMask mask;
 
     public IP_Address(int firstOctet, int secondOctet,
-                      int thirdOctet, int fourthOctet, SubnetMask mask){
+                      int thirdOctet, int fourthOctet){
         this.firstOctet = firstOctet;
         this.secondOctet = secondOctet;
         this.thirdOctet = thirdOctet;
         this.fourthOctet = fourthOctet;
-        this.mask = mask;
     }
 
     public IP_Address(IP_Address ip_address){
@@ -24,7 +22,6 @@ public class IP_Address {
         this.secondOctet = ip_address.getSecondOctet();
         this.thirdOctet = ip_address.getThirdOctet();
         this.fourthOctet = ip_address.getFourthOctet();
-        this.mask = ip_address.getMask();
     }
 
     public void setAddress(int firstOctet, int secondOctet,
@@ -67,13 +64,6 @@ public class IP_Address {
         this.fourthOctet = fourthOctet;
     }
 
-    public SubnetMask getMask() {
-        return mask;
-    }
-
-    public void setMask(SubnetMask mask) {
-        this.mask = mask;
-    }
 
     @Override
     public boolean equals(Object o) {

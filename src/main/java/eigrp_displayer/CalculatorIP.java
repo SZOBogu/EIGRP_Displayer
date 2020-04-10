@@ -1,7 +1,6 @@
 package eigrp_displayer;
 
 public class CalculatorIP {
-    //TODO: test update
     public IPAddress incrementAddress(IPAddress ip_address){
         IPAddress address = new IPAddress(ip_address);
         if(address.getFourthOctet() == 255){

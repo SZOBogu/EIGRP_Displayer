@@ -10,8 +10,8 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RoutingTableEntryTest {
-    IP_Address ip_address = Mockito.mock(IP_Address.class);
-    IP_Address ip_address0 = Mockito.mock(IP_Address.class);
+    IPAddress ip_address = Mockito.mock(IPAddress.class);
+    IPAddress ip_address0 = Mockito.mock(IPAddress.class);
     RoutingTableEntry entry = new RoutingTableEntry("P", ip_address);
     Route route = Mockito.mock(Route.class);
     Route route0 = Mockito.mock(Route.class);

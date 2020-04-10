@@ -30,10 +30,10 @@ public abstract class Link implements Addable {
     }
 
     public void linkDevice(Device device){
-        if(this.device1 != null){
+        if(this.device1 == null){
             this.device1 = device;
         }
-        else if(this.device2 != null){
+        else if(this.device2 == null){
             this.device2 = device;
         }
     }

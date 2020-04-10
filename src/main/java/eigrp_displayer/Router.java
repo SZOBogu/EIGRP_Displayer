@@ -2,14 +2,14 @@ package eigrp_displayer;
 
 public class Router extends Device{
     private RoutingTable routingTable;
-    private IP_Address ip_address;
+    private IPAddress ip_address;
     private boolean k1;
     private boolean k2;
     private boolean k3;
     private boolean k4;
     private boolean k5;
 
-    public Router(String name, IP_Address ip_address){
+    public Router(String name, IPAddress ip_address){
         super();
         this.setName(name);
         this.ip_address = ip_address;

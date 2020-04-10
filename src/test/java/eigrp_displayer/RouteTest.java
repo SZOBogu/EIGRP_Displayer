@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RouteTest {
     Route route = new Route();
-    IP_Address address = Mockito.mock(IP_Address.class);
-    IP_Address address0 = Mockito.mock(IP_Address.class);
+    IPAddress address = Mockito.mock(IPAddress.class);
+    IPAddress address0 = Mockito.mock(IPAddress.class);
 
     @BeforeEach
     void init(){

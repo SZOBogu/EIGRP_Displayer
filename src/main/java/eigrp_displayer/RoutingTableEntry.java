@@ -5,12 +5,12 @@ import java.util.List;
 
 public class RoutingTableEntry {
     private String code;
-    private IP_Address ip_address;
+    private IPAddress ip_address;
     private int successors;
     private int shortestFeasibleDistance;
     private List<Route> routes;
 
-    public RoutingTableEntry(String code, IP_Address ip_address){
+    public RoutingTableEntry(String code, IPAddress ip_address){
         this.code = code;
         this.ip_address = ip_address;
         this.successors = 0;
@@ -26,11 +26,11 @@ public class RoutingTableEntry {
         this.code = code;
     }
 
-    public IP_Address getIp_address() {
+    public IPAddress getIp_address() {
         return ip_address;
     }
 
-    public void setIp_address(IP_Address ip_address) {
+    public void setIp_address(IPAddress ip_address) {
         this.ip_address = ip_address;
     }
 

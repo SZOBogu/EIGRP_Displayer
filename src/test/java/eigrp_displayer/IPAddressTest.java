@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class IP_AddressTest {
+class IPAddressTest {
     SubnetMask mask = new SubnetMask(24);
-    IP_Address address = new IP_Address(127,0,0,1);
+    IPAddress address = new IPAddress(127,0,0,1);
 
 
 //    @Test
@@ -33,7 +33,7 @@ class IP_AddressTest {
 
     @Test
     void getSecondOctet() {
-        address.setFirstOctet(1);
+        address.setSecondOctet(1);
         assertEquals(1, address.getSecondOctet());
     }
 

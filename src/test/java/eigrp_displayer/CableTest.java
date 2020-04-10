@@ -90,6 +90,8 @@ class CableTest {
 
     @Test
     void linkDevice(){
+        assertNull(cable0.getDevice1());
+        assertNull(cable0.getDevice2());
         cable0.linkDevice(device);
         assertEquals(device, cable0.getDevice1());
         assertNull(cable0.getDevice2());

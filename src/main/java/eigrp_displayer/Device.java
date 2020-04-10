@@ -2,7 +2,7 @@ package eigrp_displayer;
 
 public abstract class Device implements Addable {
     private String name;
-    private IP_Address ip_address;
+    private IPAddress ip_address;
 
     public String getName() {
         return name;
@@ -12,11 +12,11 @@ public abstract class Device implements Addable {
         this.name = name;
     }
 
-    public IP_Address getIp_address() {
+    public IPAddress getIp_address() {
         return ip_address;
     }
 
-    public void setIp_address(IP_Address ip_address) {
+    public void setIp_address(IPAddress ip_address) {
         this.ip_address = ip_address;
     }
 }

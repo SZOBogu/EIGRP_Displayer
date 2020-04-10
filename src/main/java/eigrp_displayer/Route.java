@@ -1,16 +1,16 @@
 package eigrp_displayer;
 
 public class Route {
-    private IP_Address ip_address;
+    private IPAddress ip_address;
     private int feasibleDistance;
     private int reportedDistance;
     String connectionType;
 
-    public IP_Address getIp_address() {
+    public IPAddress getIp_address() {
         return ip_address;
     }
 
-    public void setIp_address(IP_Address ip_address) {
+    public void setIp_address(IPAddress ip_address) {
         this.ip_address = ip_address;
     }
 

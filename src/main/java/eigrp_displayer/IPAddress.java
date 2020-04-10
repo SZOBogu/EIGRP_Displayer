@@ -3,21 +3,21 @@ package eigrp_displayer;
 import java.util.Objects;
 
 //IPv4 for simplicity's sake
-public class IP_Address {
+public class IPAddress {
     private Integer firstOctet;
     private Integer secondOctet;
     private Integer thirdOctet;
     private Integer fourthOctet;
 
-    public IP_Address(int firstOctet, int secondOctet,
-                      int thirdOctet, int fourthOctet){
+    public IPAddress(int firstOctet, int secondOctet,
+                     int thirdOctet, int fourthOctet){
         this.firstOctet = firstOctet;
         this.secondOctet = secondOctet;
         this.thirdOctet = thirdOctet;
         this.fourthOctet = fourthOctet;
     }
 
-    public IP_Address(IP_Address ip_address){
+    public IPAddress(IPAddress ip_address){
         this.firstOctet = ip_address.getFirstOctet();
         this.secondOctet = ip_address.getSecondOctet();
         this.thirdOctet = ip_address.getThirdOctet();
@@ -69,7 +69,7 @@ public class IP_Address {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IP_Address that = (IP_Address) o;
+        IPAddress that = (IPAddress) o;
         return Objects.equals(getFirstOctet(), that.getFirstOctet()) &&
                 Objects.equals(getSecondOctet(), that.getSecondOctet()) &&
                 Objects.equals(getThirdOctet(), that.getThirdOctet()) &&
@@ -79,5 +79,13 @@ public class IP_Address {
     @Override
     public int hashCode() {
         return Objects.hash(getFirstOctet(), getSecondOctet(), getThirdOctet(), getFourthOctet());
+    }
+
+    @Override
+    public String toString() {
+        return  firstOctet +
+                "." + secondOctet +
+                "." + thirdOctet +
+                "." + fourthOctet;
     }
 }

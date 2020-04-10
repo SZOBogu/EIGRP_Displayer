@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShowcaseNetwork {
-    private IP_Address networkAddress;
-    private IP_Address broadcastAddress;
+    private IPAddress networkAddress;
+    private IPAddress broadcastAddress;
     private SubnetMask mask;
 
-    private List<IP_Address> takenIPAddresses;
+    private List<IPAddress> takenIPAddresses;
     private List<Link> connections;     //separate class?
     private List<Device> devices;
 
     //TODO: constructor calculating broadcast using mask and networkAddress
 
-    public ShowcaseNetwork(IP_Address networkAddress, IP_Address broadcastAddress, SubnetMask mask){
+    public ShowcaseNetwork(IPAddress networkAddress, IPAddress broadcastAddress, SubnetMask mask){
         this.networkAddress = networkAddress;
         this.broadcastAddress = broadcastAddress;
         this.mask = mask;

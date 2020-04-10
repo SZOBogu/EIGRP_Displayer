@@ -14,7 +14,8 @@ class IPAddressTest {
 
     @Test
     void setFirstOctet() {
-        assertEquals(127, address.getFirstOctet());
+        address.setFirstOctet(0);
+        assertEquals(0, address.getFirstOctet());
     }
 
     @Test

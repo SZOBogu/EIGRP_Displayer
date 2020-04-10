@@ -9,10 +9,10 @@ public class Router extends Device{
     private boolean k4;
     private boolean k5;
 
-    public Router(String name, IPAddress ip_address){
+    public Router(String name){
         super();
         this.setName(name);
-        this.ip_address = ip_address;
+        this.ip_address = null;
         this.k1 = true;
         this.k2 = false;
         this.k3 = true;

@@ -34,10 +34,4 @@ class CalculatorIPTest {
         int difference = calculator.difference(ip_address1, ip_address2);
         assertEquals(256*256*256, difference);
     }
-
-    @Test
-    void isBigger() {
-        assertTrue(calculator.isBigger(ip_address0, ip_address3));
-        assertFalse(calculator.isBigger(ip_address2, ip_address1));
-    }
 }

@@ -7,9 +7,8 @@ import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RouterTest {
-    IPAddress ip_address = Mockito.mock(IPAddress.class);
     IPAddress ip_address0 = Mockito.mock(IPAddress.class);
-    Router router = new Router("Some router", ip_address);
+    Router router = new Router("Some router");
     RoutingTable routingTable = Mockito.mock(RoutingTable.class);
     RoutingTable routingTable0 = Mockito.mock(RoutingTable.class);
 

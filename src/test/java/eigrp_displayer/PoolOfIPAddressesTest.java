@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PoolOfIPAddressesTest {
     PoolOfIPAddresses pool = new PoolOfIPAddresses();
@@ -96,5 +97,17 @@ class PoolOfIPAddressesTest {
         pool.releaseIPAddress(ipa);
         assertEquals(14, pool.getFreeAddresses().size());
         assertEquals(0, pool.getTakenAddresses().size());
+    }
+
+    @Test
+    void contains(){
+        pool.init(ipAddressNetwork, ipAddressBroadcast);
+        for (IPAddress ipAddress : controlGroup) {
+            assertTrue(pool.contains(ipAddress));
+            pool.getIPAddress();
+            assertTrue(pool.contains(ipAddress));
+            pool.releaseIPAddress(ipAddress);
+            assertTrue(pool.contains(ipAddress));
+        }
     }
 }

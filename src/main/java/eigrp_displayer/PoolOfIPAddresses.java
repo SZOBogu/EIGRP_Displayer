@@ -3,6 +3,8 @@ package eigrp_displayer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.sort;
+
 public class PoolOfIPAddresses {
     private List<IPAddress> freeAddresses;
     private List<IPAddress> takenAddresses;
@@ -52,6 +54,7 @@ public class PoolOfIPAddresses {
                 if (ipa.equals(ipAddress)) {
                     this.freeAddresses.add(ipAddress);
                     this.takenAddresses.remove(ipAddress);
+                    sort(this.freeAddresses);
                 }
             }
         }
@@ -63,8 +66,4 @@ public class PoolOfIPAddresses {
     public boolean contains(IPAddress ipAddress){
         return this.takenAddresses.contains(ipAddress) || this.freeAddresses.contains(ipAddress);
     }
-
-//    public void sortFreeAddresses(){
-//
-//    }
 }

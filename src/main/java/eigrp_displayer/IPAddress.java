@@ -3,7 +3,7 @@ package eigrp_displayer;
 import java.util.Objects;
 
 //IPv4 for simplicity's sake
-public class IPAddress {
+public class IPAddress implements Comparable{
     private Integer firstOctet;
     private Integer secondOctet;
     private Integer thirdOctet;
@@ -87,5 +87,13 @@ public class IPAddress {
                 "." + secondOctet +
                 "." + thirdOctet +
                 "." + fourthOctet;
+    }
+
+    @Override
+    public int compareTo(Object ipAddress) {
+        CalculatorIP calc = new CalculatorIP();
+        IPAddress ipAddress1 = (IPAddress)ipAddress;
+
+        return Integer.compare(calc.difference(this, ipAddress1), 0);
     }
 }

@@ -5,21 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class IPAddressTest {
-    SubnetMask mask = new SubnetMask(24);
     IPAddress address = new IPAddress(127,0,0,1);
-
-
-//    @Test
-//    void getMask() {
-//        assertEquals(mask, address.getMask());
-//    }
-//
-//    @Test
-//    void setMask() {
-//        SubnetMask mask0 = new SubnetMask(8);
-//        address.setMask(mask0);
-//        assertEquals(mask0, address.getMask());
-//    }
 
     @Test
     void getFirstOctet() {

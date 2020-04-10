@@ -56,12 +56,4 @@ public class CalculatorIP {
         return firstOctetDifference + secondOctetDifference +
                 thirdOctetDifference + fourthOctetDifference;
     }
-
-    //higher(?) you know 168.192.100.2 is sort of higher than 168.192.100.1
-    public boolean isBigger(IPAddress address1, IPAddress address2){
-        if(this.difference(address1, address2) > 0)
-            return true;
-        else
-            return false;
-    }
 }

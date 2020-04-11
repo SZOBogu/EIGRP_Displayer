@@ -40,6 +40,22 @@ public class ShowcaseNetwork {
         this.connections.add(cable);
     }
 
+    public Device getDevice(IPAddress ipAddress){
+        for(Device device : this.devices){
+            if(device.getIp_address() == ipAddress)
+                return device;
+        }
+        return null;
+    }
+
+    public List<Device> getNeighboursOf(Device device){
+        List<Device> neighbours = new ArrayList<>();
+
+
+
+        return neighbours;
+    }
+
     public SubnetMask getMask() {
         return mask;
     }

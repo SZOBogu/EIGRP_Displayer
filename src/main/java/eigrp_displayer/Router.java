@@ -1,5 +1,7 @@
 package eigrp_displayer;
 
+import java.util.Random;
+
 public class Router extends Device{
     private RoutingTable routingTable;
     private IPAddress ip_address;
@@ -8,6 +10,7 @@ public class Router extends Device{
     private boolean k3;
     private boolean k4;
     private boolean k5;
+    private int messageSendingTimeOffset;
 
     public Router(String name){
         super();
@@ -18,6 +21,7 @@ public class Router extends Device{
         this.k3 = true;
         this.k4 = false;
         this.k5 = false;
+        this.messageSendingTimeOffset = new Random().nextInt(60);
     }
 
     public RoutingTable getRoutingTable() {
@@ -66,5 +70,13 @@ public class Router extends Device{
 
     public void setK5(boolean k5) {
         this.k5 = k5;
+    }
+
+    public int getMessageSendingTimeOffset() {
+        return messageSendingTimeOffset;
+    }
+
+    public void setMessageSendingTimeOffset(int messageSendingTimeOffset) {
+        this.messageSendingTimeOffset = messageSendingTimeOffset;
     }
 }

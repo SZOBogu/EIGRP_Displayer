@@ -1,4 +1,16 @@
 package eigrp_displayer.messages;
 
-public class Query implements Message {
+import eigrp_displayer.IPAddress;
+
+public class Query extends RTPMessage implements Message {
+    private final IPAddress queriedDeviceAddress;
+
+    public Query(IPAddress sender, IPAddress receiver, IPAddress queriedDeviceAddress){
+        super(sender, receiver);
+        this.queriedDeviceAddress = queriedDeviceAddress;
+    }
+
+    public IPAddress getQueriedDeviceAddress() {
+        return queriedDeviceAddress;
+    }
 }

@@ -9,6 +9,7 @@ public class RoutingTableEntry {
     private int successors;
     private int shortestFeasibleDistance;
     private List<Route> routes;
+    private int ticksSinceLastHelloMessage;
 
     public RoutingTableEntry(String code, IPAddress ip_address){
         this.code = code;
@@ -16,6 +17,7 @@ public class RoutingTableEntry {
         this.successors = 0;
         this.successors = Integer.MAX_VALUE;
         this.routes = new ArrayList<>();
+        this.ticksSinceLastHelloMessage = 0;
     }
 
     public String getCode() {
@@ -56,5 +58,14 @@ public class RoutingTableEntry {
 
     public void setRoutes(List<Route> routes) {
         this.routes = routes;
+    }
+
+    //TODO: tests
+    public void incrementTicks(int ticks) {
+        this.ticksSinceLastHelloMessage += ticks;
+    }
+
+    public void resetTicks(){
+        this.ticksSinceLastHelloMessage = 0;
     }
 }

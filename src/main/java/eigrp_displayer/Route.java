@@ -4,7 +4,8 @@ public class Route {
     private IPAddress ip_address;
     private int feasibleDistance;
     private int reportedDistance;
-    String connectionType;
+    private String connectionType;
+    private int ticksSinceLastHelloMessage = 0;
 
     public IPAddress getIp_address() {
         return ip_address;

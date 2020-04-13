@@ -79,4 +79,12 @@ public class Router extends Device{
     public void setMessageSendingTimeOffset(int messageSendingTimeOffset) {
         this.messageSendingTimeOffset = messageSendingTimeOffset;
     }
+
+//    public RoutingTableEntry findRoutingTableEntry(IPAddress ipAddress){
+//        for(RoutingTableEntry entry : this.getRoutingTable().getEntries()){
+//            if(entry.getIp_address() == ipAddress){
+//
+//            }
+//        }
+//    }
 }

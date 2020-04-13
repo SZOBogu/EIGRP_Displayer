@@ -99,4 +99,16 @@ class ShowcaseNetworkTest {
         net.setDevices(mockList);
         assertEquals(mockList, net.getDevices());
     }
+
+    @Test
+    void testLinkDevices() {
+    }
+
+    @Test
+    void getDevice() {
+    }
+
+    @Test
+    void getNeighboursOf() {
+    }
 }

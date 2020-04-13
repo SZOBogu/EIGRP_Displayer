@@ -79,4 +79,16 @@ class RoutingTableEntryTest {
         entry.setRoutes(dummyList);
         assertEquals(dummyList, entry.getRoutes());
     }
+
+    @Test
+    void getTicksSinceLastHelloMessage() {
+    }
+
+    @Test
+    void incrementTicks() {
+    }
+
+    @Test
+    void resetTicks() {
+    }
 }

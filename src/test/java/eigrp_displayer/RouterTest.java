@@ -105,4 +105,9 @@ class RouterTest {
         router.setIp_address(ip_address0);
         assertEquals(ip_address0, router.getIp_address());
     }
+
+    @Test
+    void getMessageSendingTimeOffset() {
+    }
+
 }

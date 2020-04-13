@@ -17,4 +17,8 @@ class SubnetMaskTest {
         mask.setMask(8);
         assertEquals(8, mask.getMask());
     }
+
+    @Test
+    void calculateAvailableAddresses() {
+    }
 }

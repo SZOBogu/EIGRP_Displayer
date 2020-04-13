@@ -61,6 +61,10 @@ public class RoutingTableEntry {
     }
 
     //TODO: tests
+    public int getTicksSinceLastHelloMessage() {
+        return ticksSinceLastHelloMessage;
+    }
+
     public void incrementTicks(int ticks) {
         this.ticksSinceLastHelloMessage += ticks;
     }

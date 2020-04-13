@@ -2,7 +2,7 @@ package eigrp_displayer.messages;
 
 import eigrp_displayer.IPAddress;
 
-public class RTPMessage {
+public abstract class RTPMessage implements Message {
     private IPAddress senderAddress;
     private IPAddress receiverAddress;
 
@@ -15,15 +15,7 @@ public class RTPMessage {
         return senderAddress;
     }
 
-    public void setSenderAddress(IPAddress senderAddress) {
-        this.senderAddress = senderAddress;
-    }
-
     public IPAddress getReceiverAddress() {
         return receiverAddress;
-    }
-
-    public void setReceiverAddress(IPAddress receiverAddress) {
-        this.receiverAddress = receiverAddress;
     }
 }

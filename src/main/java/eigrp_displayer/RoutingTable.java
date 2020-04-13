@@ -54,4 +54,6 @@ public class RoutingTable {
     public void setEntries(List<RoutingTableEntry> entries) {
         this.entries = entries;
     }
+
+    public void update(RoutingTable receivedRoutingTable, IPAddress sender){}
 }

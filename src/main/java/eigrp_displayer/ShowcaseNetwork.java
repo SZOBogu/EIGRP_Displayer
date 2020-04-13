@@ -7,7 +7,6 @@ public class ShowcaseNetwork {
     private IPAddress networkAddress;
     private IPAddress broadcastAddress;
     private SubnetMask mask;
-
     private PoolOfIPAddresses pool;
     private List<Link> connections;
     private List<Device> devices;
@@ -51,9 +50,19 @@ public class ShowcaseNetwork {
     public List<Device> getNeighboursOf(Device device){
         List<Device> neighbours = new ArrayList<>();
 
-
+        for(Link link : this.connections){
+            if(link.getDevice1() == device)
+                neighbours.add(link.getDevice2());
+            if(link.getDevice2() == device)
+                neighbours.add(link.getDevice1());
+        }
 
         return neighbours;
+    }
+
+    public boolean checkIfConnected(Device device1, Device device2) {
+        List<Device> device1Neighbours = this.getNeighboursOf(device1);
+        return device1Neighbours.contains(device2);
     }
 
     public SubnetMask getMask() {

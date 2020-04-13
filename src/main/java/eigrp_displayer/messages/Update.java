@@ -11,4 +11,7 @@ public class Update extends RTPMessage implements Message {
         this.routingTable = routingTable;
     }
 
+    public RoutingTable getRoutingTable() {
+        return routingTable;
+    }
 }

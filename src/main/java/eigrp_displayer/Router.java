@@ -10,7 +10,7 @@ public class Router extends Device{
     private boolean k3;
     private boolean k4;
     private boolean k5;
-    private int messageSendingTimeOffset;
+    private final int messageSendingTimeOffset;
 
     public Router(String name){
         super();
@@ -75,16 +75,4 @@ public class Router extends Device{
     public int getMessageSendingTimeOffset() {
         return messageSendingTimeOffset;
     }
-
-    public void setMessageSendingTimeOffset(int messageSendingTimeOffset) {
-        this.messageSendingTimeOffset = messageSendingTimeOffset;
-    }
-
-//    public RoutingTableEntry findRoutingTableEntry(IPAddress ipAddress){
-//        for(RoutingTableEntry entry : this.getRoutingTable().getEntries()){
-//            if(entry.getIp_address() == ipAddress){
-//
-//            }
-//        }
-//    }
 }

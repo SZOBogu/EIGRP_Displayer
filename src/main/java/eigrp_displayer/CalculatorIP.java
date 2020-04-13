@@ -33,7 +33,6 @@ public class CalculatorIP {
         return address;
     }
 
-    //TODO:test
     public IPAddress incrementAddress(IPAddress ipAddress, int incrementBy){
         IPAddress address = new IPAddress(ipAddress);
         for(int i = 0; i < incrementBy; i++){

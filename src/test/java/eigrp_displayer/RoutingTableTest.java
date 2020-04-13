@@ -94,4 +94,8 @@ class RoutingTableTest {
     @Test
     void setIp_address() {
     }
+
+    @Test
+    void update() {
+    }
 }

@@ -47,7 +47,6 @@ class CalculatorIPTest {
         assertEquals(ip_address13, ip_address03);
     }
 
-
     @Test
     void difference() {
         int difference = calculator.difference(ip_address1, ip_address2);

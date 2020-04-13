@@ -88,14 +88,6 @@ class RoutingTableTest {
     }
 
     @Test
-    void getIp_address() {
-    }
-
-    @Test
-    void setIp_address() {
-    }
-
-    @Test
     void update() {
     }
 }

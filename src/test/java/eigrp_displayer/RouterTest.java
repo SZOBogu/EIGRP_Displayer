@@ -12,7 +12,6 @@ class RouterTest {
     RoutingTable routingTable = Mockito.mock(RoutingTable.class);
     RoutingTable routingTable0 = Mockito.mock(RoutingTable.class);
 
-
     @BeforeEach
     void init(){
         router.setRoutingTable(routingTable);
@@ -108,6 +107,7 @@ class RouterTest {
 
     @Test
     void getMessageSendingTimeOffset() {
+        assertTrue(router.getMessageSendingTimeOffset() < 60 &&
+                router.getMessageSendingTimeOffset() >= 0);
     }
-
 }

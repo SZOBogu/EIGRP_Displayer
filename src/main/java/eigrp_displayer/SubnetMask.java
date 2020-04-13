@@ -4,7 +4,7 @@ public class SubnetMask {
     int mask;
 
     public SubnetMask(int mask){
-        this.mask = mask;
+        this.setMask(mask);
     }
 
     public int getMask() {
@@ -12,10 +12,12 @@ public class SubnetMask {
     }
 
     public void setMask(int mask) {
-        this.mask = mask;
+        if(mask > 32)
+            this.mask = 32;
+        else this.mask = Math.max(mask, 0);
     }
 
-    public int calculateAvailableAddresses(){
-        return (int)Math.pow(2, 32 - this.mask);
+    public long calculateAvailableAddresses(){
+        return (long)Math.pow(2, 32 - this.mask);
     }
 }

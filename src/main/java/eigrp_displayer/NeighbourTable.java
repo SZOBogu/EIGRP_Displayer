@@ -21,6 +21,20 @@ public class NeighbourTable {
         return entries;
     }
 
+    public void formNeighbourship(IPAddress ipAddress){
+        NeighbourTableEntry entry = new NeighbourTableEntry(ipAddress);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder string = new StringBuilder(description + '\n' +
+                "H\tAddress\tInterface\tHold\tUptime\tSRTT\tRTO\tQ Cnt\tSeq Num\n");
+        for(int i = 0; i < this.entries.size(); i++){
+            string.append(i).append("\t").append(this.entries.get(i).toString()).append("\n");
+        }
+        return string.toString();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

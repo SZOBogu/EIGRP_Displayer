@@ -16,6 +16,10 @@ public class MessageManager {
 
     }
 
+    public void sendCyclicMessage(int delay){
+        //mainly Hellos
+    }
+
     public void receiveMessage(){}
 
     public void respond(RTPMessage message, Router router){
@@ -44,6 +48,7 @@ public class MessageManager {
                 if(entry.getIp_address() == message.getSenderAddress())
                     entry.resetTicks();
             }
+
         }
 
         else if(message instanceof ACK){

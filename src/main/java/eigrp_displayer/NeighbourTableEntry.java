@@ -1,6 +1,7 @@
 package eigrp_displayer;
 
-import java.util.Date;
+import java.time.LocalTime;
+import java.util.Random;
 
 public class NeighbourTableEntry {
     /**Here is a brief description of each column
@@ -19,9 +20,43 @@ public class NeighbourTableEntry {
     private IPAddress neighbourAddress;
     private String netInterface;
     private int hold;       //timeout
-    private Date uptime;
+    private LocalTime uptime;
     private int srtt;
-    private int rto;
+    private int rto;            //taken over by delay in cyclic message
     private int qCnt;
     private int seqNum;
+
+    public NeighbourTableEntry(IPAddress neighbourAddress) {
+        this.neighbourAddress = neighbourAddress;
+
+        //fill the rest with bullshit
+        Random random = new Random();
+        this.netInterface = "Interface " + random.nextInt(4) + "\\" + random.nextInt(4);
+        this.hold = 15;
+        this.uptime = LocalTime.of(0, random.nextInt(1), random.nextInt(60));
+        this.srtt = random.nextInt(300);
+        this.rto = random.nextInt(10);
+        this.qCnt = 0;
+        this.seqNum = random.nextInt(100);
+    }
+
+    public IPAddress getNeighbourAddress() {
+        return neighbourAddress;
+    }
+
+    public void setNeighbourAddress(IPAddress neighbourAddress) {
+        this.neighbourAddress = neighbourAddress;
+    }
+
+    @Override
+    public String toString() {
+        return  neighbourAddress +
+                "\t" + netInterface +
+                "\t" + hold +
+                "\t" + uptime +
+                "\t" + srtt +
+                "\t" + rto +
+                "\t" + qCnt +
+                "\t" + seqNum;
+    }
 }

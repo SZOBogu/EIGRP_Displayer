@@ -4,7 +4,8 @@ import java.util.Random;
 
 public class Router extends Device{
     private RoutingTable routingTable;
-    private IPAddress ip_address;
+    private NeighbourTable neighbourTable;
+    private RoutingTable topologyTable;
     private boolean k1;
     private boolean k2;
     private boolean k3;
@@ -15,21 +16,16 @@ public class Router extends Device{
     public Router(String name){
         super();
         this.setName(name);
-        this.ip_address = null;
+        this.setIp_address(null);
         this.k1 = true;
         this.k2 = false;
         this.k3 = true;
         this.k4 = false;
         this.k5 = false;
         this.messageSendingTimeOffset = new Random().nextInt(60);
-    }
-
-    public RoutingTable getRoutingTable() {
-        return routingTable;
-    }
-
-    public void setRoutingTable(RoutingTable routingTable) {
-        this.routingTable = routingTable;
+        this.routingTable = new RoutingTable();
+        this.neighbourTable = new NeighbourTable();
+        this.topologyTable = new RoutingTable();
     }
 
     public boolean isK1() {
@@ -76,4 +72,15 @@ public class Router extends Device{
         return messageSendingTimeOffset;
     }
 
+    public RoutingTable getRoutingTable() {
+        return routingTable;
+    }
+
+    public NeighbourTable getNeighbourTable() {
+        return neighbourTable;
+    }
+
+    public RoutingTable getTopologyTable() {
+        return topologyTable;
+    }
 }

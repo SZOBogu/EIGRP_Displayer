@@ -10,8 +10,8 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RoutingTableTest {
-    RoutingTable routingTable = new RoutingTable("Routing Table");
-    RoutingTable neighbourTable = new RoutingTable("Neighbour Table",
+    RoutingTable routingTable = new RoutingTable();
+    RoutingTable neighbourTable = new RoutingTable(
             "This is neighbour table", "P - passive");
 
     RoutingTableEntry entry = Mockito.mock(RoutingTableEntry.class);
@@ -32,22 +32,8 @@ class RoutingTableTest {
     }
 
     @Test
-    void getName() {
-        assertEquals("Routing Table", routingTable.getName());
-        assertEquals("Neighbour Table", neighbourTable.getName());
-    }
-
-    @Test
-    void setName() {
-        routingTable.setName("A Table");
-        neighbourTable.setName("B Table");
-        assertEquals("A Table", routingTable.getName());
-        assertEquals("B Table", neighbourTable.getName());
-    }
-
-    @Test
     void getDescription() {
-        assertEquals("Routing Table placeholder", routingTable.getDescription());
+        assertEquals("placeholder", routingTable.getDescription());
         assertEquals("This is neighbour table", neighbourTable.getDescription());
     }
 

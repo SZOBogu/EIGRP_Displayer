@@ -2,33 +2,23 @@ package eigrp_displayer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class RoutingTable {
-    private String name;
     private String description;
     private String codes;
     private List<RoutingTableEntry> entries;
 
-    public RoutingTable(String name){
-        this.name = name;
-        this.description = name + " placeholder";
+    public RoutingTable(){
+        this.description = "placeholder";
         this.codes = "A - active ";
         this.entries = new ArrayList<>();
     }
 
-    public RoutingTable(String name, String description, String codes){
-        this.name = name;
+    public RoutingTable(String description, String codes){
         this.description = description;
         this.codes = codes;
         this.entries = new ArrayList<>();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDescription() {
@@ -56,4 +46,17 @@ public class RoutingTable {
     }
 
     public void update(RoutingTable receivedRoutingTable, IPAddress sender){}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RoutingTable that = (RoutingTable) o;
+        return Objects.equals(getEntries(), that.getEntries());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getEntries());
+    }
 }

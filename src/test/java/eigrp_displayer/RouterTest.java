@@ -1,6 +1,5 @@
 package eigrp_displayer;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -9,13 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class RouterTest {
     IPAddress ip_address0 = Mockito.mock(IPAddress.class);
     Router router = new Router("Some router");
-    RoutingTable routingTable = Mockito.mock(RoutingTable.class);
-    RoutingTable routingTable0 = Mockito.mock(RoutingTable.class);
-
-    @BeforeEach
-    void init(){
-        router.setRoutingTable(routingTable);
-    }
 
     @Test
     void getName() {
@@ -26,17 +18,6 @@ class RouterTest {
     void setName() {
         router.setName("Test");
         assertEquals("Test", router.getName());
-    }
-
-    @Test
-    void getRoutingTable() {
-        assertEquals(routingTable, router.getRoutingTable());
-    }
-
-    @Test
-    void setRoutingTable() {
-        router.setRoutingTable(routingTable0);
-        assertEquals(routingTable0, router.getRoutingTable());
     }
 
     @Test
@@ -109,5 +90,20 @@ class RouterTest {
     void getMessageSendingTimeOffset() {
         assertTrue(router.getMessageSendingTimeOffset() < 60 &&
                 router.getMessageSendingTimeOffset() >= 0);
+    }
+
+    @Test
+    void getRoutingTable() {
+        assertEquals(new RoutingTable(), router.getRoutingTable());
+    }
+
+    @Test
+    void getNeighbourTable() {
+        assertEquals(new NeighbourTable(), router.getNeighbourTable());
+    }
+
+    @Test
+    void getTopologyTable() {
+        assertEquals(new RoutingTable(), router.getTopologyTable());
     }
 }

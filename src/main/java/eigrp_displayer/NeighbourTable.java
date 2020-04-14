@@ -23,6 +23,7 @@ public class NeighbourTable {
 
     public void formNeighbourship(IPAddress ipAddress){
         NeighbourTableEntry entry = new NeighbourTableEntry(ipAddress);
+        this.entries.add(entry);
     }
 
     @Override

@@ -4,6 +4,9 @@ public abstract class Link implements Addable {
     private String name;
     private Device device1;
     private Device device2;
+    private int bandwidth;
+    private int delay;
+    private int load;
 
     public String getName() {
         return name;
@@ -36,5 +39,29 @@ public abstract class Link implements Addable {
         else if(this.device2 == null){
             this.device2 = device;
         }
+    }
+
+    public int getBandwidth() {
+        return bandwidth;
+    }
+
+    public void setBandwidth(int bandwidth) {
+        this.bandwidth = bandwidth;
+    }
+
+    public int getDelay() {
+        return delay;
+    }
+
+    public void setDelay(int delay) {
+        this.delay = delay;
+    }
+
+    public int getLoad() {
+        return load;
+    }
+
+    public void setLoad(int load) {
+        this.load = load;
     }
 }

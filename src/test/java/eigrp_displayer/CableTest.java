@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class CableTest {
     Cable cable = new Cable();
-    Cable cable0 = new Cable("Dummy Cable", 10, 10);
+    Cable cable0 = new Cable("Dummy Cable", 10, 10, 10);
     Device device = Mockito.mock(Device.class);
     Device device0 = Mockito.mock(Device.class);
 

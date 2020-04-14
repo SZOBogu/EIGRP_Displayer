@@ -2,7 +2,15 @@ package eigrp_displayer;
 
 import eigrp_displayer.messages.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MessageManager {
+    List<RTPMessage> messagesSentWaitingForReply;
+
+    public MessageManager(){
+        this.messagesSentWaitingForReply = new ArrayList<>();
+    }
 
     public void sendMessage(RTPMessage message){
 
@@ -28,7 +36,7 @@ public class MessageManager {
             Reply replyMessage = new Reply(message.getReceiverAddress(),
                     message.getSenderAddress(),
                     queriedEntry);
-            router.getMessagesSentWaitingForReply().add(replyMessage);
+            this.getMessagesSentWaitingForReply().add(replyMessage);
             scheduler.scheduleMessage(replyMessage);
         }
         else if(message instanceof Hello){
@@ -39,7 +47,7 @@ public class MessageManager {
         }
 
         else if(message instanceof ACK){
-            router.getMessagesSentWaitingForReply().removeIf(waitingMessage ->
+            this.getMessagesSentWaitingForReply().removeIf(waitingMessage ->
                     (waitingMessage instanceof Query || waitingMessage instanceof Update)
                     && message.getSenderAddress() == waitingMessage.getReceiverAddress());
         }
@@ -48,7 +56,7 @@ public class MessageManager {
             //TODO: updating of routing table
         }
         else if(message instanceof Reply){
-            router.getMessagesSentWaitingForReply().removeIf(waitingMessage ->
+            this.getMessagesSentWaitingForReply().removeIf(waitingMessage ->
                     (waitingMessage instanceof Reply) &&
                             message.getSenderAddress() == waitingMessage.getReceiverAddress());
         }
@@ -57,5 +65,9 @@ public class MessageManager {
                 entry.incrementTicks(1);
             }
         }
+    }
+
+    public List<RTPMessage> getMessagesSentWaitingForReply() {
+        return messagesSentWaitingForReply;
     }
 }

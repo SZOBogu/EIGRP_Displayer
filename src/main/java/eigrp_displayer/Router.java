@@ -1,9 +1,5 @@
 package eigrp_displayer;
 
-import eigrp_displayer.messages.RTPMessage;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Router extends Device{
@@ -15,7 +11,6 @@ public class Router extends Device{
     private boolean k4;
     private boolean k5;
     private final int messageSendingTimeOffset;
-    List<RTPMessage> messagesSentWaitingForReply;
 
     public Router(String name){
         super();
@@ -27,7 +22,6 @@ public class Router extends Device{
         this.k4 = false;
         this.k5 = false;
         this.messageSendingTimeOffset = new Random().nextInt(60);
-        this.messagesSentWaitingForReply = new ArrayList<>();
     }
 
     public RoutingTable getRoutingTable() {
@@ -82,7 +76,4 @@ public class Router extends Device{
         return messageSendingTimeOffset;
     }
 
-    public List<RTPMessage> getMessagesSentWaitingForReply() {
-        return messagesSentWaitingForReply;
-    }
 }

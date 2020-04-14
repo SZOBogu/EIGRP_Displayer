@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class CableTest {
     Cable cable = new Cable();
-    Cable cable0 = new Cable("Dummy Cable", 10, 10, 10);
+    Cable cable0 = new Cable("Dummy Cable", 10, 11, 12,13);
     Device device = Mockito.mock(Device.class);
     Device device0 = Mockito.mock(Device.class);
 
@@ -45,8 +45,8 @@ class CableTest {
 
     @Test
     void getDelay() {
-        assertEquals(100000, cable.getBandwidth());
-        assertEquals(10, cable0.getBandwidth());
+        assertEquals(100, cable.getDelay());
+        assertEquals(11, cable0.getDelay());
     }
 
     @Test
@@ -58,12 +58,25 @@ class CableTest {
     @Test
     void getLoad() {
         assertEquals(10, cable.getLoad());
+        assertEquals(12, cable0.getLoad());
     }
 
     @Test
     void setLoad() {
         cable.setLoad(4);
         assertEquals(4, cable.getLoad());
+    }
+
+    @Test
+    void getReliability() {
+        assertEquals(10, cable.getReliability());
+        assertEquals(13, cable0.getReliability());
+    }
+
+    @Test
+    void setReliability() {
+        cable.setReliability(5);
+        assertEquals(5, cable.getReliability());
     }
 
     @Test

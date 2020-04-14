@@ -7,6 +7,7 @@ public abstract class Link implements Addable {
     private int bandwidth;
     private int delay;
     private int load;
+    private int reliability;
 
     public String getName() {
         return name;
@@ -63,5 +64,13 @@ public abstract class Link implements Addable {
 
     public void setLoad(int load) {
         this.load = load;
+    }
+
+    public int getReliability() {
+        return reliability;
+    }
+
+    public void setReliability(int reliability) {
+        this.reliability = reliability;
     }
 }

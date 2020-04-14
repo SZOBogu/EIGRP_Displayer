@@ -3,19 +3,6 @@ package eigrp_displayer;
 import eigrp_displayer.messages.*;
 
 public class MessageManager {
-    MessageScheduler scheduler;
-
-    private MessageManager(){
-        this.scheduler = new MessageScheduler();
-    }
-
-    private static class MessageManagerSingleton {
-        private static final MessageManager manager = new MessageManager();
-    }
-
-    public static MessageManager getInstance(){
-        return MessageManagerSingleton.manager;
-    }
 
     public void sendMessage(RTPMessage message){
 
@@ -24,11 +11,14 @@ public class MessageManager {
     public void receiveMessage(){}
 
     public void respond(RTPMessage message, Router router){
+        MessageScheduler scheduler = MessageScheduler.getInstance();
+
+
         if(message instanceof Query){
             Query query = (Query)message;
             RoutingTableEntry queriedEntry = null;
 
-            this.scheduler.scheduleMessage(new ACK(router.getIp_address(), message.getSenderAddress()));
+            scheduler.scheduleMessage(new ACK(router.getIp_address(), message.getSenderAddress()));
 
             for(RoutingTableEntry entry : router.getRoutingTable().getEntries()){
                 if(entry.getIp_address() == query.getQueriedDeviceAddress())
@@ -39,7 +29,7 @@ public class MessageManager {
                     message.getSenderAddress(),
                     queriedEntry);
             router.getMessagesSentWaitingForReply().add(replyMessage);
-            this.scheduler.scheduleMessage(replyMessage);
+            scheduler.scheduleMessage(replyMessage);
         }
         else if(message instanceof Hello){
             for(RoutingTableEntry entry : router.getRoutingTable().getEntries()){
@@ -54,7 +44,7 @@ public class MessageManager {
                     && message.getSenderAddress() == waitingMessage.getReceiverAddress());
         }
         else if(message instanceof Update){
-            this.scheduler.scheduleMessage(new ACK(router.getIp_address(), message.getSenderAddress()));
+            scheduler.scheduleMessage(new ACK(router.getIp_address(), message.getSenderAddress()));
             //TODO: updating of routing table
         }
         else if(message instanceof Reply){

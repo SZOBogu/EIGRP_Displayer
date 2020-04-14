@@ -11,18 +11,19 @@ public class MessageScheduler {
     private List<Message> schedule;
     private int currentTime;            //maybe a clock object someday
 
-    public MessageScheduler(){
+    private MessageScheduler(){
         this.schedule = new ArrayList<>();
         for(int i = 0; i < 10000; i++){
             this.schedule.add(new Placeholder());
         }
     }
 
-    public MessageScheduler(int time){
-        this.schedule = new ArrayList<>();
-        for(int i = 0; i < time; i++){
-            this.schedule.add(new Placeholder());
-        }
+    private static class MessageSchedulerSingleton{
+        private static final MessageScheduler scheduler = new MessageScheduler();
+    }
+
+    public static MessageScheduler getInstance(){
+        return MessageSchedulerSingleton.scheduler;
     }
 
     public void scheduleMessage(Message message){

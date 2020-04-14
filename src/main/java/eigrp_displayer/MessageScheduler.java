@@ -8,13 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageScheduler {
-    private List<Message> schedule;
-    private int currentTime;            //maybe a clock object someday
+    private List<List<Message>> schedule;
+    private Integer currentTime;            //maybe a clock object someday
+    private ShowcaseNetwork network;
 
     private MessageScheduler(){
         this.schedule = new ArrayList<>();
+        this.currentTime = 0;
         for(int i = 0; i < 10000; i++){
-            this.schedule.add(new Placeholder());
+            this.schedule.add(new ArrayList<>());
+            this.schedule.get(i).add(new Placeholder());
         }
     }
 
@@ -27,28 +30,20 @@ public class MessageScheduler {
     }
 
     public void scheduleMessage(Message message){
-        for(int i = 0; i < this.schedule.size() - currentTime; i++){
-            if(this.schedule.get(i + currentTime) instanceof Placeholder) {
-                this.schedule.remove(i + currentTime);
-                this.schedule.add(i + currentTime, message);
-                break;
-            }
+        for(int i = this.currentTime; i < this.schedule.size(); i++){
+            this.schedule.get(this.currentTime).add(message);
         }
     }
 
     public void scheduleMessage(CyclicMessage message){
-        int messagesToSchedule = 0;
-        for(int i = 0; i < this.schedule.size() - currentTime; i++){
-            if(this.currentTime % message.getInterval() == 0)
-                messagesToSchedule++;
-            if(messagesToSchedule > 0) {
-                if (this.schedule.get(i + currentTime) instanceof Placeholder) {
-                    this.schedule.remove(i + currentTime);
-                    this.schedule.add(i + currentTime, message.getMessage());
-                    messagesToSchedule--;
-                }
+        for(int i = this.currentTime; i < this.schedule.size(); i++){
+            if(this.currentTime % message.getInterval() == 0){
+                this.scheduleMessage(message.getMessage());
             }
         }
     }
 
+    public void setNetwork(ShowcaseNetwork network){
+        this.network = network;
+    }
 }

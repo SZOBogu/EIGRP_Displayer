@@ -5,7 +5,6 @@ public class Route {
     private int feasibleDistance;
     private int reportedDistance;
     private String connectionType;
-    private int ticksSinceLastHelloMessage = 0;
 
     public IPAddress getIp_address() {
         return ip_address;
@@ -38,4 +37,5 @@ public class Route {
     public void setConnectionType(String connectionType) {
         this.connectionType = connectionType;
     }
+
 }

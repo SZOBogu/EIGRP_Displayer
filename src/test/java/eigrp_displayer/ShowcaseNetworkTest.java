@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ShowcaseNetworkTest {
     IPAddress ipNet = new IPAddress(192,168,0,0);
@@ -101,14 +101,47 @@ class ShowcaseNetworkTest {
     }
 
     @Test
-    void testLinkDevices() {
-    }
-
-    @Test
     void getDevice() {
+        net.addDevice(device0);
+        net.addDevice(device1);
+
+        assertEquals(device1, net.getDevice(ipH1));
     }
 
     @Test
     void getNeighboursOf() {
+        Device device2 = Mockito.mock(Router.class);
+        Device device3 = Mockito.mock(Router.class);
+
+        net.getConnections().clear();
+
+        Link link00 = new Cable();
+        Link link01 = new Cable();
+        Link link02 = new Cable();
+
+        link00.linkDevice(device0);
+        link00.linkDevice(device1);
+
+        link01.linkDevice(device1);
+        link01.linkDevice(device2);
+
+        link02.linkDevice(device2);
+        link02.linkDevice(device3);
+
+        net.getConnections().addAll(Arrays.asList(link00, link01, link02));
+
+        assertEquals(2, net.getNeighboursOf(device1).size());
+        assertEquals(device0, net.getNeighboursOf(device1).get(0));
+        assertEquals(device2, net.getNeighboursOf(device1).get(1));
+    }
+
+    @Test
+    void checkIfConnected() {
+        assertFalse(net.checkIfConnected(device0, device1));
+        Link link = new Cable();
+        link.setDevice1(device0);
+        link.setDevice2(device1);
+        net.getConnections().add(link);
+        assertTrue(net.checkIfConnected(device0, device1));
     }
 }

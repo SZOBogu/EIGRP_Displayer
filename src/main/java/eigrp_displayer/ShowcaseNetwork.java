@@ -39,7 +39,6 @@ public class ShowcaseNetwork {
         this.connections.add(cable);
     }
 
-    //TODO:test
     public Device getDevice(IPAddress ipAddress){
         for(Device device : this.devices){
             if(device.getIp_address() == ipAddress)
@@ -60,7 +59,7 @@ public class ShowcaseNetwork {
 
         return neighbours;
     }
-    //TODO: test
+
     public boolean checkIfConnected(Device device1, Device device2) {
         List<Device> device1Neighbours = this.getNeighboursOf(device1);
         return device1Neighbours.contains(device2);

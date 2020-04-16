@@ -41,7 +41,7 @@ public class ShowcaseNetwork {
 
     public Device getDevice(IPAddress ipAddress){
         for(Device device : this.devices){
-            if(device.getIp_address() == ipAddress)
+            if(device.getIp_address().equals(ipAddress))
                 return device;
         }
         return null;

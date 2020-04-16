@@ -104,14 +104,16 @@ class ShowcaseNetworkTest {
     void getDevice() {
         net.addDevice(device0);
         net.addDevice(device1);
-
+        assertEquals(ipH0, device0.getIp_address());
+        assertEquals(ipH1, device1.getIp_address());
+        assertEquals(device0, net.getDevice(ipH0));
         assertEquals(device1, net.getDevice(ipH1));
     }
 
     @Test
     void getNeighboursOf() {
-        Device device2 = Mockito.mock(Router.class);
-        Device device3 = Mockito.mock(Router.class);
+        Device device2 = new Router("R2");
+        Device device3 = new Router("R3");
 
         net.getConnections().clear();
 

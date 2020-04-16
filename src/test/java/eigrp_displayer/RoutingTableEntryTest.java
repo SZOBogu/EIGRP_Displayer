@@ -82,13 +82,24 @@ class RoutingTableEntryTest {
 
     @Test
     void getTicksSinceLastHelloMessage() {
+        assertEquals(0, entry.getTicksSinceLastHelloMessage());
     }
 
     @Test
     void incrementTicks() {
+        assertEquals(0, entry.getTicksSinceLastHelloMessage());
+        entry.incrementTicks(2);
+        assertEquals(2, entry.getTicksSinceLastHelloMessage());
+        entry.incrementTicks(3);
+        assertEquals(5, entry.getTicksSinceLastHelloMessage());
+
     }
 
     @Test
     void resetTicks() {
+        entry.incrementTicks(100);
+        assertEquals(100, entry.getTicksSinceLastHelloMessage());
+        entry.resetTicks();
+        assertEquals(0, entry.getTicksSinceLastHelloMessage());
     }
 }

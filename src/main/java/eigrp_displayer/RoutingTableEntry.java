@@ -59,7 +59,6 @@ public class RoutingTableEntry {
         this.routes = routes;
     }
 
-    //TODO: tests
     public int getTicksSinceLastHelloMessage() {
         return this.ticksSinceLastHelloMessage;
     }

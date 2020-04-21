@@ -47,4 +47,26 @@ class NeighbourTableTest {
         }
         assertEquals(string.toString(), neighbourTable.toString());
     }
+
+    @Test
+    void updateTime() {
+        Clock.getClockDependents().clear();
+        neighbourTable = new NeighbourTable();
+        neighbourTable.formNeighbourship(ip0);
+        neighbourTable.formNeighbourship(ip1);
+        neighbourTable.getEntries().get(1).setHold(20);
+        assertEquals(1, Clock.getClockDependents().size());
+        assertEquals(neighbourTable, Clock.getClockDependents().get(0));
+        assertEquals(0, neighbourTable.getEntries().get(0).getTicksSinceLastHello());
+        assertEquals(0, neighbourTable.getEntries().get(1).getTicksSinceLastHello());
+        Clock.incrementClock();
+        assertEquals(1, neighbourTable.getEntries().get(0).getTicksSinceLastHello());
+        assertEquals(1, neighbourTable.getEntries().get(1).getTicksSinceLastHello());
+        Clock.incrementClock(14);
+        assertEquals(15, neighbourTable.getEntries().get(0).getTicksSinceLastHello());
+        assertEquals(15, neighbourTable.getEntries().get(1).getTicksSinceLastHello());
+        Clock.incrementClock();
+        assertEquals(1, neighbourTable.getEntries().size());
+        Clock.getClockDependents().clear();
+    }
 }

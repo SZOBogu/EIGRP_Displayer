@@ -13,7 +13,6 @@ public class Router extends Device{
     private boolean k5;
     private final int messageSendingTimeOffset;
 
-
     public Router(String name){
         this(name, 4);
     }

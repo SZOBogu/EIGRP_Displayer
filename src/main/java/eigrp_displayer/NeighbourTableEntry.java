@@ -3,7 +3,7 @@ package eigrp_displayer;
 import java.time.LocalTime;
 import java.util.Random;
 
-public class NeighbourTableEntry {
+public class NeighbourTableEntry{
     /**Here is a brief description of each column
 
      H – the sequential numbering of established neighbor adjacencies. The first neighbor will have a value of 0, the second neighbor a value of 1 and so on.
@@ -25,8 +25,9 @@ public class NeighbourTableEntry {
     private int rto;            //taken over by delay in cyclic message
     private int qCnt;
     private int seqNum;
+    private int ticksSinceLastHello;
 
-    public NeighbourTableEntry(IPAddress neighbourAddress) {
+    public NeighbourTableEntry(IPAddress neighbourAddress){
         this.neighbourAddress = neighbourAddress;
 
         //fill the rest with bullshit
@@ -38,6 +39,7 @@ public class NeighbourTableEntry {
         this.rto = random.nextInt(10);
         this.qCnt = 0;
         this.seqNum = random.nextInt(100);
+        this.ticksSinceLastHello = 0;
     }
 
     public IPAddress getNeighbourAddress() {
@@ -58,5 +60,21 @@ public class NeighbourTableEntry {
                 "\t" + rto +
                 "\t" + qCnt +
                 "\t" + seqNum;
+    }
+
+    public int getHold() {
+        return hold;
+    }
+
+    public void setHold(int hold) {
+        this.hold = hold;
+    }
+
+    public int getTicksSinceLastHello() {
+        return ticksSinceLastHello;
+    }
+
+    public void setTicksSinceLastHello(int ticksSinceLastHello) {
+        this.ticksSinceLastHello = ticksSinceLastHello;
     }
 }

@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class NeighbourTable {
+public class NeighbourTable implements ClockDependent{
     private String description;
     private List<NeighbourTableEntry> entries;
     
     public NeighbourTable(){
         this.description = "IP-EIGRP neighbours table for process 1";
         this.entries = new ArrayList<>();
+        Clock.addClockDependant(this);
     }
 
     public String getDescription() {
@@ -47,5 +48,15 @@ public class NeighbourTable {
     @Override
     public int hashCode() {
         return Objects.hash(getEntries());
+    }
+
+    @Override
+    public void updateTime() {
+        for(NeighbourTableEntry entry : this.entries){
+            entry.setTicksSinceLastHello(entry.getTicksSinceLastHello() + 1);
+            if(entry.getTicksSinceLastHello() > entry.getHold()){
+                this.entries.remove(entry);
+            }
+        }
     }
 }

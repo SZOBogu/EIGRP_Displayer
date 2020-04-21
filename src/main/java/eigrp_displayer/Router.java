@@ -12,8 +12,14 @@ public class Router extends Device{
     private boolean k4;
     private boolean k5;
     private final int messageSendingTimeOffset;
+    private DeviceInterface[] deviceInterfaces;
+
 
     public Router(String name){
+        this(name, 4);
+    }
+
+    public Router(String name, int numberOfInterfaces){
         super();
         this.setName(name);
         this.setIp_address(null);
@@ -26,6 +32,7 @@ public class Router extends Device{
         this.routingTable = new RoutingTable();
         this.neighbourTable = new NeighbourTable();
         this.topologyTable = new RoutingTable();
+        this.deviceInterfaces = new DeviceInterface[numberOfInterfaces];
     }
 
     public boolean isK1() {

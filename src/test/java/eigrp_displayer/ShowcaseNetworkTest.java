@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ShowcaseNetworkTest {
     IPAddress ipNet = new IPAddress(192,168,0,0);
@@ -33,14 +33,14 @@ class ShowcaseNetworkTest {
         assertNull(device0.getIp_address());
         assertEquals(0, net.getDevices().size());
     }
-
-    @Test
-    void linkDevices() {
-        net.linkDevices(device0, device1);
-        assertEquals(1, net.getConnections().size());
-        assertEquals(device0, net.getConnections().get(0).getDevice1());
-        assertEquals(device1, net.getConnections().get(0).getDevice2());
-    }
+//
+//    @Test
+//    void linkDevices() {
+//        net.linkDevices(device0, device1);
+//        assertEquals(1, net.getConnections().size());
+//        assertEquals(device0, net.getConnections().get(0).getDevice1());
+//        assertEquals(device1, net.getConnections().get(0).getDevice2());
+//    }
 
     @Test
     void getMask() {
@@ -77,18 +77,6 @@ class ShowcaseNetworkTest {
     }
 
     @Test
-    void getConnections() {
-        assertEquals(new ArrayList<>(), net.getConnections());
-    }
-
-    @Test
-    void setConnections() {
-        ArrayList<Connection> mockList = Mockito.mock(ArrayList.class);
-        net.setConnections(mockList);
-        assertEquals(mockList, net.getConnections());
-    }
-
-    @Test
     void getDevices() {
         assertEquals(new ArrayList<>(), net.getDevices());
     }
@@ -108,42 +96,5 @@ class ShowcaseNetworkTest {
         assertEquals(ipH1, device1.getIp_address());
         assertEquals(device0, net.getDevice(ipH0));
         assertEquals(device1, net.getDevice(ipH1));
-    }
-
-    @Test
-    void getNeighboursOf() {
-        Device device2 = new Router("R2");
-        Device device3 = new Router("R3");
-
-        net.getConnections().clear();
-
-        Connection connection00 = new Cable();
-        Connection connection01 = new Cable();
-        Connection connection02 = new Cable();
-
-        connection00.linkDevice(device0);
-        connection00.linkDevice(device1);
-
-        connection01.linkDevice(device1);
-        connection01.linkDevice(device2);
-
-        connection02.linkDevice(device2);
-        connection02.linkDevice(device3);
-
-        net.getConnections().addAll(Arrays.asList(connection00, connection01, connection02));
-
-        assertEquals(2, net.getNeighboursOf(device1).size());
-        assertEquals(device0, net.getNeighboursOf(device1).get(0));
-        assertEquals(device2, net.getNeighboursOf(device1).get(1));
-    }
-
-    @Test
-    void checkIfConnected() {
-        assertFalse(net.checkIfConnected(device0, device1));
-        Connection connection = new Cable();
-        connection.setDevice1(device0);
-        connection.setDevice2(device1);
-        net.getConnections().add(connection);
-        assertTrue(net.checkIfConnected(device0, device1));
     }
 }

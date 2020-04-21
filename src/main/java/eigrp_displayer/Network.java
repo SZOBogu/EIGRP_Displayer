@@ -2,7 +2,7 @@ package eigrp_displayer;
 
 public class Network implements Addable {
     private IPAddress networkAddress;
-    private SubnetMask mask;
+    private Mask mask;
 
     public IPAddress getNetworkAddress() {
         return networkAddress;
@@ -12,11 +12,11 @@ public class Network implements Addable {
         this.networkAddress = networkAddress;
     }
 
-    public SubnetMask getMask() {
+    public Mask getMask() {
         return mask;
     }
 
-    public void setMask(SubnetMask mask) {
+    public void setMask(Mask mask) {
         this.mask = mask;
     }
 }

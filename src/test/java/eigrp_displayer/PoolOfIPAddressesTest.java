@@ -12,7 +12,7 @@ class PoolOfIPAddressesTest {
     PoolOfIPAddresses pool = new PoolOfIPAddresses();
     IPAddress ipAddressNetwork = new IPAddress(192,168,100, 0);
     IPAddress ipAddressBroadcast = new IPAddress(192,168,100, 16);
-    SubnetMask mask = new SubnetMask(28);
+    Mask mask = new Mask(28);
 
     IPAddress address1 = new IPAddress(192,168,100, 1);
     IPAddress address2 = new IPAddress(192,168,100, 2);

@@ -13,7 +13,7 @@ class ShowcaseNetworkTest {
     IPAddress ipBr = new IPAddress(192,168,0,15);
     IPAddress ipH0 = new IPAddress(192,168,0,1);
     IPAddress ipH1 = new IPAddress(192,168,0,2);
-    SubnetMask mask = new SubnetMask(28);
+    Mask mask = new Mask(28);
     ShowcaseNetwork net = new ShowcaseNetwork(ipNet, ipBr, mask);
     Device device0 = new Router("Router");
     Device device1 = new EndDevice();
@@ -49,7 +49,7 @@ class ShowcaseNetworkTest {
 
     @Test
     void setMask() {
-        SubnetMask mask0 = new SubnetMask(24);
+        Mask mask0 = new Mask(24);
         net.setMask(mask0);
         assertEquals(mask0, net.getMask());
     }
@@ -83,7 +83,7 @@ class ShowcaseNetworkTest {
 
     @Test
     void setConnections() {
-        ArrayList mockList = Mockito.mock(ArrayList.class);
+        ArrayList<Connection> mockList = Mockito.mock(ArrayList.class);
         net.setConnections(mockList);
         assertEquals(mockList, net.getConnections());
     }
@@ -95,7 +95,7 @@ class ShowcaseNetworkTest {
 
     @Test
     void setDevices() {
-        ArrayList mockList = Mockito.mock(ArrayList.class);
+        ArrayList<Device> mockList = Mockito.mock(ArrayList.class);
         net.setDevices(mockList);
         assertEquals(mockList, net.getDevices());
     }
@@ -117,20 +117,20 @@ class ShowcaseNetworkTest {
 
         net.getConnections().clear();
 
-        Link link00 = new Cable();
-        Link link01 = new Cable();
-        Link link02 = new Cable();
+        Connection connection00 = new Cable();
+        Connection connection01 = new Cable();
+        Connection connection02 = new Cable();
 
-        link00.linkDevice(device0);
-        link00.linkDevice(device1);
+        connection00.linkDevice(device0);
+        connection00.linkDevice(device1);
 
-        link01.linkDevice(device1);
-        link01.linkDevice(device2);
+        connection01.linkDevice(device1);
+        connection01.linkDevice(device2);
 
-        link02.linkDevice(device2);
-        link02.linkDevice(device3);
+        connection02.linkDevice(device2);
+        connection02.linkDevice(device3);
 
-        net.getConnections().addAll(Arrays.asList(link00, link01, link02));
+        net.getConnections().addAll(Arrays.asList(connection00, connection01, connection02));
 
         assertEquals(2, net.getNeighboursOf(device1).size());
         assertEquals(device0, net.getNeighboursOf(device1).get(0));
@@ -140,10 +140,10 @@ class ShowcaseNetworkTest {
     @Test
     void checkIfConnected() {
         assertFalse(net.checkIfConnected(device0, device1));
-        Link link = new Cable();
-        link.setDevice1(device0);
-        link.setDevice2(device1);
-        net.getConnections().add(link);
+        Connection connection = new Cable();
+        connection.setDevice1(device0);
+        connection.setDevice2(device1);
+        net.getConnections().add(connection);
         assertTrue(net.checkIfConnected(device0, device1));
     }
 }

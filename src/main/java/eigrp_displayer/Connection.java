@@ -1,6 +1,6 @@
 package eigrp_displayer;
 
-public abstract class Link implements Addable {
+public abstract class Connection implements Addable {
     private String name;
     private Device device1;
     private Device device2;

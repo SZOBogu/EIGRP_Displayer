@@ -33,7 +33,7 @@ public class MetricCalculator {
     }
 
 
-    public int calculateMetric(Router router, Link link){
+    public int calculateMetric(Router router, Connection connection){
         int k1 = router.isK1() ? 1 : 0;
         int k2 = router.isK2() ? 1 : 0;
         int k3 = router.isK3() ? 1 : 0;
@@ -41,14 +41,14 @@ public class MetricCalculator {
         int k5 = router.isK5() ? 1 : 0;
 
         if(k5 == 0){
-            return (k1 * link.getBandwidth() +
-                    ((k2 * link.getBandwidth())/(256-link.getLoad()))
-                    + k3 * link.getDelay()) * 256;
+            return (k1 * connection.getBandwidth() +
+                    ((k2 * connection.getBandwidth())/(256- connection.getLoad()))
+                    + k3 * connection.getDelay()) * 256;
         }
         else
-            return (k1 * link.getBandwidth() +
-                    ((k2 * link.getBandwidth())/(256-link.getLoad()))
-                    + k3 * link.getDelay()) *
-                    k5/(k4 + link.getReliability()) * 256;
+            return (k1 * connection.getBandwidth() +
+                    ((k2 * connection.getBandwidth())/(256- connection.getLoad()))
+                    + k3 * connection.getDelay()) *
+                    k5/(k4 + connection.getReliability()) * 256;
     }
 }

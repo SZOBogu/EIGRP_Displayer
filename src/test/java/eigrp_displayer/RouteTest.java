@@ -16,9 +16,9 @@ class RouteTest {
     Router router3 = Mockito.mock(Router.class);
     Router router4 = Mockito.mock(Router.class);
 
-    Link link1 = new Cable();
-    Link link2 = new Cable();
-    Link link3 = new Cable();
+    Connection connection1 = new Cable();
+    Connection connection2 = new Cable();
+    Connection connection3 = new Cable();
 
     @BeforeEach
     void init(){
@@ -27,18 +27,18 @@ class RouteTest {
         route.setReportedDistance(1);
         route.setConnectionType("Any");
 
-        link1.linkDevice(router1);
-        link1.linkDevice(router2);
+        connection1.linkDevice(router1);
+        connection1.linkDevice(router2);
 
-        link2.linkDevice(router2);
-        link2.linkDevice(router3);
+        connection2.linkDevice(router2);
+        connection2.linkDevice(router3);
 
-        link3.linkDevice(router3);
-        link3.linkDevice(router4);
+        connection3.linkDevice(router3);
+        connection3.linkDevice(router4);
 
-        route.getPaths().add(link1);
-        route.getPaths().add(link2);
-        route.getPaths().add(link3);
+        route.getPaths().add(connection1);
+        route.getPaths().add(connection2);
+        route.getPaths().add(connection3);
     }
 
     @Test
@@ -88,42 +88,42 @@ class RouteTest {
     @Test
     void getPaths() {
         assertEquals(3, route.getPaths().size());
-        assertEquals(link1, route.getPaths().get(0));
-        assertEquals(link2, route.getPaths().get(1));
-        assertEquals(link3, route.getPaths().get(2));
+        assertEquals(connection1, route.getPaths().get(0));
+        assertEquals(connection2, route.getPaths().get(1));
+        assertEquals(connection3, route.getPaths().get(2));
     }
 
     @Test
     void getLowestBandwidth() {
-        link1.setBandwidth(2);
-        link2.setBandwidth(3);
-        link3.setBandwidth(4);
+        connection1.setBandwidth(2);
+        connection2.setBandwidth(3);
+        connection3.setBandwidth(4);
 
         assertEquals(5000000 ,route.getLowestBandwidth());
     }
 
     @Test
     void getSumOfDelays() {
-        link1.setDelay(30);
-        link2.setDelay(20);
-        link3.setDelay(10);
+        connection1.setDelay(30);
+        connection2.setDelay(20);
+        connection3.setDelay(10);
         assertEquals(60, route.getSumOfDelays());
     }
 
     @Test
     void getWorstLoad() {
-        link1.setLoad(22);
-        link2.setLoad(33);
-        link3.setLoad(11);
+        connection1.setLoad(22);
+        connection2.setLoad(33);
+        connection3.setLoad(11);
 
         assertEquals(11 ,route.getWorstLoad());
     }
 
     @Test
     void getWorstReliability() {
-        link1.setReliability(44);
-        link2.setReliability(20);
-        link3.setReliability(63);
+        connection1.setReliability(44);
+        connection2.setReliability(20);
+        connection3.setReliability(63);
 
         assertEquals(20 ,route.getWorstReliability());
     }

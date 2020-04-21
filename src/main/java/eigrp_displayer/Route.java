@@ -9,7 +9,7 @@ public class Route {
     private int feasibleDistance;
     private int reportedDistance;
     private String connectionType; //TODO: replace by interface somehow
-    private List<Link> paths = new ArrayList<>();
+    private List<Connection> paths = new ArrayList<>();
 
     public IPAddress getTargetIPAddress() {
         return targetIPAddress;
@@ -43,14 +43,14 @@ public class Route {
         this.connectionType = connectionType;
     }
 
-    public List<Link> getPaths() {
+    public List<Connection> getPaths() {
         return paths;
     }
 
     public int getLowestBandwidth(){
         List<Integer> bandwidths = new ArrayList<>();
-        for(Link link : this.paths){
-            bandwidths.add(link.getBandwidth());
+        for(Connection connection : this.paths){
+            bandwidths.add(connection.getBandwidth());
         }
         Collections.sort(bandwidths);
         return (int)Math.pow(10,7)/bandwidths.get(0);
@@ -58,16 +58,16 @@ public class Route {
 
     public int getSumOfDelays(){
         int sum = 0;
-        for(Link link : this.paths){
-            sum += link.getDelay();
+        for(Connection connection : this.paths){
+            sum += connection.getDelay();
         }
         return sum;
     }
 
     public int getWorstLoad() {
         List<Integer> loads = new ArrayList<>();
-        for(Link link : this.paths){
-            loads.add(link.getLoad());
+        for(Connection connection : this.paths){
+            loads.add(connection.getLoad());
         }
         Collections.sort(loads);
         return loads.get(0);
@@ -75,8 +75,8 @@ public class Route {
 
     public int getWorstReliability() {
         List<Integer> reliabilities = new ArrayList<>();
-        for(Link link : this.paths){
-            reliabilities.add(link.getReliability());
+        for(Connection connection : this.paths){
+            reliabilities.add(connection.getReliability());
         }
         Collections.sort(reliabilities);
         return reliabilities.get(0);

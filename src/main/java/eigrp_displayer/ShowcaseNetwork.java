@@ -6,12 +6,12 @@ import java.util.List;
 public class ShowcaseNetwork {
     private IPAddress networkAddress;
     private IPAddress broadcastAddress;
-    private SubnetMask mask;
+    private Mask mask;
     private PoolOfIPAddresses pool;
-    private List<Link> connections;
+    private List<Connection> connections;
     private List<Device> devices;
 
-    public ShowcaseNetwork(IPAddress networkAddress, IPAddress broadcastAddress, SubnetMask mask){
+    public ShowcaseNetwork(IPAddress networkAddress, IPAddress broadcastAddress, Mask mask){
         this.networkAddress = networkAddress;
         this.broadcastAddress = broadcastAddress;
         this.mask = mask;
@@ -50,11 +50,11 @@ public class ShowcaseNetwork {
     public List<Device> getNeighboursOf(Device device){
         List<Device> neighbours = new ArrayList<>();
 
-        for(Link link : this.connections){
-            if(link.getDevice1() == device)
-                neighbours.add(link.getDevice2());
-            if(link.getDevice2() == device)
-                neighbours.add(link.getDevice1());
+        for(Connection connection : this.connections){
+            if(connection.getDevice1() == device)
+                neighbours.add(connection.getDevice2());
+            if(connection.getDevice2() == device)
+                neighbours.add(connection.getDevice1());
         }
 
         return neighbours;
@@ -65,11 +65,11 @@ public class ShowcaseNetwork {
         return device1Neighbours.contains(device2);
     }
 
-    public SubnetMask getMask() {
+    public Mask getMask() {
         return mask;
     }
 
-    public void setMask(SubnetMask mask) {
+    public void setMask(Mask mask) {
         this.mask = mask;
     }
 
@@ -89,11 +89,11 @@ public class ShowcaseNetwork {
         this.broadcastAddress = broadcastAddress;
     }
 
-    public List<Link> getConnections() {
+    public List<Connection> getConnections() {
         return connections;
     }
 
-    public void setConnections(List<Link> connections) {
+    public void setConnections(List<Connection> connections) {
         this.connections = connections;
     }
 

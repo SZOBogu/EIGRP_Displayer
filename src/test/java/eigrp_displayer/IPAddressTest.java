@@ -51,4 +51,10 @@ class IPAddressTest {
         address.setFourthOctet(4);
         assertEquals(4, address.getFourthOctet());
     }
+
+    @Test
+    void setAddress(){
+        address.setAddress(4,20,6,9);
+        assertEquals(new IPAddress(4,20,6,9), address);
+    }
 }

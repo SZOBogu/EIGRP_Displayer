@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class SubnetMaskTest {
-    SubnetMask mask = new SubnetMask(24);
+class MaskTest {
+    Mask mask = new Mask(24);
 
     @Test
     void getMask() {

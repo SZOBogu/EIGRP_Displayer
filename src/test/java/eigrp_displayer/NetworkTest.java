@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class NetworkTest {
     Network network = new Network();
-    SubnetMask mask = Mockito.mock(SubnetMask.class);
+    Mask mask = Mockito.mock(Mask.class);
     IPAddress ip = Mockito.mock(IPAddress.class);
 
     @Test

@@ -1,6 +1,6 @@
 package eigrp_displayer;
 
-public class Cable extends Link{
+public class Cable extends Connection {
     public Cable(){
         this("Ethernet Cable", 100000, 100, 10, 10);
     }

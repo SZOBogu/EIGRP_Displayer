@@ -1,9 +1,9 @@
 package eigrp_displayer;
 
-public class SubnetMask {
+public class Mask {
     int mask;
 
-    public SubnetMask(int mask){
+    public Mask(int mask){
         this.setMask(mask);
     }
 

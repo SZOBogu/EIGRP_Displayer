@@ -23,7 +23,7 @@ public class PoolOfIPAddresses {
         }
     }
 
-    public void init(IPAddress networkAddress, SubnetMask mask){
+    public void init(IPAddress networkAddress, Mask mask){
         CalculatorIP calc = new CalculatorIP();
 
         for(int i = 1; i < mask.calculateAvailableAddresses() - 1; i++){

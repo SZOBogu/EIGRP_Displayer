@@ -32,7 +32,6 @@ class MetricCalculatorTest {
         route.setTargetIPAddress(address);
         route.setFeasibleDistance(10);
         route.setReportedDistance(1);
-        route.setConnectionType("Any");
 
         connection1.linkDevice(router1);
         connection1.linkDevice(router2);

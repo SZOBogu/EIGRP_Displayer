@@ -8,7 +8,6 @@ public class Route {
     private IPAddress targetIPAddress;
     private int feasibleDistance;
     private int reportedDistance;
-    private String connectionType; //TODO: replace by interface somehow
     private List<Connection> paths = new ArrayList<>();
 
     public IPAddress getTargetIPAddress() {
@@ -33,14 +32,6 @@ public class Route {
 
     public void setReportedDistance(int reportedDistance) {
         this.reportedDistance = reportedDistance;
-    }
-
-    public String getConnectionType() {
-        return connectionType;
-    }
-
-    public void setConnectionType(String connectionType) {
-        this.connectionType = connectionType;
     }
 
     public List<Connection> getPaths() {

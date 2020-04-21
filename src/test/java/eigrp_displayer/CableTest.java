@@ -112,4 +112,13 @@ class CableTest {
         assertEquals(device, cable0.getDevice1());
         assertEquals(device0, cable0.getDevice2());
     }
+
+    @Test
+    void getOtherDevice() {
+        assertEquals(device0, cable.getOtherDevice(device));
+        assertEquals(device, cable.getOtherDevice(device0));
+        cable.setDevice1(null);
+        assertNull(cable.getOtherDevice(device));
+        assertNull(cable.getOtherDevice(device0));
+    }
 }

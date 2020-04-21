@@ -106,4 +106,17 @@ class RouterTest {
     void getTopologyTable() {
         assertEquals(new RoutingTable(), router.getTopologyTable());
     }
+
+    @Test
+    void getDeviceInterfaces() {
+        assertEquals(4, router.getDeviceInterfaces().length);
+        assertEquals("Interface 0", router.getDeviceInterfaces()[0].getName());
+        assertNull(router.getDeviceInterfaces()[0].getConnection());
+        assertEquals("Interface 1", router.getDeviceInterfaces()[1].getName());
+        assertNull(router.getDeviceInterfaces()[0].getConnection());
+        assertEquals("Interface 2", router.getDeviceInterfaces()[2].getName());
+        assertNull(router.getDeviceInterfaces()[0].getConnection());
+        assertEquals("Interface 3", router.getDeviceInterfaces()[3].getName());
+        assertNull(router.getDeviceInterfaces()[0].getConnection());
+    }
 }

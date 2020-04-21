@@ -33,6 +33,9 @@ public class Router extends Device{
         this.neighbourTable = new NeighbourTable();
         this.topologyTable = new RoutingTable();
         this.deviceInterfaces = new DeviceInterface[numberOfInterfaces];
+        for(int i = 0; i < numberOfInterfaces; i++){
+            this.deviceInterfaces[i] = new DeviceInterface("Interface " + i);
+        }
     }
 
     public boolean isK1() {
@@ -89,5 +92,9 @@ public class Router extends Device{
 
     public RoutingTable getTopologyTable() {
         return topologyTable;
+    }
+
+    public DeviceInterface[] getDeviceInterfaces() {
+        return deviceInterfaces;
     }
 }

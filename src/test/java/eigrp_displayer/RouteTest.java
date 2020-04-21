@@ -25,7 +25,6 @@ class RouteTest {
         route.setTargetIPAddress(address);
         route.setFeasibleDistance(10);
         route.setReportedDistance(1);
-        route.setConnectionType("Any");
 
         connection1.linkDevice(router1);
         connection1.linkDevice(router2);
@@ -72,17 +71,6 @@ class RouteTest {
     void setReportedDistance() {
         route.setReportedDistance(2);
         assertEquals(2, route.getReportedDistance());
-    }
-
-    @Test
-    void getConnectionType() {
-        assertEquals("Any", route.getConnectionType());
-    }
-
-    @Test
-    void setConnectionType() {
-        route.setConnectionType("FastEthernet0/0");
-        assertEquals("FastEthernet0/0", route.getConnectionType());
     }
 
     @Test

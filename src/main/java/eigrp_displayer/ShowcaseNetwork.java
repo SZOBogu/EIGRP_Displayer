@@ -32,12 +32,13 @@ public class ShowcaseNetwork {
         this.devices.remove(device);
     }
 
-//    public void linkDevices(Device device1, Device device2){
-//        Cable cable = new Cable();
-//        cable.linkDevice(device1);
-//        cable.linkDevice(device2);
-//        this.connections.add(cable);
-//    }
+    public void linkDevices(Device device1, Device device2){
+        Cable cable = new Cable();
+        device1.setConnection(cable);
+        device2.setConnection(cable);
+        cable.setDevice1(device1);
+        cable.setDevice2(device2);
+    }
 
     public Device getDevice(IPAddress ipAddress){
         for(Device device : this.devices){

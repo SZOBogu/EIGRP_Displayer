@@ -119,4 +119,12 @@ class RouterTest {
         assertEquals("Interface 3", router.getDeviceInterfaces()[3].getName());
         assertNull(router.getDeviceInterfaces()[0].getConnection());
     }
+
+    @Test
+    void setConnection(){
+        Connection connection0 = Mockito.mock(Connection.class);
+        router.setConnection(connection0);
+        assertEquals(connection0, router.getDeviceInterfaces()[0].getConnection());
+        assertNull(router.getDeviceInterfaces()[1].getConnection());
+    }
 }

@@ -33,14 +33,17 @@ class ShowcaseNetworkTest {
         assertNull(device0.getIp_address());
         assertEquals(0, net.getDevices().size());
     }
-//
-//    @Test
-//    void linkDevices() {
-//        net.linkDevices(device0, device1);
-//        assertEquals(1, net.getConnections().size());
-//        assertEquals(device0, net.getConnections().get(0).getDevice1());
-//        assertEquals(device1, net.getConnections().get(0).getDevice2());
-//    }
+
+    @Test
+    void linkDevices() {
+        net.linkDevices(device0, device1);
+        assertEquals(device0.getDeviceInterfaces()[0].getConnection(),
+                device1.getDeviceInterfaces()[0].getConnection());
+        assertEquals(device1,
+                device0.getDeviceInterfaces()[0].getConnection().getOtherDevice(device0));
+        assertEquals(device0,
+                device1.getDeviceInterfaces()[0].getConnection().getOtherDevice(device1));
+    }
 
     @Test
     void getMask() {

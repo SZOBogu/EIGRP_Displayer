@@ -8,7 +8,6 @@ public class ShowcaseNetwork {
     private IPAddress broadcastAddress;
     private Mask mask;
     private PoolOfIPAddresses pool;
-//    private List<Connection> connections;
     private List<Device> devices;
 
     public ShowcaseNetwork(IPAddress networkAddress, IPAddress broadcastAddress, Mask mask){
@@ -17,7 +16,6 @@ public class ShowcaseNetwork {
         this.mask = mask;
         this.pool = new PoolOfIPAddresses();
         this.pool.init(networkAddress, mask);
-//        this.connections = new ArrayList<>();
         this.devices = new ArrayList<>();
     }
 

@@ -7,12 +7,12 @@ import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ReplyTest {
+class ReplyMessageTest {
     IPAddress sender = Mockito.mock(IPAddress.class);
     IPAddress receiver = Mockito.mock(IPAddress.class);
     RoutingTableEntry entry = Mockito.mock(RoutingTableEntry.class);
 
-    Reply reply = new Reply(sender, receiver, entry);
+    ReplyMessage reply = new ReplyMessage(sender, receiver, entry);
 
     @Test
     void getRoutingTableEntry() {

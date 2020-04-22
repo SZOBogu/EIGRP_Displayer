@@ -23,6 +23,7 @@ public abstract class Connection implements Addable {
 
     public void setDevice1(Device device1) {
         this.device1 = device1;
+        this.callForUpdate();
     }
 
     public Device getDevice2() {
@@ -31,14 +32,17 @@ public abstract class Connection implements Addable {
 
     public void setDevice2(Device device2) {
         this.device2 = device2;
+        this.callForUpdate();
     }
 
     public void linkDevice(Device device){
         if(this.device1 == null){
             this.device1 = device;
+            this.callForUpdate();
         }
         else if(this.device2 == null){
             this.device2 = device;
+            this.callForUpdate();
         }
     }
 
@@ -59,6 +63,7 @@ public abstract class Connection implements Addable {
 
     public void setBandwidth(int bandwidth) {
         this.bandwidth = bandwidth;
+        this.callForUpdate();
     }
 
     public int getDelay() {
@@ -67,6 +72,7 @@ public abstract class Connection implements Addable {
 
     public void setDelay(int delay) {
         this.delay = delay;
+        this.callForUpdate();
     }
 
     public int getLoad() {
@@ -75,6 +81,7 @@ public abstract class Connection implements Addable {
 
     public void setLoad(int load) {
         this.load = load;
+        this.callForUpdate();
     }
 
     public int getReliability() {
@@ -83,5 +90,13 @@ public abstract class Connection implements Addable {
 
     public void setReliability(int reliability) {
         this.reliability = reliability;
+        this.callForUpdate();
+    }
+
+    public void callForUpdate(){
+        if(this.device1 != null)
+            this.device1.checkConnection(this);
+        if(this.device2 != null)
+            this.device2.checkConnection(this);
     }
 }

@@ -5,7 +5,7 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class NeighbourTableTest {
     NeighbourTable neighbourTable = new NeighbourTable();
@@ -68,5 +68,15 @@ class NeighbourTableTest {
         Clock.incrementClock();
         assertEquals(1, neighbourTable.getEntries().size());
         Clock.getClockDependents().clear();
+    }
+
+    @Test
+    void checkIfPresent() {
+        neighbourTable.formNeighbourship(ip0);
+        neighbourTable.formNeighbourship(ip1);
+
+        assertTrue(neighbourTable.checkIfPresent(ip0));
+        assertTrue(neighbourTable.checkIfPresent(ip1));
+        assertFalse(neighbourTable.checkIfPresent(ip2));
     }
 }

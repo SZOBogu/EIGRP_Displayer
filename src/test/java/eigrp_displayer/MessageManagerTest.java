@@ -8,12 +8,12 @@ class MessageManagerTest {
     MessageManager manager = new MessageManager();
 
     Router router = Mockito.mock(Router.class);
-    ACK ack = Mockito.mock(ACK.class);
-    Hello hello = Mockito.mock(Hello.class);
-    Query query = Mockito.mock(Query.class);
-    Reply reply = Mockito.mock(Reply.class);
-    Update update = Mockito.mock(Update.class);
-    Placeholder placeholder = Mockito.mock(Placeholder.class);
+    ACKMessage ack = Mockito.mock(ACKMessage.class);
+    HelloMessage hello = Mockito.mock(HelloMessage.class);
+    QueryMessage query = Mockito.mock(QueryMessage.class);
+    ReplyMessage reply = Mockito.mock(ReplyMessage.class);
+    UpdateMessage update = Mockito.mock(UpdateMessage.class);
+    NullMessage nullMessage = Mockito.mock(NullMessage.class);
 
     @Test
     void sendMessage() {

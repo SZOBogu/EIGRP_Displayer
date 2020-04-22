@@ -7,13 +7,22 @@ import java.util.List;
 
 public class MessageManager {
     List<RTPMessage> messagesSentWaitingForReply;
+    //Router field?
 
     public MessageManager(){
         this.messagesSentWaitingForReply = new ArrayList<>();
     }
 
+    //unicast
     public void sendMessage(RTPMessage message){
+        //check if connected
+        //schedule message
+    }
 
+    //broadcast
+    public void sendMessageToAllNeighbours(RTPMessage message){
+        //check if connected
+        //schedule message
     }
 
     public void sendCyclicMessage(int delay){
@@ -23,27 +32,24 @@ public class MessageManager {
     public void receiveMessage(){}
 
     public void respond(RTPMessage message, Router router){
-        MessageScheduler scheduler = MessageScheduler.getInstance();
-
-
-        if(message instanceof Query){
-            Query query = (Query)message;
+        if(message instanceof QueryMessage){
+            QueryMessage query = (QueryMessage)message;
             RoutingTableEntry queriedEntry = null;
 
-            scheduler.scheduleMessage(new ACK(router.getIp_address(), message.getSenderAddress()));
+            this.sendMessage(new ACKMessage(router.getIp_address(), message.getSenderAddress()));
 
             for(RoutingTableEntry entry : router.getRoutingTable().getEntries()){
                 if(entry.getIp_address() == query.getQueriedDeviceAddress())
                     queriedEntry = entry;
             }
 
-            Reply replyMessage = new Reply(message.getReceiverAddress(),
+            ReplyMessage replyMessage = new ReplyMessage(message.getReceiverAddress(),
                     message.getSenderAddress(),
                     queriedEntry);
             this.getMessagesSentWaitingForReply().add(replyMessage);
-            scheduler.scheduleMessage(replyMessage);
+            this.sendMessage(replyMessage);
         }
-        else if(message instanceof Hello){
+        else if(message instanceof HelloMessage){
             for(RoutingTableEntry entry : router.getRoutingTable().getEntries()){
                 if(entry.getIp_address() == message.getSenderAddress())
                     entry.resetTicks();
@@ -51,24 +57,19 @@ public class MessageManager {
 
         }
 
-        else if(message instanceof ACK){
+        else if(message instanceof ACKMessage){
             this.getMessagesSentWaitingForReply().removeIf(waitingMessage ->
-                    (waitingMessage instanceof Query || waitingMessage instanceof Update)
+                    (waitingMessage instanceof QueryMessage || waitingMessage instanceof UpdateMessage)
                     && message.getSenderAddress() == waitingMessage.getReceiverAddress());
         }
-        else if(message instanceof Update){
-            scheduler.scheduleMessage(new ACK(router.getIp_address(), message.getSenderAddress()));
-            //TODO: updating of routing table
+        else if(message instanceof UpdateMessage){
+            this.sendMessage(new ACKMessage(router.getIp_address(), message.getSenderAddress()));
+            router.getRoutingTable().update(((UpdateMessage) message).getRoutingTable(), message.getSenderAddress());
         }
-        else if(message instanceof Reply){
+        else if(message instanceof ReplyMessage){
             this.getMessagesSentWaitingForReply().removeIf(waitingMessage ->
-                    (waitingMessage instanceof Reply) &&
+                    (waitingMessage instanceof ReplyMessage) &&
                             message.getSenderAddress() == waitingMessage.getReceiverAddress());
-        }
-        else{
-            for(RoutingTableEntry entry : router.getRoutingTable().getEntries()){
-                entry.incrementTicks(1);
-            }
         }
     }
 

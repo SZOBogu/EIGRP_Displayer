@@ -6,18 +6,14 @@ import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ACKTest {
+class QueryMessageTest {
     IPAddress sender = Mockito.mock(IPAddress.class);
     IPAddress receiver = Mockito.mock(IPAddress.class);
-    ACK ack = new ACK(sender, receiver);
+    IPAddress queriedDeviceAddress = Mockito.mock(IPAddress.class);
+    QueryMessage query = new QueryMessage(sender, receiver, queriedDeviceAddress);
 
     @Test
-    void getSenderAddress() {
-        assertEquals(sender, ack.getSenderAddress());
-    }
-
-    @Test
-    void getReceiverAddress() {
-        assertEquals(receiver, ack.getReceiverAddress());
+    void getQueriedDeviceAddress() {
+        assertEquals(queriedDeviceAddress, query.getQueriedDeviceAddress());
     }
 }

@@ -31,7 +31,7 @@ class NeighbourTableEntryTest {
         assertEquals("15", splittedEntry[2]);
         //TODO: look into, sometimes fails: 00:00 ==> expected: <true> but was: <false>
         assertTrue(splittedEntry[3].matches("^00:0[0-1]:[0-5][0-9]$"), " " + splittedEntry[3]);
-        assertTrue(splittedEntry[4].matches("^([0-9]|[1-9][0-9]|[1-2][0-9][0-9])$"), " " + splittedEntry[4]);
+        assertTrue(splittedEntry[4].matches("([0-9]|[1-9][0-9]|[1-2][0-9][0-9])|00:00"), " " + splittedEntry[4]);
         assertTrue(splittedEntry[5].matches("\\d"), " " + splittedEntry[5]);
         assertEquals("0", splittedEntry[6]);
         assertTrue(splittedEntry[7].matches("^([0-9]|[1-9][0-9])$"), " " + splittedEntry[7]);

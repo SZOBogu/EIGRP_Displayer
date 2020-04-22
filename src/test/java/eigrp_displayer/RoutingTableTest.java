@@ -47,7 +47,8 @@ class RoutingTableTest {
 
     @Test
     void getCodes() {
-        assertEquals("A - active ", routingTable.getCodes());
+        assertEquals("Codes: P - Passive, A - Active, U - Update, Q - Query, R - Reply, r - Reply status",
+                routingTable.getCodes());
         assertEquals("P - passive", neighbourTable.getCodes());
     }
 

@@ -7,12 +7,12 @@ import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class UpdateTest {
+class UpdateMessageTest {
     IPAddress sender = Mockito.mock(IPAddress.class);
     IPAddress receiver = Mockito.mock(IPAddress.class);
     RoutingTable routingTable = Mockito.mock(RoutingTable.class);
 
-    Update update = new Update(sender, receiver, routingTable);
+    UpdateMessage update = new UpdateMessage(sender, receiver, routingTable);
 
     @Test
     void getRoutingTable() {

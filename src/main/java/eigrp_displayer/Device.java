@@ -44,4 +44,8 @@ public abstract class Device implements Addable {
             }
         }
     }
+
+    public void checkConnection(Connection connection){
+        //przelicz trasy
+    }
 }

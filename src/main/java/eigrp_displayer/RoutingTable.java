@@ -11,7 +11,7 @@ public class RoutingTable {
 
     public RoutingTable(){
         this.description = "placeholder";
-        this.codes = "A - active ";
+        this.codes = "Codes: P - Passive, A - Active, U - Update, Q - Query, R - Reply, r - Reply status";
         this.entries = new ArrayList<>();
     }
 
@@ -45,7 +45,10 @@ public class RoutingTable {
         this.entries = entries;
     }
 
+    //TODO:implement
     public void update(RoutingTable receivedRoutingTable, IPAddress sender){}
+
+    public List<Route> getBestPath() {return null;}
 
     @Override
     public boolean equals(Object o) {

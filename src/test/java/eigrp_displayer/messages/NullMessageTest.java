@@ -4,15 +4,15 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PlaceholderTest {
-    Placeholder placeholder = new Placeholder();
+class NullMessageTest {
+    NullMessage nullMessage = new NullMessage();
     @Test
     void getSenderAddress() {
-        assertNull(placeholder.getSenderAddress());
+        assertNull(nullMessage.getSenderAddress());
     }
 
     @Test
     void getReceiverAddress() {
-        assertNull(placeholder.getReceiverAddress());
+        assertNull(nullMessage.getReceiverAddress());
     }
 }

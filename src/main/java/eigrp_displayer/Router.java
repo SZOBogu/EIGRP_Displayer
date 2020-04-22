@@ -1,5 +1,7 @@
 package eigrp_displayer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Router extends Device{
@@ -18,7 +20,7 @@ public class Router extends Device{
     }
 
     public Router(String name, int numberOfInterfaces){
-        super();
+        super(numberOfInterfaces);
         this.setName(name);
         this.setIp_address(null);
         this.k1 = true;
@@ -86,5 +88,18 @@ public class Router extends Device{
 
     public RoutingTable getTopologyTable() {
         return topologyTable;
+    }
+
+    //TODO: tests
+    public List<Device> getAllNeighbours(){
+        List<Device> devices = new ArrayList<>();
+        List<IPAddress> ips = this.neighbourTable.getAllNeighboursAddresses();
+        for(DeviceInterface deviceInterface : this.getDeviceInterfaces()){
+            Device device = deviceInterface.getConnection().getOtherDevice(this);
+            if(device != null && ips.contains(device.getIp_address())){
+                devices.add(device);
+            }
+        }
+        return devices;
     }
 }

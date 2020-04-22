@@ -1,5 +1,8 @@
 package eigrp_displayer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Device implements Addable {
     private String name;
     private IPAddress ip_address;
@@ -45,6 +48,29 @@ public abstract class Device implements Addable {
         }
     }
 
+    //TODO: test
+    public List<Device> getAllConnectedDevices(){
+        List<Device> devices = new ArrayList<>();
+        for(DeviceInterface deviceInterface : this.getDeviceInterfaces()){
+            Device device = deviceInterface.getConnection().getOtherDevice(this);
+            if(device != null){
+                devices.add(device);
+            }
+        }
+        return devices;
+    }
+
+    //TODO:test
+    public Device getConnectedDevice(IPAddress ipAddress){
+        for(DeviceInterface deviceInterface : this.deviceInterfaces){
+            Device device = deviceInterface.getConnection().getOtherDevice(this);
+            if(device.getIp_address().equals(ipAddress)){
+                return device;
+            }
+        }
+        return null;
+    }
+    //TODO: implement, rename, test
     public void checkConnection(Connection connection){
         //przelicz trasy
     }

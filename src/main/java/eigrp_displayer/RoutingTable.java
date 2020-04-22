@@ -48,6 +48,9 @@ public class RoutingTable {
     //TODO:implement
     public void update(RoutingTable receivedRoutingTable, IPAddress sender){}
 
+    //TODO:implement
+    public void update(RoutingTableEntry receivedRoutingTableEntry, IPAddress sender){}
+
     public List<Route> getBestPath() {return null;}
 
     @Override

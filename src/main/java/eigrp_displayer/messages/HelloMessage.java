@@ -6,4 +6,7 @@ public class HelloMessage extends RTPMessage implements Message {
     public HelloMessage(IPAddress sender, IPAddress receiver){
         super(sender, receiver);
     }
+    public HelloMessage(HelloMessage hello){
+        this(hello.getSenderAddress(), hello.getReceiverAddress());
+    }
 }

@@ -1,15 +1,15 @@
 package eigrp_displayer.messages;
 
 public class CyclicMessage {
-    private Message message;
+    private RTPMessage message;
     private int interval;
 
-    public CyclicMessage(Message message, int interval){
+    public CyclicMessage(RTPMessage message, int interval){
         this.message = message;
         this.interval = interval;
     }
 
-    public Message getMessage() {
+    public RTPMessage getMessage() {
         return message;
     }
 

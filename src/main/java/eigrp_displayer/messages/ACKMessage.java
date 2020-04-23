@@ -6,7 +6,4 @@ public class ACKMessage extends RTPMessage implements Message {
     public ACKMessage(IPAddress sender, IPAddress receiver){
         super(sender, receiver);
     }
-    public ACKMessage(ACKMessage ack){
-        this(ack.getSenderAddress(), ack.getReceiverAddress());
-    }
 }

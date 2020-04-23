@@ -11,11 +11,6 @@ public class ReplyMessage extends RTPMessage implements Message{
         this.routingTableEntry = routingTableEntry;
     }
 
-    public ReplyMessage(ReplyMessage replyMessage){
-        this(replyMessage.getSenderAddress(), replyMessage.getReceiverAddress(),
-                replyMessage.getRoutingTableEntry());
-    }
-
     public RoutingTableEntry getRoutingTableEntry() {
         return routingTableEntry;
     }

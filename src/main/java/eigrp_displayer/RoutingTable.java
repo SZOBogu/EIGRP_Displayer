@@ -5,36 +5,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class RoutingTable {
-    private String description;
-    private String codes;
     private List<RoutingTableEntry> entries;
 
     public RoutingTable(){
-        this.description = "placeholder";
-        this.codes = "Codes: P - Passive, A - Active, U - Update, Q - Query, R - Reply, r - Reply status";
         this.entries = new ArrayList<>();
-    }
-
-    public RoutingTable(String description, String codes){
-        this.description = description;
-        this.codes = codes;
-        this.entries = new ArrayList<>();
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getCodes() {
-        return codes;
-    }
-
-    public void setCodes(String codes) {
-        this.codes = codes;
     }
 
     public List<RoutingTableEntry> getEntries() {
@@ -50,8 +24,6 @@ public class RoutingTable {
 
     //TODO:implement
     public void update(RoutingTableEntry receivedRoutingTableEntry, IPAddress sender){}
-
-    public List<Route> getBestPath() {return null;}
 
     @Override
     public boolean equals(Object o) {

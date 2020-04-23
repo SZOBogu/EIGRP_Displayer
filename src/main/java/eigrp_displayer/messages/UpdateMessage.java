@@ -11,11 +11,6 @@ public class UpdateMessage extends RTPMessage implements Message {
         this.routingTable = routingTable;
     }
 
-    public UpdateMessage(UpdateMessage updateMessage){
-        this(updateMessage.getSenderAddress(), updateMessage.getReceiverAddress(),
-                updateMessage.getRoutingTable());
-    }
-
     public RoutingTable getRoutingTable() {
         return routingTable;
     }

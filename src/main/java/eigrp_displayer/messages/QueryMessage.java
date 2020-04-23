@@ -10,11 +10,6 @@ public class QueryMessage extends RTPMessage implements Message {
         this.queriedDeviceAddress = queriedDeviceAddress;
     }
 
-    public QueryMessage(QueryMessage queryMessage){
-        this(queryMessage.getSenderAddress(), queryMessage.getReceiverAddress(),
-                queryMessage.queriedDeviceAddress);
-    }
-
     public IPAddress getQueriedDeviceAddress() {
         return queriedDeviceAddress;
     }

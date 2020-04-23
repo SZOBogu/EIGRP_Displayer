@@ -90,16 +90,20 @@ public class Router extends Device{
         return topologyTable;
     }
 
-    //TODO: tests
     public List<Device> getAllNeighbours(){
         List<Device> devices = new ArrayList<>();
         List<IPAddress> ips = this.neighbourTable.getAllNeighboursAddresses();
-        for(DeviceInterface deviceInterface : this.getDeviceInterfaces()){
-            Device device = deviceInterface.getConnection().getOtherDevice(this);
-            if(device != null && ips.contains(device.getIp_address())){
-                devices.add(device);
+        try {
+            for (DeviceInterface deviceInterface : this.getDeviceInterfaces()) {
+                Device device = deviceInterface.getConnection().getOtherDevice(this);
+                if (device != null && ips.contains(device.getIp_address())) {
+                    devices.add(device);
+                }
             }
+            return devices;
         }
-        return devices;
+        catch (Exception e){
+            return devices;
+        }
     }
 }

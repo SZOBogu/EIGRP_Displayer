@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -78,5 +79,34 @@ class NeighbourTableTest {
         assertTrue(neighbourTable.checkIfPresent(ip0));
         assertTrue(neighbourTable.checkIfPresent(ip1));
         assertFalse(neighbourTable.checkIfPresent(ip2));
+    }
+
+
+    @Test
+    void getAllNeighboursAddresses() {
+        neighbourTable.formNeighbourship(ip0);
+        neighbourTable.formNeighbourship(ip1);
+        List<IPAddress> neighbourIPs = neighbourTable.getAllNeighboursAddresses();
+
+        assertEquals(2, neighbourIPs.size());
+        assertEquals(ip0, neighbourIPs.get(0));
+        assertEquals(ip1, neighbourIPs.get(1));
+    }
+
+    @Test
+    void removeNeighbourship() {
+        IPAddress ip2 = Mockito.mock(IPAddress.class);
+
+        neighbourTable.formNeighbourship(ip0);
+        neighbourTable.formNeighbourship(ip1);
+
+        assertEquals(2, neighbourTable.getAllNeighboursAddresses().size());
+        neighbourTable.removeNeighbourship(ip0);
+        assertEquals(1, neighbourTable.getAllNeighboursAddresses().size());
+        neighbourTable.removeNeighbourship(ip2);
+        assertEquals(1, neighbourTable.getAllNeighboursAddresses().size());
+        neighbourTable.removeNeighbourship(ip1);
+        assertEquals(0, neighbourTable.getAllNeighboursAddresses().size());
+
     }
 }

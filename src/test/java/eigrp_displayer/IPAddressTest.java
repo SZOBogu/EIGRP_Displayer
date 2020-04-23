@@ -3,6 +3,7 @@ package eigrp_displayer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class IPAddressTest {
     IPAddress address = new IPAddress(127,0,0,1);
@@ -56,5 +57,18 @@ class IPAddressTest {
     void setAddress(){
         address.setAddress(4,20,6,9);
         assertEquals(new IPAddress(4,20,6,9), address);
+    }
+
+    @Test
+    void equals(){
+        IPAddress ip0 = new IPAddress(23,234,5,57);
+        IPAddress ip1 = new IPAddress(5,45,223,4);
+        IPAddress ip2 = new IPAddress(5,12,5,56);
+        IPAddress ip3 = new IPAddress(23,234,5,57);
+
+        assertEquals(ip0, ip3);
+        assertNotEquals(ip0, ip1);
+        assertNotEquals(ip0, ip2);
+        assertNotEquals(ip2, ip1);
     }
 }

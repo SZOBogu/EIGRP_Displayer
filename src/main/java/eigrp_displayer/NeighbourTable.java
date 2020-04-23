@@ -35,7 +35,6 @@ public class NeighbourTable implements ClockDependent{
         return false;
     }
 
-    //TODO: test
     public List<IPAddress> getAllNeighboursAddresses(){
         List<IPAddress> ips = new ArrayList<>();
         for(NeighbourTableEntry entry : this.entries){
@@ -44,9 +43,8 @@ public class NeighbourTable implements ClockDependent{
         return ips;
     }
 
-    //TODO:test
     public void removeNeighbourship(IPAddress ipAddress){
-        this.entries.removeIf(entry -> entry.getNeighbourAddress() == ipAddress);
+        this.entries.removeIf(entry -> entry.getNeighbourAddress().equals(ipAddress));
     }
 
     @Override

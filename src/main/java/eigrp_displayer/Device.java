@@ -48,19 +48,22 @@ public abstract class Device implements Addable {
         }
     }
 
-    //TODO: test
     public List<Device> getAllConnectedDevices(){
         List<Device> devices = new ArrayList<>();
-        for(DeviceInterface deviceInterface : this.getDeviceInterfaces()){
-            Device device = deviceInterface.getConnection().getOtherDevice(this);
-            if(device != null){
-                devices.add(device);
+        try {
+            for (DeviceInterface deviceInterface : this.getDeviceInterfaces()) {
+                Device device = deviceInterface.getConnection().getOtherDevice(this);
+                if (device != null) {
+                    devices.add(device);
+                }
             }
+            return devices;
         }
-        return devices;
+        catch (Exception e) {
+            return devices;
+        }
     }
 
-    //TODO:test
     public Device getConnectedDevice(IPAddress ipAddress){
         for(DeviceInterface deviceInterface : this.deviceInterfaces){
             Device device = deviceInterface.getConnection().getOtherDevice(this);
@@ -71,7 +74,7 @@ public abstract class Device implements Addable {
         return null;
     }
     //TODO: implement, rename, test
-    public void checkConnection(Connection connection){
+    public void updateMetric(Connection connection){
         //przelicz trasy
     }
 }

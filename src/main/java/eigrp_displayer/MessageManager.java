@@ -14,6 +14,7 @@ public class MessageManager implements ClockDependent {
     public MessageManager() {
         this.messagesSentWaitingForReply = new HashMap<>();
         this.messagesToTryToSendAgain = new HashMap<>();
+        Clock.addClockDependant(this);
     }
 
     public Router getRouter() {
@@ -26,98 +27,25 @@ public class MessageManager implements ClockDependent {
 
     //unicast
     public void sendMessage(RTPMessage message) {
-        //TODO: fix for devices
         for (DeviceInterface deviceInterface : this.router.getDeviceInterfaces()) {
-            Router router = (Router) deviceInterface.getConnection().getOtherDevice(this.router);
-            IPAddress ip = router.getIp_address();
+            Device device = deviceInterface.getConnection().getOtherDevice(this.router);
+            IPAddress ip = device.getIp_address();
             if (ip.equals(message.getReceiverAddress()))
                 MessageScheduler.getInstance().scheduleMessage(message);
         }
     }
 
-    //multicast?
-    public void sendMessageToAllNeighboursBut(RTPMessage message, IPAddress ipAddress) {
-        List<Device> allButOneNeigbours = this.router.getAllNeighbours();
-        for (Device device : allButOneNeigbours) {
-            if (allButOneNeigbours.get(allButOneNeigbours.indexOf(device)).
-                    getIp_address().equals(ipAddress)) {
-                allButOneNeigbours.remove(device);
-                break;
-            }
+    public void sendMessages(List<QueryMessage> messages){
+        for(QueryMessage query : messages){
+            this.sendMessage(query);
         }
-        //TODO: deep copy of message with replaced receiver address according to list
-        //no way this is good solution
-        if (message instanceof QueryMessage) {
-            List<QueryMessage> queryMessages = new ArrayList<>();
-            for (Device device : allButOneNeigbours) {
-                QueryMessage queryMessage = new QueryMessage((QueryMessage) message);
-                queryMessage.setReceiverAddress(device.getIp_address());
-                queryMessages.add(new QueryMessage(queryMessage));
-            }
-            for (QueryMessage queryMessage : queryMessages) {
-                this.sendMessage(queryMessage);
-            }
-        } else if (message instanceof HelloMessage) {
-            List<HelloMessage> helloMessages = new ArrayList<>();
-            for (Device device : allButOneNeigbours) {
-                HelloMessage helloMessage = new HelloMessage((HelloMessage) message);
-                helloMessage.setReceiverAddress(device.getIp_address());
-                helloMessages.add(new HelloMessage(helloMessage));
-            }
-            for (HelloMessage helloMessage : helloMessages) {
-                this.sendMessage(helloMessage);
-            }
-        } else if (message instanceof ACKMessage) {
-            List<ACKMessage> ackMessages = new ArrayList<>();
-            for (Device device : allButOneNeigbours) {
-                ACKMessage ackMessage = new ACKMessage((ACKMessage) message);
-                ackMessage.setReceiverAddress(device.getIp_address());
-                ackMessages.add(new ACKMessage(ackMessage));
-            }
-            for (ACKMessage queryMessage : ackMessages) {
-                this.sendMessage(queryMessage);
-            }
-        } else if (message instanceof UpdateMessage) {
-            List<UpdateMessage> updateMessages = new ArrayList<>();
-            for (Device device : allButOneNeigbours) {
-                UpdateMessage updateMessage = new UpdateMessage((UpdateMessage) message);
-                updateMessage.setReceiverAddress(device.getIp_address());
-                updateMessages.add(new UpdateMessage(updateMessage));
-            }
-            for (UpdateMessage updateMessage : updateMessages) {
-                this.sendMessage(updateMessage);
-            }
-        } else if (message instanceof ReplyMessage) {
-            List<ReplyMessage> replyMessages = new ArrayList<>();
-            for (Device device : allButOneNeigbours) {
-                ReplyMessage replyMessage = new ReplyMessage((ReplyMessage) message);
-                replyMessage.setReceiverAddress(device.getIp_address());
-                replyMessages.add(new ReplyMessage(replyMessage));
-            }
-            for (ReplyMessage replyMessage : replyMessages) {
-                this.sendMessage(replyMessage);
-            }
-        }
-        this.sendMessage(message);
     }
 
-    //broadcast
-    public void sendMessageToAllNeighbours(RTPMessage message){
-        //check if connected
-        //schedule message
-    }
-
-    //broadcast
-    public void sendMessageOnAllInterfaces(RTPMessage message){
-        //check if connected
-        //schedule message
-    }
 
     public void sendCyclicMessage(CyclicMessage message){
-        //TODO: fix for devices
         for(DeviceInterface deviceInterface : this.router.getDeviceInterfaces()){
-            Router router = (Router)deviceInterface.getConnection().getOtherDevice(this.router);
-            IPAddress ip = router.getIp_address();
+            Device device = deviceInterface.getConnection().getOtherDevice(this.router);
+            IPAddress ip = device.getIp_address();
             if(ip.equals(message.getMessage().getReceiverAddress())){
                 MessageScheduler.getInstance().scheduleCyclicMessage(message);
             }
@@ -144,7 +72,7 @@ public class MessageManager implements ClockDependent {
 
     public void respondACK(ACKMessage ack){
         for(RTPMessage message : this.messagesToTryToSendAgain.keySet()){
-            if(message instanceof QueryMessage || message instanceof UpdateMessage){
+            if(message instanceof ReplyMessage || message instanceof UpdateMessage){
                 if(message.getReceiverAddress().equals(ack.getSenderAddress()))
                     this.messagesToTryToSendAgain.remove(message);
             }
@@ -153,31 +81,91 @@ public class MessageManager implements ClockDependent {
 
     public void respondHello(HelloMessage helloMessage){
         if(!this.router.getNeighbourTable().checkIfPresent(helloMessage.getSenderAddress())){
-            RComparator comparator = new RComparator();
-            //TODO: cases other than routers on both ends
-            if(comparator.compare((Router)router.getConnectedDevice(helloMessage.getSenderAddress()) ,
-                    this.router)){
+            Device otherDevice = null;
+            for(Device device : this.router.getAllConnectedDevices()){
+                if(device.getIp_address().equals(helloMessage.getSenderAddress())){
+                    otherDevice = device;
+                    break;
+                }
+            }
+
+            if(otherDevice instanceof Router) {
+                RComparator comparator = new RComparator();
+                if (comparator.compare((Router) router.getConnectedDevice(helloMessage.getSenderAddress()),
+                        this.router)) {
+                    this.router.getNeighbourTable().formNeighbourship(helloMessage.getSenderAddress());
+                }
+            }
+            if(otherDevice instanceof Router) {
+                //TODO: look for unexpected cases of not replying/looping/whatever
                 this.router.getNeighbourTable().formNeighbourship(helloMessage.getSenderAddress());
             }
         }
     }
 
     public void respondQuery(QueryMessage queryMessage){
-        //Wysłanie ACK, odpowiedz z danymi o ip jesli mamy, jesli nie mamy pytamy sasiadow (co jesli dojedzie do loopa?)
-        //przy loopie jesli dostanie sie z innego zrodla ten sam request to odeslij ze ni ma takiego
         this.sendMessage(new ACKMessage(this.router.getIp_address(), queryMessage.getSenderAddress()));
+        boolean isReplySent = false;
+        boolean isLoopedBack = false;
+
+        List<RoutingTableEntry> entries = this.router.getRoutingTable().getEntries();
+
+        //if query for the same ip address that was queried from this.router then delete, and send back empty reply
+        for(RTPMessage message : messagesSentWaitingForReply.keySet()){
+            if(message instanceof QueryMessage){
+                if(((QueryMessage) message).getQueriedDeviceAddress().equals(queryMessage.getQueriedDeviceAddress())){
+                    messagesSentWaitingForReply.remove(message);
+                    isLoopedBack =true;
+                    ReplyMessage emptyReply = new ReplyMessage(this.router.getIp_address(),
+                            queryMessage.getSenderAddress(), null);
+                    this.sendMessage(emptyReply);
+                }
+            }
+        }
+        if(!isLoopedBack) {
+            for (RoutingTableEntry entry : entries) {
+                if (entry.getIp_address().equals(
+                        queryMessage.getQueriedDeviceAddress())) {
+                    this.sendMessage(new ReplyMessage(this.router.getIp_address(),
+                            queryMessage.getSenderAddress(), entry));
+                    isReplySent = true;
+                }
+            }
+            //ask neighbours for info
+            if(!isReplySent) {
+                List<QueryMessage> queryMessages = new ArrayList<>();
+                List<Device> allNeighboursButSenderOfQuery =
+                        this.router.getAllNeighboursButOne(queryMessage.getSenderAddress());
+                for (Device device : allNeighboursButSenderOfQuery) {
+                    QueryMessage qmsg = new QueryMessage(
+                            this.router.getIp_address(),
+                            device.getIp_address(),
+                            queryMessage.getQueriedDeviceAddress());
+                    queryMessages.add(qmsg);
+                }
+                this.sendMessages(queryMessages);
+            }
+        }
     }
 
     public void respondUpdate(UpdateMessage updateMessage){
-        //porownaj entry z tablica routingu, te ktore nie pasuja do wczesniejszej wersji popraw
         this.sendMessage(new ACKMessage(this.router.getIp_address(), updateMessage.getSenderAddress()));
         this.router.getRoutingTable().update(updateMessage.getRoutingTable(),
                 updateMessage.getSenderAddress());
     }
 
     public void respondReply(ReplyMessage replyMessage){
-        //ack (?) dostosuj wpisy w tablicach routingu
+        //ack, delete query from messages waiting for reply, update routing tables
         this.sendMessage(new ACKMessage(this.router.getIp_address(), replyMessage.getSenderAddress()));
+
+        for(RTPMessage message : this.messagesSentWaitingForReply.keySet()){
+            if(message instanceof QueryMessage){
+                if(((QueryMessage) message).getQueriedDeviceAddress().equals(
+                        replyMessage.getRoutingTableEntry().getIp_address())){
+                    this.messagesSentWaitingForReply.remove(message);
+                }
+            }
+        }
         this.router.getRoutingTable().update(replyMessage.getRoutingTableEntry(),
                 replyMessage.getSenderAddress());
     }

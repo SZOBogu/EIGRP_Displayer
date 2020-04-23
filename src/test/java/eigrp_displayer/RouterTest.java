@@ -7,7 +7,28 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RouterTest {
     IPAddress ip_address0 = Mockito.mock(IPAddress.class);
+    IPAddress ip0 = Mockito.mock(IPAddress.class);
+    IPAddress ip1 = Mockito.mock(IPAddress.class);
+    Cable cable0 = new Cable();
+    Cable cable1 = new Cable();
     Router router = new Router("Some router");
+    Router router0 = new Router("R1");
+    Router router1 = new Router("R2");
+
+    private void init(){
+        router0.setIp_address(ip0);
+        router1.setIp_address(ip1);
+
+        cable0.linkDevice(router);
+        cable1.linkDevice(router);
+        cable0.linkDevice(router0);
+        cable1.linkDevice(router1);
+
+        router.setConnection(cable0);
+        router.setConnection(cable1);
+        router0.setConnection(cable0);
+        router1.setConnection(cable1);
+    }
 
     @Test
     void getName() {
@@ -130,22 +151,7 @@ class RouterTest {
 
     @Test
     void getAllConnectedDevices() {
-        Router router0 = new Router("R1");
-        Router router1 = new Router("R2");
-
-        Cable cable0 = new Cable();
-        Cable cable1 = new Cable();
-
-        cable0.linkDevice(router);
-        cable1.linkDevice(router);
-        cable0.linkDevice(router0);
-        cable1.linkDevice(router1);
-
-        router.setConnection(cable0);
-        router.setConnection(cable1);
-        router0.setConnection(cable0);
-        router1.setConnection(cable1);
-
+        init();
         assertEquals(2, router.getAllConnectedDevices().size());
         assertEquals(router0, router.getAllConnectedDevices().get(0));
         assertEquals(router1, router.getAllConnectedDevices().get(1));
@@ -153,25 +159,9 @@ class RouterTest {
 
     @Test
     void getConnectedDevice() {
-        Router router0 = new Router("R1");
-        Router router1 = new Router("R2");
-        IPAddress ip0 = Mockito.mock(IPAddress.class);
-        IPAddress ip1 = Mockito.mock(IPAddress.class);
+        init();
         router0.setIp_address(ip0);
         router1.setIp_address(ip1);
-
-        Cable cable0 = new Cable();
-        Cable cable1 = new Cable();
-
-        cable0.linkDevice(router);
-        cable1.linkDevice(router);
-        cable0.linkDevice(router0);
-        cable1.linkDevice(router1);
-
-        router.setConnection(cable0);
-        router.setConnection(cable1);
-        router0.setConnection(cable0);
-        router1.setConnection(cable1);
 
         assertEquals(router0, router.getConnectedDevice(ip0));
         assertEquals(router1, router.getConnectedDevice(ip1));
@@ -179,29 +169,31 @@ class RouterTest {
 
     @Test
     void getAllNeighbours() {
-        Router router0 = new Router("R1");
-        Router router1 = new Router("R2");
-        IPAddress ip0 = Mockito.mock(IPAddress.class);
-        IPAddress ip1 = Mockito.mock(IPAddress.class);
+        init();
         router0.setIp_address(ip0);
         router1.setIp_address(ip1);
-
-        Cable cable0 = new Cable();
-        Cable cable1 = new Cable();
-
-        cable0.linkDevice(router);
-        cable1.linkDevice(router);
-        cable0.linkDevice(router0);
-        cable1.linkDevice(router1);
-
-        router.setConnection(cable0);
-        router.setConnection(cable1);
-        router0.setConnection(cable0);
-        router1.setConnection(cable1);
 
         router.getNeighbourTable().formNeighbourship(ip1);
 
         assertEquals(1, router.getAllNeighbours().size());
         assertEquals(router1, router.getAllNeighbours().get(0));
+    }
+
+    @Test
+    void getAllNeighboursButOne() {
+        init();
+        IPAddress ip2 = Mockito.mock(IPAddress.class);
+        router.getNeighbourTable().formNeighbourship(ip0);
+        router.getNeighbourTable().formNeighbourship(ip1);
+
+        assertEquals(1, router.getAllNeighboursButOne(ip0).size());
+        assertEquals(router1, router.getAllNeighboursButOne(ip0).get(0));
+
+        assertEquals(1, router.getAllNeighboursButOne(ip1).size());
+        assertEquals(router0, router.getAllNeighboursButOne(ip1).get(0));
+
+        assertEquals(2, router.getAllNeighboursButOne(ip2).size());
+        assertEquals(router0, router.getAllNeighboursButOne(ip2).get(0));
+        assertEquals(router1, router.getAllNeighboursButOne(ip2).get(1));
     }
 }

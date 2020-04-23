@@ -106,4 +106,10 @@ public class Router extends Device{
             return devices;
         }
     }
+
+    public List<Device> getAllNeighboursButOne(IPAddress ipAddress){
+        List<Device> devices = this.getAllNeighbours();
+        devices.removeIf(device -> device.getIp_address().equals(ipAddress));
+        return devices;
+    }
 }

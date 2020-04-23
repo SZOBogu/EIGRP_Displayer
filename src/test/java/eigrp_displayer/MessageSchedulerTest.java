@@ -2,6 +2,7 @@ package eigrp_displayer;
 
 import eigrp_displayer.messages.CyclicMessage;
 import eigrp_displayer.messages.Message;
+import eigrp_displayer.messages.RTPMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class MessageSchedulerTest {
-    Message message = Mockito.mock(Message.class);
+    RTPMessage message = Mockito.mock(RTPMessage.class);
     ShowcaseNetwork network = Mockito.mock(ShowcaseNetwork.class);
     CyclicMessage cyclicMessage = new CyclicMessage(message, 10);
 

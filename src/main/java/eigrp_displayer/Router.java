@@ -125,4 +125,30 @@ public class Router extends Device{
             this.update( entry, senderAddress);
         }
     }
+
+    //TODO: test (have fun dawg)
+    public String printTopologyTable() {
+        StringBuilder string = new StringBuilder(this.topologyTable.getDescription() + "\n\n" + this.topologyTable.getCodes() + "\n\n");
+
+        for(RoutingTableEntry entry : this.topologyTable.getEntries()){
+
+            string.append(entry.getCode()).append(" ").append(entry.getIp_address()).append("/")
+                    .append(MessageScheduler.getInstance().getNetwork().getMask()).append(", ")
+                    .append(this.topologyTable.getSuccessorCount(entry.getIp_address()))
+                    .append(" successors, FD is").append(entry.getFeasibleDistance()).append("\n");
+
+            List<IPAddress> ips = entry.getIPAddressPath(this);
+            for(IPAddress ip : ips){
+                for(DeviceInterface deviceInterface : this.getDeviceInterfaces()) {
+                    if(ip.equals(deviceInterface.getConnection().getOtherDevice(this).getIp_address()))
+
+                        string.append("\tvia ").append(ips).append(" ").append("(")
+                                .append(entry.getFeasibleDistance()).append("\\")
+                                .append(entry.getReportedDistance()).append(" ")
+                                .append(deviceInterface.getName());
+                }
+            }
+        }
+        return string.toString();
+    }
 }

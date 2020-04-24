@@ -25,6 +25,6 @@ class ACKMessageTest {
     void setReceiverAddress(){
         IPAddress ip = Mockito.mock(IPAddress.class);
         ack.setReceiverAddress(ip);
-        assertEquals(ip, ack.getSenderAddress());
+        assertEquals(ip, ack.getReceiverAddress());
     }
 }

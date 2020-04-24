@@ -29,8 +29,6 @@ class RoutingTableEntryTest {
     @BeforeEach
     void init(){
         entry.setPath(path);
-        entry.setFeasibleDistance(10);
-        entry.setSuccessors(1);
 
         connection1.linkDevice(router1);
         connection1.linkDevice(router2);
@@ -68,26 +66,14 @@ class RoutingTableEntryTest {
 
     @Test
     void getSuccessors() {
-        assertEquals(1, entry.getSuccessors());
-        assertEquals(1, entry0.getSuccessors());
+        assertEquals(0, entry.getSuccessors());
+        assertEquals(0, entry0.getSuccessors());
     }
 
     @Test
     void setSuccessors() {
-        entry.setSuccessors(0);
-        assertEquals(0, entry.getSuccessors());
-    }
-
-    @Test
-    void getFeasibleDistance() {
-        assertEquals(10, entry.getFeasibleDistance());
-        assertEquals(10, entry0.getFeasibleDistance());
-    }
-
-    @Test
-    void setFeasibleDistance() {
-        entry.setFeasibleDistance(100);
-        assertEquals(100, entry.getFeasibleDistance());
+        entry.setSuccessors(1);
+        assertEquals(1, entry.getSuccessors());
     }
 
     @Test
@@ -164,5 +150,27 @@ class RoutingTableEntryTest {
     void setPath() {
         entry.setPath(new ArrayList<>());
         assertEquals(new ArrayList<>(), entry.getPath());
+    }
+
+    @Test
+    void getReportedDistance() {
+        assertEquals(Long.MAX_VALUE, entry.getReportedDistance());
+    }
+
+    @Test
+    void setReportedDistance() {
+        entry.setReportedDistance(11);
+        assertEquals(11, entry.getReportedDistance());
+    }
+
+    @Test
+    void getFeasibleDistance() {
+        assertEquals(Long.MAX_VALUE, entry.getFeasibleDistance());
+    }
+
+    @Test
+    void setFeasibleDistance() {
+        entry.setFeasibleDistance(1);
+        assertEquals(1, entry.getFeasibleDistance());
     }
 }

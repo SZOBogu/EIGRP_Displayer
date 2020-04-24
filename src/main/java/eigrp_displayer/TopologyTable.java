@@ -29,7 +29,22 @@ public class TopologyTable extends RoutingTable{
         this.codes = codes;
     }
 
+    //TODO: implement
     public RoutingTableEntry getBestPath(IPAddress targetAddress) {return null;}
+
+    //TODO: test
+    public int getSuccessorCount(IPAddress ipAddress){
+        int count = 0;
+        for(RoutingTableEntry entry : this.getEntries()){
+            if(entry.getIp_address().equals(ipAddress)){
+                count++;
+            }
+        }
+        if(count <= 0)
+            return 0;
+        else
+            return count - 1;
+    }
 
     //TODO:test
     public void update(Router router, RoutingTable receivedRoutingTable, IPAddress sender){
@@ -66,11 +81,15 @@ public class TopologyTable extends RoutingTable{
                     if (metricForConnectionWithSender -
                             receivedRoutingTableEntry.getFeasibleDistance() <
                             entry.getFeasibleDistance()) {
+
                         this.getEntries().remove(entry);
                         RoutingTableEntry updatedRoutingTableEntry =
                                 new RoutingTableEntry(receivedRoutingTableEntry.getIp_address());
+
                         updatedRoutingTableEntry.setFeasibleDistance(
                                 receivedRoutingTableEntry.getFeasibleDistance() + metricForConnectionWithSender);
+
+                        updatedRoutingTableEntry.setReportedDistance(receivedRoutingTableEntry.getFeasibleDistance());
                         this.getEntries().add(updatedRoutingTableEntry);
                         List<Connection> updatedPath = entry.getPath();
                         updatedPath.add(0, connection);
@@ -87,13 +106,16 @@ public class TopologyTable extends RoutingTable{
             //TODO: make method out of it
             RoutingTableEntry updatedRoutingTableEntry =
                     new RoutingTableEntry(receivedRoutingTableEntry.getIp_address());
+
             updatedRoutingTableEntry.setFeasibleDistance(
                     receivedRoutingTableEntry.getFeasibleDistance() + metricForConnectionWithSender);
+
+            updatedRoutingTableEntry.setReportedDistance(receivedRoutingTableEntry.getFeasibleDistance());
+
             this.getEntries().add(updatedRoutingTableEntry);
             List<Connection> updatedPath = receivedRoutingTableEntry.getPath();
             updatedPath.add(0, connection);
             updatedRoutingTableEntry.setPath(updatedPath);
         }
     }
-    
 }

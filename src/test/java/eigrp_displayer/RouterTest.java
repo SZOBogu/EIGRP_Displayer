@@ -125,7 +125,7 @@ class RouterTest {
 
     @Test
     void getTopologyTable() {
-        assertEquals(new RoutingTable(), router.getTopologyTable());
+        assertEquals(new TopologyTable(), router.getTopologyTable());
     }
 
     @Test

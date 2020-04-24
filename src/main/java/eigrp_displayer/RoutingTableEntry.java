@@ -9,6 +9,7 @@ public class RoutingTableEntry {
     private IPAddress ip_address;
     private int successors;
     private long feasibleDistance;
+    private long reportedDistance;
     private int ticksSinceLastHelloMessage = 0;
     private List<Connection> path;
 
@@ -22,6 +23,7 @@ public class RoutingTableEntry {
         this.ip_address = ip_address;
         this.successors = 0;
         this.feasibleDistance = Long.MAX_VALUE;
+        this.reportedDistance = Long.MAX_VALUE;
         this.path = new ArrayList<>();
     }
 
@@ -41,16 +43,24 @@ public class RoutingTableEntry {
         this.ip_address = ip_address;
     }
 
-    public int getSuccessors() {
-        return successors;
-    }
-
     public long getFeasibleDistance() {
         return feasibleDistance;
     }
 
     public void setFeasibleDistance(long feasibleDistance) {
         this.feasibleDistance = feasibleDistance;
+    }
+
+    public long getReportedDistance() {
+        return reportedDistance;
+    }
+
+    public void setReportedDistance(long reportedDistance) {
+        this.reportedDistance = reportedDistance;
+    }
+
+    public int getSuccessors() {
+        return successors;
     }
 
     public void setSuccessors(int successors) {
@@ -111,4 +121,40 @@ public class RoutingTableEntry {
         Collections.sort(reliabilities);
         return reliabilities.get(0);
     }
+
+    public List<Device> getDevicePath(Router router){
+        List<Device> devicePath = new ArrayList<>();
+        List<IPAddress> usedIPs = new ArrayList<>();
+
+        devicePath.add(router);
+        usedIPs.add(router.getIp_address());
+
+        for(int i = 0 ; i < this.path.size() ; i++){
+            Connection connection = this.path.get(i);
+            usedIPs.add(connection.getOtherDevice(devicePath.get(i)).getIp_address());
+            devicePath.add(connection.getOtherDevice(devicePath.get(i)));
+        }
+
+        return devicePath;
+    }
+
+    public List<IPAddress> getIPAddressPath(Router router){
+        List<Device> devices = this.getDevicePath(router);
+        List<IPAddress> ips = new ArrayList<>();
+
+        for(Device device : devices){
+            ips.add(device.getIp_address());
+        }
+        return ips;
+    }
+
+    public String getStringPath(Router router){
+        List<IPAddress> ips = this.getIPAddressPath(router);
+        String string = "";
+        for(int i = 1 ; i < ips.size(); i++){
+            string += "via " + ips.get(i).toString();
+        }
+        return "dupa";
+    }
+
 }

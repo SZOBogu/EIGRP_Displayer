@@ -12,32 +12,52 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class RoutingTableEntryTest {
     IPAddress ip_address = Mockito.mock(IPAddress.class);
     IPAddress ip_address0 = Mockito.mock(IPAddress.class);
-    RoutingTableEntry entry = new RoutingTableEntry("P", ip_address);
-    Route route = Mockito.mock(Route.class);
-    Route route0 = Mockito.mock(Route.class);
-    ArrayList<Route> routeList = new ArrayList<>(Arrays.asList(route, route0));
+    RoutingTableEntry entry = new RoutingTableEntry("A", ip_address);
+    RoutingTableEntry entry0 = new RoutingTableEntry(ip_address0);
+
+    Connection connection1 = new Cable();
+    Connection connection2 = new Cable();
+    Connection connection3 = new Cable();
+
+    Router router1 = Mockito.mock(Router.class);
+    Router router2 = Mockito.mock(Router.class);
+    Router router3 = Mockito.mock(Router.class);
+    Router router4 = Mockito.mock(Router.class);
+
+    ArrayList<Connection> path = new ArrayList<>(Arrays.asList(connection1, connection2, connection3));
 
     @BeforeEach
     void init(){
-        entry.setRoutes(routeList);
-        entry.setShortestFeasibleDistance(10);
+        entry.setPath(path);
+        entry.setFeasibleDistance(10);
         entry.setSuccessors(1);
+
+        connection1.linkDevice(router1);
+        connection1.linkDevice(router2);
+
+        connection2.linkDevice(router2);
+        connection2.linkDevice(router3);
+
+        connection3.linkDevice(router3);
+        connection3.linkDevice(router4);
     }
 
     @Test
     void getCode() {
-        assertEquals("P", entry.getCode());
+        assertEquals("A", entry.getCode());
+        assertEquals("P", entry0.getCode());
     }
 
     @Test
     void setCode() {
-        entry.setCode("A");
-        assertEquals("A", entry.getCode());
+        entry.setCode("D");
+        assertEquals("D", entry.getCode());
     }
 
     @Test
     void getIp_address() {
         assertEquals(ip_address, entry.getIp_address());
+        assertEquals(ip_address0, entry0.getIp_address());
     }
 
     @Test
@@ -49,6 +69,7 @@ class RoutingTableEntryTest {
     @Test
     void getSuccessors() {
         assertEquals(1, entry.getSuccessors());
+        assertEquals(1, entry0.getSuccessors());
     }
 
     @Test
@@ -58,26 +79,15 @@ class RoutingTableEntryTest {
     }
 
     @Test
-    void getShortestFeasibleDistance() {
-        assertEquals(10, entry.getShortestFeasibleDistance());
+    void getFeasibleDistance() {
+        assertEquals(10, entry.getFeasibleDistance());
+        assertEquals(10, entry0.getFeasibleDistance());
     }
 
     @Test
-    void setShortestFeasibleDistance() {
-        entry.setShortestFeasibleDistance(100);
-        assertEquals(100, entry.getShortestFeasibleDistance());
-    }
-
-    @Test
-    void getRoutes() {
-        assertEquals(routeList, entry.getRoutes());
-    }
-
-    @Test
-    void setRoutes() {
-        ArrayList dummyList = new ArrayList();
-        entry.setRoutes(dummyList);
-        assertEquals(dummyList, entry.getRoutes());
+    void setFeasibleDistance() {
+        entry.setFeasibleDistance(100);
+        assertEquals(100, entry.getFeasibleDistance());
     }
 
     @Test
@@ -92,7 +102,6 @@ class RoutingTableEntryTest {
         assertEquals(2, entry.getTicksSinceLastHelloMessage());
         entry.incrementTicks(3);
         assertEquals(5, entry.getTicksSinceLastHelloMessage());
-
     }
 
     @Test
@@ -101,5 +110,59 @@ class RoutingTableEntryTest {
         assertEquals(100, entry.getTicksSinceLastHelloMessage());
         entry.resetTicks();
         assertEquals(0, entry.getTicksSinceLastHelloMessage());
+    }
+
+    @Test
+    void getPaths() {
+        assertEquals(3, entry.getPath().size());
+        assertEquals(connection1, entry.getPath().get(0));
+        assertEquals(connection2, entry.getPath().get(1));
+        assertEquals(connection3, entry.getPath().get(2));
+    }
+
+    @Test
+    void getLowestBandwidth() {
+        connection1.setBandwidth(2);
+        connection2.setBandwidth(3);
+        connection3.setBandwidth(4);
+
+        assertEquals(5000000 ,entry.getLowestBandwidth());
+    }
+
+    @Test
+    void getSumOfDelays() {
+        connection1.setDelay(30);
+        connection2.setDelay(20);
+        connection3.setDelay(10);
+        assertEquals(60, entry.getSumOfDelays());
+    }
+
+    @Test
+    void getWorstLoad() {
+        connection1.setLoad(22);
+        connection2.setLoad(33);
+        connection3.setLoad(11);
+
+        assertEquals(11 ,entry.getWorstLoad());
+    }
+
+    @Test
+    void getWorstReliability() {
+        connection1.setReliability(44);
+        connection2.setReliability(20);
+        connection3.setReliability(63);
+
+        assertEquals(20 ,entry.getWorstReliability());
+    }
+
+    @Test
+    void getPath() {
+        assertEquals(path, entry.getPath());
+    }
+
+    @Test
+    void setPath() {
+        entry.setPath(new ArrayList<>());
+        assertEquals(new ArrayList<>(), entry.getPath());
     }
 }

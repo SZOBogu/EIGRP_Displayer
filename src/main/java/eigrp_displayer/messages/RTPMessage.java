@@ -23,7 +23,6 @@ public abstract class RTPMessage implements Message {
         return receiverAddress;
     }
 
-    //TODO: test
     public void setReceiverAddress(IPAddress receiverAddress) {
         this.receiverAddress = receiverAddress;
     }

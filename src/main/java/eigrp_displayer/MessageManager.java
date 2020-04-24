@@ -26,29 +26,55 @@ public class MessageManager implements ClockDependent {
     }
 
     //unicast
-    public void sendMessage(RTPMessage message) {
+    public void sendMessage(RTPMessage message, int offset) {
         for (DeviceInterface deviceInterface : this.router.getDeviceInterfaces()) {
             Device device = deviceInterface.getConnection().getOtherDevice(this.router);
             IPAddress ip = device.getIp_address();
             if (ip.equals(message.getReceiverAddress()))
-                MessageScheduler.getInstance().scheduleMessage(message);
+                MessageScheduler.getInstance().scheduleMessage(message, offset);
         }
     }
 
-    public void sendMessages(List<QueryMessage> messages){
+    public void sendMessages(List<QueryMessage> messages, int offset){
         for(QueryMessage query : messages){
-            this.sendMessage(query);
+            this.sendMessage(query, offset);
         }
     }
 
 
-    public void sendCyclicMessage(CyclicMessage message){
+    public void sendCyclicMessage(CyclicMessage message, int offset){
         for(DeviceInterface deviceInterface : this.router.getDeviceInterfaces()){
             Device device = deviceInterface.getConnection().getOtherDevice(this.router);
             IPAddress ip = device.getIp_address();
             if(ip.equals(message.getMessage().getReceiverAddress())){
-                MessageScheduler.getInstance().scheduleCyclicMessage(message);
+                MessageScheduler.getInstance().scheduleCyclicMessage(message, offset);
             }
+        }
+    }
+
+    public void sendMessage(RTPMessage message) {
+        this.sendMessage(message, 0);
+    }
+
+    public void sendMessages(List<QueryMessage> messages){
+        this.sendMessages(messages, 0);
+    }
+
+
+    public void sendCyclicMessage(CyclicMessage message){
+        this.sendCyclicMessage(message, 0);
+    }
+
+    public void scheduleHellos(){
+        List<IPAddress> connectedDevicesAddresses = new ArrayList<>();
+
+        for(Device device : this.router.getAllConnectedDevices()){
+            connectedDevicesAddresses.add(device.getIp_address());
+        }
+        for(IPAddress ip : connectedDevicesAddresses){
+            CyclicMessage message = new CyclicMessage(
+                    new HelloMessage(this.router.getIp_address(), ip), 15);
+            this.sendCyclicMessage(message);
         }
     }
 
@@ -150,7 +176,7 @@ public class MessageManager implements ClockDependent {
 
     public void respondUpdate(UpdateMessage updateMessage){
         this.sendMessage(new ACKMessage(this.router.getIp_address(), updateMessage.getSenderAddress()));
-        this.router.getRoutingTable().update(updateMessage.getRoutingTable(),
+        this.router.update(updateMessage.getRoutingTable(),
                 updateMessage.getSenderAddress());
     }
 
@@ -166,7 +192,7 @@ public class MessageManager implements ClockDependent {
                 }
             }
         }
-        this.router.getRoutingTable().update(replyMessage.getRoutingTableEntry(),
+        this.router.update(replyMessage.getRoutingTableEntry(),
                 replyMessage.getSenderAddress());
     }
 
@@ -176,6 +202,7 @@ public class MessageManager implements ClockDependent {
 
     @Override
     public void updateTime() {
+        //TODO: fix for various cases
         this.messagesSentWaitingForReply.replaceAll((k, v) -> v + 1);
         while(this.messagesSentWaitingForReply.containsValue(17)){
             this.messagesSentWaitingForReply.values().removeIf(val -> 17 == val);

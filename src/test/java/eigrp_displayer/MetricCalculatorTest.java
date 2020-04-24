@@ -3,15 +3,17 @@ package eigrp_displayer;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MetricCalculatorTest {
     MetricCalculator calculator = new MetricCalculator();
     Router router1 = new Router("R1");
     Connection connection = new Cable();
 
-    Route route = new Route();
     IPAddress address = Mockito.mock(IPAddress.class);
+    RoutingTableEntry entry = new RoutingTableEntry(address);
 
     Router router2 = Mockito.mock(Router.class);
     Router router3 = Mockito.mock(Router.class);
@@ -21,6 +23,9 @@ class MetricCalculatorTest {
     Connection connection2 = new Cable();
     Connection connection3 = new Cable();
 
+    ArrayList<Connection> path = new ArrayList<>(java.util.Arrays.asList(
+            connection, connection1, connection2, connection3));
+
     @Test
     void calculateMetricRouter(){
         router1.setK1(true);
@@ -29,9 +34,7 @@ class MetricCalculatorTest {
         router1.setK4(true);
         router1.setK5(true);
 
-        route.setTargetIPAddress(address);
-        route.setFeasibleDistance(10);
-        route.setReportedDistance(1);
+        entry.setFeasibleDistance(10);
 
         connection1.linkDevice(router1);
         connection1.linkDevice(router2);
@@ -41,10 +44,6 @@ class MetricCalculatorTest {
 
         connection3.linkDevice(router3);
         connection3.linkDevice(router4);
-
-        route.getPaths().add(connection1);
-        route.getPaths().add(connection2);
-        route.getPaths().add(connection3);
 
         connection1.setBandwidth(2);
         connection2.setBandwidth(3);
@@ -62,15 +61,17 @@ class MetricCalculatorTest {
         connection2.setReliability(20);
         connection3.setReliability(63);
 
-        int bandwidth = route.getLowestBandwidth();
-        int delay = route.getSumOfDelays();
-        int load = route.getWorstLoad();
-        int reliability = route.getWorstReliability();
+        entry.setPath(path);
+
+        int bandwidth = entry.getLowestBandwidth();
+        int delay = entry.getSumOfDelays();
+        int load = entry.getWorstLoad();
+        int reliability = entry.getWorstReliability();
 
         int metric = (bandwidth +
                 (bandwidth / (256 - load))
                 + delay) /(1 + reliability) * 256;
-        assertEquals(metric, calculator.calculateMetric(router1, route));
+        assertEquals(metric, calculator.calculateMetric(router1, entry));
     }
 
 

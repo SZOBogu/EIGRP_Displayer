@@ -2,17 +2,17 @@ package eigrp_displayer;
 
 public class MetricCalculator {
 
-    public int calculateMetric(Router router, Route route){
+    public int calculateMetric(Router router, RoutingTableEntry entry){
         int k1 = router.isK1() ? 1 : 0;
         int k2 = router.isK2() ? 1 : 0;
         int k3 = router.isK3() ? 1 : 0;
         int k4 = router.isK4() ? 1 : 0;
         int k5 = router.isK5() ? 1 : 0;
 
-        int bandwidth = route.getLowestBandwidth();
-        int delay = route.getSumOfDelays();
-        int load = route.getWorstLoad();
-        int reliability = route.getWorstReliability();
+        int bandwidth = entry.getLowestBandwidth();
+        int delay = entry.getSumOfDelays();
+        int load = entry.getWorstLoad();
+        int reliability = entry.getWorstReliability();
 
         return (k1 * bandwidth +
                 ((k2 * bandwidth)/(256-load))

@@ -7,7 +7,7 @@ import java.util.Random;
 public class Router extends Device{
     private RoutingTable routingTable;
     private NeighbourTable neighbourTable;
-    private RoutingTable topologyTable;
+    private TopologyTable topologyTable;
     private boolean k1;
     private boolean k2;
     private boolean k3;
@@ -31,7 +31,7 @@ public class Router extends Device{
         this.messageSendingTimeOffset = new Random().nextInt(60);
         this.routingTable = new RoutingTable();
         this.neighbourTable = new NeighbourTable();
-        this.topologyTable = new RoutingTable();
+        this.topologyTable = new TopologyTable();
     }
 
     public boolean isK1() {
@@ -111,5 +111,18 @@ public class Router extends Device{
         List<Device> devices = this.getAllNeighbours();
         devices.removeIf(device -> device.getIp_address().equals(ipAddress));
         return devices;
+    }
+
+    //TODO: tests
+    public void update(RoutingTableEntry entry, IPAddress senderAddress){
+        this.topologyTable.update(this, entry, senderAddress);
+        RoutingTableEntry bestEntry = this.topologyTable.getBestPath(senderAddress);
+        this.routingTable.update(bestEntry);
+    }
+
+    public void update(RoutingTable table, IPAddress senderAddress){
+        for(RoutingTableEntry entry : table.getEntries()){
+            this.update( entry, senderAddress);
+        }
     }
 }

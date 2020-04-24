@@ -48,6 +48,16 @@ public class NeighbourTable implements ClockDependent{
     }
 
     @Override
+    public void updateTime() {
+        for(NeighbourTableEntry entry : this.entries){
+            entry.setTicksSinceLastHello(entry.getTicksSinceLastHello() + 1);
+            if(entry.getTicksSinceLastHello() > entry.getHold()){
+                this.entries.remove(entry);
+            }
+        }
+    }
+
+    @Override
     public String toString() {
         StringBuilder string = new StringBuilder(description + '\n' +
                 "H\tAddress\tInterface\tHold\tUptime\tSRTT\tRTO\tQ Cnt\tSeq Num\n");
@@ -68,15 +78,5 @@ public class NeighbourTable implements ClockDependent{
     @Override
     public int hashCode() {
         return Objects.hash(getEntries());
-    }
-
-    @Override
-    public void updateTime() {
-        for(NeighbourTableEntry entry : this.entries){
-            entry.setTicksSinceLastHello(entry.getTicksSinceLastHello() + 1);
-            if(entry.getTicksSinceLastHello() > entry.getHold()){
-                this.entries.remove(entry);
-            }
-        }
     }
 }

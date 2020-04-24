@@ -19,11 +19,15 @@ public class RoutingTable {
         this.entries = entries;
     }
 
-    //TODO:implement
-    public void update(RoutingTable receivedRoutingTable, IPAddress sender){}
-
-    //TODO:implement
-    public void update(RoutingTableEntry receivedRoutingTableEntry, IPAddress sender){}
+    public void update(RoutingTableEntry bestPathEntry){
+        for(RoutingTableEntry entry : this.getEntries()){
+            if(entry.getIp_address().equals(bestPathEntry.getIp_address()) &&
+            bestPathEntry.getFeasibleDistance() < entry.getFeasibleDistance()){
+                this.getEntries().remove(entry);
+                this.getEntries().add(bestPathEntry);
+            }
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -36,5 +40,12 @@ public class RoutingTable {
     @Override
     public int hashCode() {
         return Objects.hash(getEntries());
+    }
+
+    @Override
+    public String toString() {
+        return "RoutingTable{" +
+                "entries=" + entries +
+                '}';
     }
 }

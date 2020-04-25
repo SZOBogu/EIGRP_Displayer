@@ -2,7 +2,7 @@ package eigrp_displayer;
 
 public class MetricCalculator {
 
-    public int calculateMetric(Router router, RoutingTableEntry entry){
+    public long calculateMetric(Router router, RoutingTableEntry entry){
         int k1 = router.isK1() ? 1 : 0;
         int k2 = router.isK2() ? 1 : 0;
         int k3 = router.isK3() ? 1 : 0;
@@ -20,12 +20,12 @@ public class MetricCalculator {
                 k5/(k4 + reliability) * 256;
     }
 
-    public int calculateMetric(int bandwidth, int delay){
+    public long calculateMetric(int bandwidth, int delay){
         return (bandwidth + delay) * 256;
     }
 
 
-    public int calculateMetric(int bandwidth, int delay,
+    public long calculateMetric(int bandwidth, int delay,
                                int load, int reliability){
         return (bandwidth +
                 (bandwidth / (256 - load))
@@ -33,7 +33,7 @@ public class MetricCalculator {
     }
 
 
-    public int calculateMetric(Router router, Connection connection){
+    public long calculateMetric(Router router, Connection connection){
         int k1 = router.isK1() ? 1 : 0;
         int k2 = router.isK2() ? 1 : 0;
         int k3 = router.isK3() ? 1 : 0;

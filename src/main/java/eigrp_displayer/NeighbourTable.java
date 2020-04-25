@@ -29,7 +29,7 @@ public class NeighbourTable implements ClockDependent{
 
     public boolean checkIfPresent(IPAddress ip){
         for(NeighbourTableEntry entry : this.entries){
-            if(entry.getNeighbourAddress() == ip)
+            if(entry.getNeighbourAddress().equals(ip))
                 return true;
         }
         return false;

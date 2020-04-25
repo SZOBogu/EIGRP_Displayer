@@ -1,15 +1,11 @@
 package eigrp_displayer;
 
-public class Network implements Addable {
-    private IPAddress networkAddress;
+public class Network extends Device implements Addable {
     private Mask mask;
 
-    public IPAddress getNetworkAddress() {
-        return networkAddress;
-    }
-
-    public void setNetworkAddress(IPAddress networkAddress) {
-        this.networkAddress = networkAddress;
+    public Network(){
+        super(100);
+        super.setName("External Network");
     }
 
     public Mask getMask() {

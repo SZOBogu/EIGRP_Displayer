@@ -7,11 +7,11 @@ import java.util.List;
 public class RoutingTableEntry {
     private String code;
     private IPAddress ip_address;
-    private int successors;
     private long feasibleDistance;
     private long reportedDistance;
     private int ticksSinceLastHelloMessage = 0;
     private List<Connection> path;
+    private List<Connection> successorPath;
 
     //TODO: tests
     public RoutingTableEntry(IPAddress ip_address){
@@ -21,10 +21,10 @@ public class RoutingTableEntry {
     public RoutingTableEntry(String code, IPAddress ip_address){
         this.code = code;
         this.ip_address = ip_address;
-        this.successors = 0;
         this.feasibleDistance = Long.MAX_VALUE;
         this.reportedDistance = Long.MAX_VALUE;
         this.path = new ArrayList<>();
+        this.successorPath = new ArrayList<>();
     }
 
     public String getCode() {
@@ -59,12 +59,20 @@ public class RoutingTableEntry {
         this.reportedDistance = reportedDistance;
     }
 
-    public int getSuccessors() {
-        return successors;
+    public List<Connection> getPath() {
+        return path;
     }
 
-    public void setSuccessors(int successors) {
-        this.successors = successors;
+    public void setPath(List<Connection> path) {
+        this.path = path;
+    }
+
+    public List<Connection> getSuccessorPath() {
+        return successorPath;
+    }
+
+    public void setSuccessorPath(List<Connection> successorPath) {
+        this.successorPath = successorPath;
     }
 
     public int getTicksSinceLastHelloMessage() {
@@ -77,14 +85,6 @@ public class RoutingTableEntry {
 
     public void resetTicks(){
         this.ticksSinceLastHelloMessage = 0;
-    }
-
-    public List<Connection> getPath() {
-        return path;
-    }
-
-    public void setPath(List<Connection> path) {
-        this.path = path;
     }
 
     public int getLowestBandwidth(){

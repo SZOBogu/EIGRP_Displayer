@@ -86,7 +86,7 @@ public class Router extends Device{
         return neighbourTable;
     }
 
-    public RoutingTable getTopologyTable() {
+    public TopologyTable getTopologyTable() {
         return topologyTable;
     }
 
@@ -120,9 +120,9 @@ public class Router extends Device{
         this.routingTable.update(bestEntry);
     }
 
-    public void update(RoutingTable table, IPAddress senderAddress){
+    public void update(TopologyTable table, IPAddress senderAddress){
         for(RoutingTableEntry entry : table.getEntries()){
-            this.update( entry, senderAddress);
+            this.update(entry, senderAddress);
         }
     }
 

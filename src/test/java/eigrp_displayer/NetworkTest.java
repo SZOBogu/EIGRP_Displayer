@@ -23,13 +23,18 @@ class NetworkTest {
     }
 
     @Test
-    void getNetworkAddress() {
-        assertNull(network.getNetworkAddress());
+    void getIPAddress() {
+        assertNull(network.getIp_address());
     }
 
     @Test
-    void setNetworkAddress() {
-        network.setNetworkAddress(ip);
-        assertEquals(ip, network.getNetworkAddress());
+    void setIPAddress() {
+        network.setIp_address(ip);
+        assertEquals(ip, network.getIp_address());
+    }
+
+    @Test
+    void getDeviceInterfaces() {
+        assertEquals(100, network.getDeviceInterfaces().length);
     }
 }

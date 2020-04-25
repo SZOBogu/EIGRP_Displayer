@@ -73,6 +73,17 @@ public abstract class Device implements Addable {
         }
         return null;
     }
+
+    //TODO: test
+    public Connection getConnectionWithDevice(Device device){
+        for(DeviceInterface deviceInterface : this.deviceInterfaces){
+            Connection connection = deviceInterface.getConnection();
+            if(connection == device.getConnectionWithDevice(this)){
+                return connection;
+            }
+        }
+        return null;
+    }
     //TODO: implement, rename, test
     public void updateMetric(Connection connection){
         //przelicz trasy

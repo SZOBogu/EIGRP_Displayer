@@ -47,7 +47,7 @@ class NeighbourTableEntryTest {
             assertTrue(splittedEntry[1].matches("Interface [0-3]\\\\[0-3]"), " " + splittedEntry[1]);
             assertEquals("15", splittedEntry[2]);
 
-            assertTrue(splittedEntry[3].matches("^00:0[0-1]:[0-5][0-9]$"), " " + splittedEntry[3]);
+            assertTrue(splittedEntry[3].matches("^00:0[0-1]:[0-5][0-9]$|00:00"), " " + splittedEntry[3]);
             assertTrue(splittedEntry[4].matches("([0-9]|[1-9][0-9]|[1-2][0-9][0-9])|00:00"), " " + splittedEntry[4]);
             assertTrue(splittedEntry[5].matches("\\d"), " " + splittedEntry[5]);
             assertEquals("0", splittedEntry[6]);

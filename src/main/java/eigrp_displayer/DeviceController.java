@@ -11,6 +11,11 @@ import java.util.List;
 public class DeviceController {
     private Device device;
 
+    public DeviceController() {}
+    public DeviceController(Device device) {
+        this.device = device;
+    }
+
     public Device getDevice() {
         return device;
     }
@@ -22,7 +27,7 @@ public class DeviceController {
     //unicast
     public void sendMessage(RTPMessage message, int offset) {
         for (DeviceInterface deviceInterface : this.device.getDeviceInterfaces()) {
-            Device device = deviceInterface.getConnection().getOtherDevice(this.device);
+            Device device = deviceInterface.getConnection().getOtherDevice(this).getDevice();
             IPAddress ip = device.getIp_address();
             if (ip.equals(message.getReceiverAddress()))
                 MessageScheduler.getInstance().scheduleMessage(message, offset);
@@ -38,7 +43,7 @@ public class DeviceController {
 
     public void sendCyclicMessage(CyclicMessage message, int offset){
         for(DeviceInterface deviceInterface : this.device.getDeviceInterfaces()){
-            Device device = deviceInterface.getConnection().getOtherDevice(this.device);
+            Device device = deviceInterface.getConnection().getOtherDevice(this).getDevice();
             IPAddress ip = device.getIp_address();
             if(ip.equals(message.getMessage().getReceiverAddress())){
                 MessageScheduler.getInstance().scheduleCyclicMessage(message, offset);
@@ -62,8 +67,8 @@ public class DeviceController {
     public void scheduleHellos(){
         List<IPAddress> connectedDevicesAddresses = new ArrayList<>();
 
-        for(Device device : this.device.getAllConnectedDevices()){
-            connectedDevicesAddresses.add(device.getIp_address());
+        for(DeviceController controller : this.getAllConnectedDeviceControllers()){
+            connectedDevicesAddresses.add(controller.getDevice().getIp_address());
         }
         for(IPAddress ip : connectedDevicesAddresses){
             CyclicMessage message = new CyclicMessage(
@@ -74,5 +79,57 @@ public class DeviceController {
 
     public void respond(RTPMessage message){
         System.out.println(""); //do not reply
+    }
+
+
+    public List<DeviceController> getAllConnectedDeviceControllers(){
+        List<DeviceController> deviceControllers = new ArrayList<>();
+        try {
+            for (DeviceInterface deviceInterface : this.device.getDeviceInterfaces()) {
+                DeviceController controller = deviceInterface.getConnection().getOtherDevice(this);
+                if (controller != null) {
+                    deviceControllers.add(controller);
+                }
+            }
+            return deviceControllers;
+        }
+        catch (Exception e) {
+            return deviceControllers;
+        }
+    }
+
+    public DeviceController getConnectedDeviceController(IPAddress ipAddress){
+        for(DeviceInterface deviceInterface : this.device.getDeviceInterfaces()){
+            DeviceController controller = deviceInterface.getConnection().getOtherDevice(this);
+            if(controller.getDevice().getIp_address().equals(ipAddress)){
+                return controller;
+            }
+        }
+        return null;
+    }
+
+    //TODO: test
+    public Connection getConnectionWithDevice(DeviceController controller){
+        for(DeviceInterface deviceInterface : this.device.getDeviceInterfaces()){
+            Connection connection = deviceInterface.getConnection();
+            if(connection == this.getConnectionWithDevice(controller)){
+                return connection;
+            }
+        }
+        return null;
+    }
+    //TODO: implement, rename, test
+    public void updateMetric(Connection connection){
+        //przelicz trasy
+    }
+
+    //TODO: rewrite
+    public void setConnection(Connection connection){
+        for(int i = 0; i < this.device.getDeviceInterfaces().length; i++){
+            if(this.device.getDeviceInterfaces()[i].getConnection() == null) {
+                this.device.getDeviceInterfaces()[i].setConnection(connection);
+                break;
+            }
+        }
     }
 }

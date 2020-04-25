@@ -1,8 +1,5 @@
 package eigrp_displayer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class Device implements Addable {
     private String name;
     private IPAddress ip_address;
@@ -37,55 +34,5 @@ public abstract class Device implements Addable {
 
     public DeviceInterface[] getDeviceInterfaces() {
         return deviceInterfaces;
-    }
-
-    public void setConnection(Connection connection){
-        for(int i = 0; i < this.getDeviceInterfaces().length; i++){
-            if(this.getDeviceInterfaces()[i].getConnection() == null) {
-                this.getDeviceInterfaces()[i].setConnection(connection);
-                break;
-            }
-        }
-    }
-
-    public List<Device> getAllConnectedDevices(){
-        List<Device> devices = new ArrayList<>();
-        try {
-            for (DeviceInterface deviceInterface : this.getDeviceInterfaces()) {
-                Device device = deviceInterface.getConnection().getOtherDevice(this);
-                if (device != null) {
-                    devices.add(device);
-                }
-            }
-            return devices;
-        }
-        catch (Exception e) {
-            return devices;
-        }
-    }
-
-    public Device getConnectedDevice(IPAddress ipAddress){
-        for(DeviceInterface deviceInterface : this.deviceInterfaces){
-            Device device = deviceInterface.getConnection().getOtherDevice(this);
-            if(device.getIp_address().equals(ipAddress)){
-                return device;
-            }
-        }
-        return null;
-    }
-
-    //TODO: test
-    public Connection getConnectionWithDevice(Device device){
-        for(DeviceInterface deviceInterface : this.deviceInterfaces){
-            Connection connection = deviceInterface.getConnection();
-            if(connection == device.getConnectionWithDevice(this)){
-                return connection;
-            }
-        }
-        return null;
-    }
-    //TODO: implement, rename, test
-    public void updateMetric(Connection connection){
-        //przelicz trasy
     }
 }

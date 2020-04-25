@@ -9,15 +9,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MetricCalculatorTest {
     MetricCalculator calculator = new MetricCalculator();
-    Router router1 = new Router("R1");
+    Router router = new Router("R1");
+    RouterController routerController0 = new RouterController(router);
     Connection connection = new Cable();
 
     IPAddress address = Mockito.mock(IPAddress.class);
     RoutingTableEntry entry = new RoutingTableEntry(address);
 
-    Router router2 = Mockito.mock(Router.class);
-    Router router3 = Mockito.mock(Router.class);
-    Router router4 = Mockito.mock(Router.class);
+    RouterController routerController1 = Mockito.mock(RouterController.class);
+    RouterController routerController2 = Mockito.mock(RouterController.class);
+    RouterController routerController3 = Mockito.mock(RouterController.class);
 
     Connection connection1 = new Cable();
     Connection connection2 = new Cable();
@@ -28,22 +29,22 @@ class MetricCalculatorTest {
 
     @Test
     void calculateMetricRouter(){
-        router1.setK1(true);
-        router1.setK2(true);
-        router1.setK3(true);
-        router1.setK4(true);
-        router1.setK5(true);
+        router.setK1(true);
+        router.setK2(true);
+        router.setK3(true);
+        router.setK4(true);
+        router.setK5(true);
 
         entry.setFeasibleDistance(10);
 
-        connection1.linkDevice(router1);
-        connection1.linkDevice(router2);
+        connection1.linkDevice(routerController0);
+        connection1.linkDevice(routerController1);
 
-        connection2.linkDevice(router2);
-        connection2.linkDevice(router3);
+        connection2.linkDevice(routerController1);
+        connection2.linkDevice(routerController2);
 
-        connection3.linkDevice(router3);
-        connection3.linkDevice(router4);
+        connection3.linkDevice(routerController2);
+        connection3.linkDevice(routerController3);
 
         connection1.setBandwidth(2);
         connection2.setBandwidth(3);
@@ -71,31 +72,32 @@ class MetricCalculatorTest {
         int metric = (bandwidth +
                 (bandwidth / (256 - load))
                 + delay) /(1 + reliability) * 256;
-        assertEquals(metric, calculator.calculateMetric(router1, entry));
+        assertEquals(metric, calculator.calculateMetric(router, entry));
     }
 
 
     @Test
     void calculateMetricDefaultCase() {
-        router1.setK1(true);
-        router1.setK2(false);
-        router1.setK3(true);
-        router1.setK4(false);
-        router1.setK5(false);
+        router.setK1(true);
+        router.setK2(false);
+        router.setK3(true);
+        router.setK4(false);
+        router.setK5(false);
         int metric = (connection.getBandwidth() + connection.getDelay()) * 256;
-        assertEquals(metric, calculator.calculateMetric(router1, connection));
+        assertEquals(metric, calculator.calculateMetric(router, connection));
     }
 
     @Test
     void calculateMetricAllRsTrue() {
-        router1.setK1(true);
-        router1.setK2(true);
-        router1.setK3(true);
-        router1.setK4(true);
-        router1.setK5(true);
+        router.setK1(true);
+        router.setK2(true);
+        router.setK3(true);
+        router.setK4(true);
+        router.setK5(true);
 
-        int metric = (connection.getBandwidth() + connection.getBandwidth() / (256 - connection.getLoad()) + connection.getDelay()) /(1 + connection.getReliability()) * 256;
-        assertEquals(metric, calculator.calculateMetric(router1, connection));
+        int metric = (connection.getBandwidth() + connection.getBandwidth() /
+                (256 - connection.getLoad()) + connection.getDelay()) /(1 + connection.getReliability()) * 256;
+        assertEquals(metric, calculator.calculateMetric(router, connection));
     }
 
     @Test

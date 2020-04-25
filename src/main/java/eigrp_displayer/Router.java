@@ -1,7 +1,5 @@
 package eigrp_displayer;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Router extends Device{
@@ -88,67 +86,5 @@ public class Router extends Device{
 
     public TopologyTable getTopologyTable() {
         return topologyTable;
-    }
-
-    public List<Device> getAllNeighbours(){
-        List<Device> devices = new ArrayList<>();
-        List<IPAddress> ips = this.neighbourTable.getAllNeighboursAddresses();
-        try {
-            for (DeviceInterface deviceInterface : this.getDeviceInterfaces()) {
-                Device device = deviceInterface.getConnection().getOtherDevice(this);
-                if (device != null && ips.contains(device.getIp_address())) {
-                    devices.add(device);
-                }
-            }
-            return devices;
-        }
-        catch (Exception e){
-            return devices;
-        }
-    }
-
-    public List<Device> getAllNeighboursButOne(IPAddress ipAddress){
-        List<Device> devices = this.getAllNeighbours();
-        devices.removeIf(device -> device.getIp_address().equals(ipAddress));
-        return devices;
-    }
-
-    //TODO: tests
-    public void update(RoutingTableEntry entry, IPAddress senderAddress){
-        this.topologyTable.update(this, entry, senderAddress);
-        RoutingTableEntry bestEntry = this.topologyTable.getBestPath(senderAddress);
-        this.routingTable.update(bestEntry);
-    }
-
-    public void update(TopologyTable table, IPAddress senderAddress){
-        for(RoutingTableEntry entry : table.getEntries()){
-            this.update(entry, senderAddress);
-        }
-    }
-
-    //TODO: test (have fun dawg)
-    public String printTopologyTable() {
-        StringBuilder string = new StringBuilder(this.topologyTable.getDescription() + "\n\n" + this.topologyTable.getCodes() + "\n\n");
-
-        for(RoutingTableEntry entry : this.topologyTable.getEntries()){
-
-            string.append(entry.getCode()).append(" ").append(entry.getIp_address()).append("/")
-                    .append(MessageScheduler.getInstance().getNetwork().getMask()).append(", ")
-                    .append(this.topologyTable.getSuccessorCount(entry.getIp_address()))
-                    .append(" successors, FD is").append(entry.getFeasibleDistance()).append("\n");
-
-            List<IPAddress> ips = entry.getIPAddressPath(this);
-            for(IPAddress ip : ips){
-                for(DeviceInterface deviceInterface : this.getDeviceInterfaces()) {
-                    if(ip.equals(deviceInterface.getConnection().getOtherDevice(this).getIp_address()))
-
-                        string.append("\tvia ").append(ips).append(" ").append("(")
-                                .append(entry.getFeasibleDistance()).append("\\")
-                                .append(entry.getReportedDistance()).append(" ")
-                                .append(deviceInterface.getName());
-                }
-            }
-        }
-        return string.toString();
     }
 }

@@ -122,34 +122,34 @@ public class RoutingTableEntry {
         return reliabilities.get(0);
     }
 
-    public List<Device> getDevicePath(Router router){
-        List<Device> devicePath = new ArrayList<>();
+    public List<DeviceController> getDevicePath(RouterController routerController){
+        List<DeviceController> devicePath = new ArrayList<>();
         List<IPAddress> usedIPs = new ArrayList<>();
 
-        devicePath.add(router);
-        usedIPs.add(router.getIp_address());
+        devicePath.add(routerController);
+        usedIPs.add(routerController.getDevice().getIp_address());
 
         for(int i = 0 ; i < this.path.size() ; i++){
             Connection connection = this.path.get(i);
-            usedIPs.add(connection.getOtherDevice(devicePath.get(i)).getIp_address());
+            usedIPs.add(connection.getOtherDevice(devicePath.get(i)).getDevice().getIp_address());
             devicePath.add(connection.getOtherDevice(devicePath.get(i)));
         }
 
         return devicePath;
     }
 
-    public List<IPAddress> getIPAddressPath(Router router){
-        List<Device> devices = this.getDevicePath(router);
+    public List<IPAddress> getIPAddressPath(RouterController routerController){
+        List<DeviceController> devices = this.getDevicePath(routerController);
         List<IPAddress> ips = new ArrayList<>();
 
-        for(Device device : devices){
-            ips.add(device.getIp_address());
+        for(DeviceController device : devices){
+            ips.add(device.getDevice().getIp_address());
         }
         return ips;
     }
 
-    public String getStringPath(Router router){
-        List<IPAddress> ips = this.getIPAddressPath(router);
+    public String getStringPath(RouterController routerController){
+        List<IPAddress> ips = this.getIPAddressPath(routerController);
         String string = "";
         for(int i = 1 ; i < ips.size(); i++){
             string += "via " + ips.get(i).toString();

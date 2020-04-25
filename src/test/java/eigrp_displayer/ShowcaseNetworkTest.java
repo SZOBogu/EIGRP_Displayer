@@ -1,5 +1,6 @@
 package eigrp_displayer;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -17,32 +18,42 @@ class ShowcaseNetworkTest {
     ShowcaseNetwork net = new ShowcaseNetwork(ipNet, ipBr, mask);
     Device device0 = new Router("Router");
     Device device1 = new EndDevice();
+    DeviceController controller0 = new DeviceController();
+    DeviceController controller1 = new DeviceController();
+
+    @BeforeEach
+    void init(){
+        controller0.setDevice(device0);
+        controller1.setDevice(device1);
+    }
 
     @Test
     void addDevice() {
-        assertNull(device0.getIp_address());
-        net.addDevice(device0);
-        assertEquals(1, net.getDevices().size());
+        assertNull(controller0.getDevice().getIp_address());
+        net.addDeviceController(controller0);
+        assertEquals(1, net.getDeviceControllers().size());
         assertEquals(ipH0, device0.getIp_address());
     }
 
     @Test
     void removeDevice() {
-        this.addDevice();
-        net.removeDevice(device0);
+        net.addDeviceController(controller0);
+        net.addDeviceController(controller1);
+        assertEquals(2, net.getDeviceControllers().size());
+        net.removeDeviceController(controller0);
+        assertEquals(1, net.getDeviceControllers().size());
         assertNull(device0.getIp_address());
-        assertEquals(0, net.getDevices().size());
     }
 
     @Test
     void linkDevices() {
-        net.linkDevices(device0, device1);
+        net.linkDevices(controller0, controller1);
         assertEquals(device0.getDeviceInterfaces()[0].getConnection(),
                 device1.getDeviceInterfaces()[0].getConnection());
         assertEquals(device1,
-                device0.getDeviceInterfaces()[0].getConnection().getOtherDevice(device0));
+                device0.getDeviceInterfaces()[0].getConnection().getOtherDevice(controller0).getDevice());
         assertEquals(device0,
-                device1.getDeviceInterfaces()[0].getConnection().getOtherDevice(device1));
+                device1.getDeviceInterfaces()[0].getConnection().getOtherDevice(controller1).getDevice());
     }
 
     @Test
@@ -80,24 +91,14 @@ class ShowcaseNetworkTest {
     }
 
     @Test
-    void getDevices() {
-        assertEquals(new ArrayList<>(), net.getDevices());
+    void getDeviceControllers() {
+        assertEquals(new ArrayList<>(), net.getDeviceControllers());
     }
 
     @Test
-    void setDevices() {
-        ArrayList<Device> mockList = Mockito.mock(ArrayList.class);
-        net.setDevices(mockList);
-        assertEquals(mockList, net.getDevices());
-    }
-
-    @Test
-    void getDevice() {
-        net.addDevice(device0);
-        net.addDevice(device1);
-        assertEquals(ipH0, device0.getIp_address());
-        assertEquals(ipH1, device1.getIp_address());
-        assertEquals(device0, net.getDevice(ipH0));
-        assertEquals(device1, net.getDevice(ipH1));
+    void setDeviceControllers() {
+        ArrayList<DeviceController> mockList = Mockito.mock(ArrayList.class);
+        net.setDeviceControllers(mockList);
+        assertEquals(mockList, net.getDeviceControllers());
     }
 }

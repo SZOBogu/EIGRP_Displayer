@@ -8,7 +8,7 @@ public class ShowcaseNetwork {
     private IPAddress broadcastAddress;
     private Mask mask;
     private PoolOfIPAddresses pool;
-    private List<Device> devices;
+    private List<DeviceController> deviceControllers;
 
     public ShowcaseNetwork(IPAddress networkAddress, IPAddress broadcastAddress, Mask mask){
         this.networkAddress = networkAddress;
@@ -16,32 +16,33 @@ public class ShowcaseNetwork {
         this.mask = mask;
         this.pool = new PoolOfIPAddresses();
         this.pool.init(networkAddress, mask);
-        this.devices = new ArrayList<>();
+        this.deviceControllers = new ArrayList<>();
     }
 
-    public void addDevice(Device device){
-        this.devices.add(device);
-        device.setIp_address(this.pool.getIPAddress());
+    public void addDeviceController(DeviceController controller){
+        this.deviceControllers.add(controller);
+        controller.getDevice().setIp_address(this.pool.getIPAddress());
     }
 
-    public void removeDevice(Device device){
-        this.pool.releaseIPAddress(device.getIp_address());
-        device.setIp_address(null);
-        this.devices.remove(device);
+    public void removeDeviceController(DeviceController controller){
+        this.pool.releaseIPAddress(controller.getDevice().getIp_address());
+        controller.getDevice().setIp_address(null);
+        this.deviceControllers.remove(controller);
+
     }
 
-    public void linkDevices(Device device1, Device device2){
+    public void linkDevices(DeviceController deviceController1, DeviceController deviceController2){
         Cable cable = new Cable();
-        device1.setConnection(cable);
-        device2.setConnection(cable);
-        cable.setDevice1(device1);
-        cable.setDevice2(device2);
+        deviceController1.setConnection(cable);
+        deviceController2.setConnection(cable);
+        cable.setDevice1(deviceController1);
+        cable.setDevice2(deviceController2);
     }
 
-    public Device getDevice(IPAddress ipAddress){
-        for(Device device : this.devices){
-            if(device.getIp_address().equals(ipAddress))
-                return device;
+    public DeviceController getDeviceController(IPAddress ipAddress){
+        for(DeviceController controller : this.deviceControllers){
+            if(controller.getDevice().getIp_address().equals(ipAddress))
+                return controller;
         }
         return null;
     }
@@ -70,11 +71,11 @@ public class ShowcaseNetwork {
         this.broadcastAddress = broadcastAddress;
     }
 
-    public List<Device> getDevices() {
-        return devices;
+    public List<DeviceController> getDeviceControllers() {
+        return deviceControllers;
     }
 
-    public void setDevices(List<Device> devices) {
-        this.devices = devices;
+    public void setDeviceControllers(List<DeviceController> deviceControllers) {
+        this.deviceControllers = deviceControllers;
     }
 }

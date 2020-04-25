@@ -16,6 +16,11 @@ public class RouterController extends DeviceController implements ClockDependent
         Clock.addClockDependant(this);
     }
 
+    public RouterController(Router router) {
+        this();
+        this.setDevice(router);
+    }
+
     public Router getDevice(){
         return (Router)super.getDevice();
     }
@@ -27,7 +32,7 @@ public class RouterController extends DeviceController implements ClockDependent
     //unicast
     public void sendMessage(RTPMessage message, int offset) {
         for (DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()) {
-            Device device = deviceInterface.getConnection().getOtherDevice(this.getDevice());
+            Device device = deviceInterface.getConnection().getOtherDevice(this).getDevice();
             IPAddress ip = device.getIp_address();
             if (ip.equals(message.getReceiverAddress()))
                 MessageScheduler.getInstance().scheduleMessage(message, offset);
@@ -40,10 +45,9 @@ public class RouterController extends DeviceController implements ClockDependent
         }
     }
 
-
     public void sendCyclicMessage(CyclicMessage message, int offset){
         for(DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()){
-            Device device = deviceInterface.getConnection().getOtherDevice(this.getDevice());
+            Device device = deviceInterface.getConnection().getOtherDevice(this).getDevice();
             IPAddress ip = device.getIp_address();
             if(ip.equals(message.getMessage().getReceiverAddress())){
                 MessageScheduler.getInstance().scheduleCyclicMessage(message, offset);
@@ -67,8 +71,8 @@ public class RouterController extends DeviceController implements ClockDependent
     public void scheduleHellos(){
         List<IPAddress> connectedDevicesAddresses = new ArrayList<>();
 
-        for(Device device : this.getDevice().getAllConnectedDevices()){
-            connectedDevicesAddresses.add(device.getIp_address());
+        for(DeviceController controller : this.getAllConnectedDeviceControllers()){
+            connectedDevicesAddresses.add(controller.getDevice().getIp_address());
         }
         for(IPAddress ip : connectedDevicesAddresses){
             CyclicMessage message = new CyclicMessage(
@@ -106,30 +110,31 @@ public class RouterController extends DeviceController implements ClockDependent
 
     public void respondHello(HelloMessage helloMessage){
         if(!this.getDevice().getNeighbourTable().checkIfPresent(helloMessage.getSenderAddress())){
-            Device otherDevice = null;
-            for(Device device : this.getDevice().getAllConnectedDevices()){
-                if(device.getIp_address().equals(helloMessage.getSenderAddress())){
-                    otherDevice = device;
+            DeviceController otherDeviceController = null;
+            for(DeviceController controller : this.getAllConnectedDeviceControllers()){
+                if(controller.getDevice().getIp_address().equals(helloMessage.getSenderAddress())){
+                    otherDeviceController = controller;
                     break;
                 }
             }
 
-            if(otherDevice instanceof Router) {
+            if(otherDeviceController.getDevice() instanceof Router) {
                 RComparator comparator = new RComparator();
-                if (comparator.compare((Router) getDevice().getConnectedDevice(helloMessage.getSenderAddress()),
-                        this.getDevice())) {
+                if (comparator.compare(this.getDevice(), (Router)otherDeviceController.getDevice())) {
                     this.getDevice().getNeighbourTable().formNeighbourship(helloMessage.getSenderAddress());
                 }
             }
-            if(otherDevice instanceof EndDevice || otherDevice instanceof Network) {
+            if(otherDeviceController.getDevice() instanceof EndDevice ||
+                    otherDeviceController.getDevice() instanceof Network) {
                 //TODO: look for unexpected cases of not replying/looping/whatever
                 this.getDevice().getNeighbourTable().formNeighbourship(helloMessage.getSenderAddress());
                 //AND make new record in routing and topology tables
-                RoutingTableEntry entry = new RoutingTableEntry(otherDevice.getIp_address());
+                RoutingTableEntry entry = new RoutingTableEntry(
+                        otherDeviceController.getDevice().getIp_address());
                 entry.setCode("C");
 
                 MetricCalculator calculator = new MetricCalculator();
-                Connection connection = this.getDevice().getConnectionWithDevice(otherDevice);
+                Connection connection = this.getConnectionWithDevice(otherDeviceController);
                 long metric = calculator.calculateMetric(this.getDevice(), connection);
                 entry.setFeasibleDistance(metric);
                 entry.setReportedDistance(0);
@@ -140,6 +145,7 @@ public class RouterController extends DeviceController implements ClockDependent
 
                 UpdateMessage updateMessage = new UpdateMessage(this.getDevice().getIp_address(),
                         helloMessage.getSenderAddress(), this.getDevice().getTopologyTable());
+                this.sendMessage(updateMessage);
             }
         }
     }
@@ -175,12 +181,12 @@ public class RouterController extends DeviceController implements ClockDependent
             //ask neighbours for info ?
             if(!isReplySent) {
                 List<QueryMessage> queryMessages = new ArrayList<>();
-                List<Device> allNeighboursButSenderOfQuery =
-                        this.getDevice().getAllNeighboursButOne(queryMessage.getSenderAddress());
-                for (Device device : allNeighboursButSenderOfQuery) {
+                List<DeviceController> allNeighboursButSenderOfQuery =
+                        this.getAllNeighboursButOne(queryMessage.getSenderAddress());
+                for (DeviceController controller : allNeighboursButSenderOfQuery) {
                     QueryMessage qmsg = new QueryMessage(
                             this.getDevice().getIp_address(),
-                            device.getIp_address(),
+                            controller.getDevice().getIp_address(),
                             queryMessage.getQueriedDeviceAddress());
                     queryMessages.add(qmsg);
                 }
@@ -191,7 +197,7 @@ public class RouterController extends DeviceController implements ClockDependent
 
     public void respondUpdate(UpdateMessage updateMessage){
         this.sendMessage(new ACKMessage(this.getDevice().getIp_address(), updateMessage.getSenderAddress()));
-        this.getDevice().update(updateMessage.getTopologyTable(),
+        this.update(updateMessage.getTopologyTable(),
                 updateMessage.getSenderAddress());
     }
 
@@ -207,7 +213,7 @@ public class RouterController extends DeviceController implements ClockDependent
                 }
             }
         }
-        this.getDevice().update(replyMessage.getRoutingTableEntry(),
+        this.update(replyMessage.getRoutingTableEntry(),
                 replyMessage.getSenderAddress());
     }
 
@@ -222,5 +228,113 @@ public class RouterController extends DeviceController implements ClockDependent
         while(this.messagesSentWaitingForReply.containsValue(17)){
             this.messagesSentWaitingForReply.values().removeIf(val -> 17 == val);
         }
+    }
+
+    public List<DeviceController> getAllNeighbours(){
+        List<DeviceController> deviceControllers = new ArrayList<>();
+        List<IPAddress> ips = this.getDevice().getNeighbourTable().getAllNeighboursAddresses();
+        try {
+            for (DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()) {
+                DeviceController controller = deviceInterface.getConnection().getOtherDevice(this);
+                if (controller != null && ips.contains(controller.getDevice().getIp_address())) {
+                    deviceControllers.add(controller);
+                }
+            }
+            return deviceControllers;
+        }
+        catch (Exception e){
+            return deviceControllers;
+        }
+    }
+
+    public List<DeviceController> getAllNeighboursButOne(IPAddress ipAddress){
+        List<DeviceController> deviceControllers = this.getAllNeighbours();
+        deviceControllers.removeIf(controller -> controller.getDevice().getIp_address().equals(ipAddress));
+        return deviceControllers;
+    }
+
+    //TODO: tests
+    public void update(RoutingTableEntry entry, IPAddress senderAddress){
+        this.getDevice().getTopologyTable().update(this, entry, senderAddress);
+        RoutingTableEntry bestEntry = this.getDevice().getTopologyTable().getBestEntryForIP(senderAddress);
+        this.getDevice().getRoutingTable().update(bestEntry);
+    }
+
+    public void update(TopologyTable table, IPAddress senderAddress){
+        for(RoutingTableEntry entry : table.getEntries()){
+            this.update(entry, senderAddress);
+        }
+    }
+
+    //TODO:test
+    public DeviceInterface getInterface(RoutingTableEntry entry){
+        for(DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()){
+            if(deviceInterface.getConnection().getOtherDevice(this).getDevice().getIp_address()
+                    == entry.getIp_address()){
+                return deviceInterface;
+            }
+        }
+        return null;
+    }
+
+    //TODO: test (have fun dawg)
+    public String printTopologyTable() {
+        StringBuilder string = new StringBuilder(this.getDevice().getTopologyTable().getDescription() + "\n\n"
+                + this.getDevice().getTopologyTable().getCodes() + "\n\n");
+
+        for(RoutingTableEntry entry : this.getDevice().getTopologyTable().getEntries()){
+
+            string.append(entry.getCode()).append(" ").append(entry.getIp_address()).append("/")
+                    .append(MessageScheduler.getInstance().getNetwork().getMask()).append(", ")
+                    .append(this.getDevice().getTopologyTable().getSuccessorCount(entry.getIp_address()))
+                    .append(" successors, FD is").append(entry.getFeasibleDistance()).append("\n");
+
+            List<RoutingTableEntry> successorEntries = this.getDevice().getTopologyTable().getSuccessorEntriesForIP(entry.getIp_address());
+            for(RoutingTableEntry rtEntry : successorEntries){
+                for(DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()) {
+                    if(rtEntry.getIp_address().equals(
+                            deviceInterface.getConnection().getOtherDevice(this).getDevice().getIp_address()))
+                        string.append("\tvia ").append(rtEntry.getIp_address()).append(" ").append("(")
+                                .append(entry.getFeasibleDistance()).append("\\")
+                                .append(entry.getReportedDistance()).append(" ")
+                                .append(deviceInterface.getName());
+                }
+            }
+        }
+        return string.toString();
+    }
+
+    public String printRoutingTable(){
+        boolean isVariablySubnetted = false;
+        List<Mask> masks = new ArrayList<>();
+        Mask thisNetworkMask = MessageScheduler.getInstance().getNetwork().getMask();
+        masks.add(thisNetworkMask);
+        int subnetCount = 0;
+
+        for(DeviceController controller : this.getAllConnectedDeviceControllers()){
+            if(controller.getDevice() instanceof Network){
+                isVariablySubnetted = true;
+                masks.add(((Network) controller.getDevice()).getMask());
+                subnetCount++;
+            }
+        }
+        StringBuilder string = new StringBuilder(this.getDevice().getIp_address() + "\\");
+        string.append(thisNetworkMask.getMask()).append(" ");
+
+        if(isVariablySubnetted)
+            string.append("is ");
+        else
+            string.append("isn't ");
+        string.append("variably subnetted, ").append(subnetCount)
+                .append(" subnets, ").append(masks.size()).append(" masks\n");
+
+        for(RoutingTableEntry entry : this.getDevice().getRoutingTable().getEntries()){
+            string.append(entry.getCode()).append("\t")
+                    .append(entry.getIp_address()).append("[").append(entry.getReportedDistance())
+                    .append("\\").append(entry.getFeasibleDistance()).append("] via ")
+                    .append(entry.getPath().get(0).getOtherDevice(this).getDevice().getIp_address())
+                    .append(", ").append(this.getInterface(entry).getName()).append("\n");
+        }
+        return string.toString();
     }
 }

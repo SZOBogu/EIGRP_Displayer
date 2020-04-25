@@ -2,8 +2,8 @@ package eigrp_displayer;
 
 public abstract class Connection implements Addable {
     private String name;
-    private Device device1;
-    private Device device2;
+    private DeviceController device1;
+    private DeviceController device2;
     private int bandwidth;
     private int delay;
     private int load;
@@ -17,25 +17,25 @@ public abstract class Connection implements Addable {
         this.name = name;
     }
 
-    public Device getDevice1() {
+    public DeviceController getDevice1() {
         return device1;
     }
 
-    public void setDevice1(Device device1) {
+    public void setDevice1(DeviceController device1) {
         this.device1 = device1;
 //        this.callForUpdate();
     }
 
-    public Device getDevice2() {
+    public DeviceController getDevice2() {
         return device2;
     }
 
-    public void setDevice2(Device device2) {
+    public void setDevice2(DeviceController device2) {
         this.device2 = device2;
 //        this.callForUpdate();
     }
 
-    public void linkDevice(Device device){
+    public void linkDevice(DeviceController device){
         if(this.device1 == null){
             this.device1 = device;
 //            this.callForUpdate();
@@ -46,7 +46,7 @@ public abstract class Connection implements Addable {
         }
     }
 
-    public Device getOtherDevice(Device device){
+    public DeviceController getOtherDevice(DeviceController device){
         if(this.device1 == device){
             return this.device2;
         }

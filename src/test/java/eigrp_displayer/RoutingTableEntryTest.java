@@ -19,10 +19,10 @@ class RoutingTableEntryTest {
     Connection connection2 = new Cable();
     Connection connection3 = new Cable();
 
-    Router router1 = Mockito.mock(Router.class);
-    Router router2 = Mockito.mock(Router.class);
-    Router router3 = Mockito.mock(Router.class);
-    Router router4 = Mockito.mock(Router.class);
+    RouterController routerController0 = Mockito.mock(RouterController.class);
+    RouterController routerController1 = Mockito.mock(RouterController.class);
+    RouterController routerController2 = Mockito.mock(RouterController.class);
+    RouterController routerController3 = Mockito.mock(RouterController.class);
 
     ArrayList<Connection> path = new ArrayList<>(Arrays.asList(connection1, connection2, connection3));
 
@@ -30,14 +30,14 @@ class RoutingTableEntryTest {
     void init(){
         entry.setPath(path);
 
-        connection1.linkDevice(router1);
-        connection1.linkDevice(router2);
+        connection1.linkDevice(routerController0);
+        connection1.linkDevice(routerController1);
 
-        connection2.linkDevice(router2);
-        connection2.linkDevice(router3);
+        connection2.linkDevice(routerController1);
+        connection2.linkDevice(routerController2);
 
-        connection3.linkDevice(router3);
-        connection3.linkDevice(router4);
+        connection3.linkDevice(routerController2);
+        connection3.linkDevice(routerController3);
     }
 
     @Test
@@ -62,18 +62,6 @@ class RoutingTableEntryTest {
     void setIp_address() {
         entry.setIp_address(ip_address0);
         assertEquals(ip_address0, entry.getIp_address());
-    }
-
-    @Test
-    void getSuccessors() {
-        assertEquals(0, entry.getSuccessors());
-        assertEquals(0, entry0.getSuccessors());
-    }
-
-    @Test
-    void setSuccessors() {
-        entry.setSuccessors(1);
-        assertEquals(1, entry.getSuccessors());
     }
 
     @Test

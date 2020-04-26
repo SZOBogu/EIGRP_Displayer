@@ -19,13 +19,26 @@ public class RoutingTable {
         this.entries = entries;
     }
 
+    public RoutingTableEntry getEntry(IPAddress ip) {
+        for (RoutingTableEntry entry : this.entries) {
+            if (entry.getIp_address().equals(ip))
+                return entry;
+        }
+        return null;
+    }
+
     public void update(RoutingTableEntry bestPathEntry){
-        for(RoutingTableEntry entry : this.getEntries()){
-            if(entry.getIp_address().equals(bestPathEntry.getIp_address()) &&
-            bestPathEntry.getFeasibleDistance() < entry.getFeasibleDistance()){
-                this.getEntries().remove(entry);
-                this.getEntries().add(bestPathEntry);
+        try {
+            for (RoutingTableEntry entry : this.getEntries()) {
+                if (entry.getIp_address().equals(bestPathEntry.getIp_address()) &&
+                        bestPathEntry.getFeasibleDistance() < entry.getFeasibleDistance()) {
+                    this.getEntries().remove(entry);
+                    this.getEntries().add(bestPathEntry);
+                }
             }
+        }
+        catch(Exception e){
+            System.out.println("");
         }
     }
 
@@ -40,12 +53,5 @@ public class RoutingTable {
     @Override
     public int hashCode() {
         return Objects.hash(getEntries());
-    }
-
-    @Override
-    public String toString() {
-        return "RoutingTable{" +
-                "entries=" + entries +
-                '}';
     }
 }

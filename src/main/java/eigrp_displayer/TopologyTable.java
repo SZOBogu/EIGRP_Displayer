@@ -29,7 +29,6 @@ public class TopologyTable extends RoutingTable{
         this.codes = codes;
     }
 
-    //TODO:test
     public List<RoutingTableEntry> getAllEntriesForIP(IPAddress targetAddress){
         List<RoutingTableEntry> suitableEntries = new ArrayList<>();
 
@@ -41,7 +40,6 @@ public class TopologyTable extends RoutingTable{
         return suitableEntries;
     }
 
-    //TODO: test
     public RoutingTableEntry getBestEntryForIP(IPAddress targetAddress) {
         long lowestDistance = Long.MAX_VALUE;
         RoutingTableEntry bestEntry = null;
@@ -56,7 +54,6 @@ public class TopologyTable extends RoutingTable{
         return bestEntry;
     }
 
-    //TODO: test
     public List<RoutingTableEntry> getSuccessorEntriesForIP(IPAddress targetAddress) {
         List<RoutingTableEntry> suitableEntries = this.getAllEntriesForIP(targetAddress);
         RoutingTableEntry bestEntry = this.getBestEntryForIP(targetAddress);
@@ -65,7 +62,6 @@ public class TopologyTable extends RoutingTable{
         return suitableEntries;
     }
 
-    //TODO: test
     public int getSuccessorCount(IPAddress ipAddress){
         int count = 0;
         for(RoutingTableEntry entry : this.getEntries()){

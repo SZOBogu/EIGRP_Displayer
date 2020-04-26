@@ -9,7 +9,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TopologyTableTest {
-    TopologyTable topologyTable = new TopologyTable();
+    Router router = new Router("R");
+    RouterController controller = new RouterController(router);
+    TopologyTable topologyTable = controller.getDevice().getTopologyTable();
     IPAddress ip0 = Mockito.mock(IPAddress.class);
     IPAddress ip1 = Mockito.mock(IPAddress.class);
     IPAddress ip2 = Mockito.mock(IPAddress.class);
@@ -52,10 +54,26 @@ class TopologyTableTest {
 
     @Test
     void updateTable() {
+        //update(RouterController routerController, RoutingTableEntry receivedRoutingTableEntry, IPAddress sender)
+        TopologyTable receivedTopologyTable = new TopologyTable();
     }
 
     @Test
     void updateEntry() {
+       //update(RouterController controller, RoutingTable receivedRoutingTable, IPAddress sender){
+        init();
+        entry1.setFeasibleDistance(1000);
+        RoutingTableEntry betterEntry = new RoutingTableEntry(ip1);
+        RoutingTableEntry worseEntry = new RoutingTableEntry(ip1);
+        betterEntry.setFeasibleDistance(100);
+        worseEntry.setFeasibleDistance(10000);
+
+        topologyTable.update(betterEntry);
+        topologyTable.update(worseEntry);
+
+        assertEquals(betterEntry, topologyTable.getBestEntryForIP(ip1));
+        topologyTable.getEntries().remove(betterEntry);
+        assertEquals(entry1, topologyTable.getBestEntryForIP(ip1));
     }
 
     @Test
@@ -78,9 +96,15 @@ class TopologyTableTest {
 
     @Test
     void getSuccessorEntriesForIP() {
+        entry0.setFeasibleDistance(102942);
+        entry3.setFeasibleDistance(1029422);
+        assertEquals(1, topologyTable.getSuccessorEntriesForIP(ip0).size());
+        assertEquals(entry3, topologyTable.getSuccessorEntriesForIP(ip0).get(0));
     }
 
     @Test
     void getSuccessorCount() {
+        assertEquals(1, topologyTable.getSuccessorCount(ip0));
+        assertEquals(0, topologyTable.getSuccessorCount(ip1));
     }
 }

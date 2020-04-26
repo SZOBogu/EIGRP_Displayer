@@ -13,7 +13,6 @@ public class RoutingTableEntry {
     private List<Connection> path;
     private List<Connection> successorPath;
 
-    //TODO: tests
     public RoutingTableEntry(IPAddress ip_address){
         this("P", ip_address);
     }

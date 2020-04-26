@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MessageScheduler implements ClockDependent{
     private List<List<RTPMessage>> schedule = new ArrayList<>();
-    private ShowcaseNetwork network;
+    private Network network;
 
     private static class MessageSchedulerSingleton{
         private static final MessageScheduler scheduler = new MessageScheduler();
@@ -46,11 +46,11 @@ public class MessageScheduler implements ClockDependent{
         return schedule;
     }
 
-    public ShowcaseNetwork getNetwork() {
+    public Network getNetwork() {
         return network;
     }
 
-    public void setNetwork(ShowcaseNetwork network){
+    public void setNetwork(Network network){
         this.network = network;
     }
 

@@ -74,7 +74,7 @@ public class RouterController extends DeviceController implements ClockDependent
                 }
             }
             if(otherDeviceController.getDevice() instanceof EndDevice ||
-                    otherDeviceController.getDevice() instanceof Network) {
+                    otherDeviceController.getDevice() instanceof ExternalNetwork) {
                 //TODO: look for unexpected cases of not replying/looping/whatever
                 this.getDevice().getNeighbourTable().formNeighbourship(helloMessage.getSenderAddress());
                 //AND make new record in routing and topology tables
@@ -267,9 +267,9 @@ public class RouterController extends DeviceController implements ClockDependent
         int subnetCount = 0;
 
         for(DeviceController controller : this.getAllConnectedDeviceControllers()){
-            if(controller.getDevice() instanceof Network){
+            if(controller.getDevice() instanceof ExternalNetwork){
                 isVariablySubnetted = true;
-                masks.add(((Network) controller.getDevice()).getMask());
+                masks.add(((ExternalNetwork) controller.getDevice()).getMask());
                 subnetCount++;
             }
         }

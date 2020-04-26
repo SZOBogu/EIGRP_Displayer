@@ -138,7 +138,7 @@ public class TopologyTable extends RoutingTable{
             newEntry.setFeasibleDistance(receivedRoutingTableEntry.getFeasibleDistance()
                     + metricForConnectionWithSender);
 
-            //TODO: make method out of it
+            //TODO: make builder out of it
             RoutingTableEntry updatedRoutingTableEntry =
                     new RoutingTableEntry(receivedRoutingTableEntry.getIp_address());
 

@@ -1,17 +1,22 @@
 package eigrp_displayer;
 
-import eigrp_displayer.messages.CyclicMessage;
-import eigrp_displayer.messages.HelloMessage;
-import eigrp_displayer.messages.QueryMessage;
-import eigrp_displayer.messages.RTPMessage;
+import eigrp_displayer.messages.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DeviceController {
     private Device device;
+    private List<RTPMessage> messageSchedule;
 
-    public DeviceController() {}
+    public DeviceController() {
+        this.messageSchedule = new ArrayList<>();
+        for(int i = 0; i <10000; i++){
+            messageSchedule.add(new NullMessage());
+        }
+        MessageScheduler.getInstance().getSchedule().add(this.messageSchedule);
+    }
+
     public DeviceController(Device device) {
         this.device = device;
     }
@@ -24,13 +29,24 @@ public class DeviceController {
         this.device = device;
     }
 
-    //unicast
+    public List<RTPMessage> getMessageSchedule() {
+        return messageSchedule;
+    }
+
+    public void setMessageSchedule(List<RTPMessage> messageSchedule) {
+        this.messageSchedule = messageSchedule;
+    }
+
     public void sendMessage(RTPMessage message, int offset) {
-        for (DeviceInterface deviceInterface : this.device.getDeviceInterfaces()) {
+        for (DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()) {
             Device device = deviceInterface.getConnection().getOtherDevice(this).getDevice();
             IPAddress ip = device.getIp_address();
-            if (ip.equals(message.getReceiverAddress()))
-                MessageScheduler.getInstance().scheduleMessage(message, offset);
+            if (ip.equals(message.getReceiverAddress()) &&
+                    Clock.getTime() + offset < this.getMessageSchedule().size()) {
+
+                this.getMessageSchedule().remove(Clock.getTime() + offset);
+                this.getMessageSchedule().add(Clock.getTime() + offset, message);
+            }
         }
     }
 
@@ -40,13 +56,17 @@ public class DeviceController {
         }
     }
 
-
     public void sendCyclicMessage(CyclicMessage message, int offset){
-        for(DeviceInterface deviceInterface : this.device.getDeviceInterfaces()){
+        for(DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()){
             Device device = deviceInterface.getConnection().getOtherDevice(this).getDevice();
             IPAddress ip = device.getIp_address();
             if(ip.equals(message.getMessage().getReceiverAddress())){
-                MessageScheduler.getInstance().scheduleCyclicMessage(message, offset);
+                for(int i = Clock.getTime() ; i < this.getMessageSchedule().size(); i++){
+                    if(i + offset % message.getInterval() == 0) {
+                        this.getMessageSchedule().remove(Clock.getTime());
+                        this.getMessageSchedule().add(Clock.getTime(), message.getMessage());
+                    }
+                }
             }
         }
     }
@@ -72,10 +92,11 @@ public class DeviceController {
         }
         for(IPAddress ip : connectedDevicesAddresses){
             CyclicMessage message = new CyclicMessage(
-                    new HelloMessage(this.device.getIp_address(), ip), 15);
+                    new HelloMessage(this.getDevice().getIp_address(), ip), 15);
             this.sendCyclicMessage(message);
         }
     }
+
 
     public void respond(RTPMessage message){
         System.out.println(""); //do not reply
@@ -109,10 +130,10 @@ public class DeviceController {
     }
 
     //TODO: test
-    public Connection getConnectionWithDevice(DeviceController controller){
+    public Connection getConnectionWithDeviceController(DeviceController controller){
         for(DeviceInterface deviceInterface : this.device.getDeviceInterfaces()){
             Connection connection = deviceInterface.getConnection();
-            if(connection == this.getConnectionWithDevice(controller)){
+            if(connection.getDevice1() == controller || connection.getDevice2() == controller){
                 return connection;
             }
         }
@@ -123,7 +144,6 @@ public class DeviceController {
         //przelicz trasy
     }
 
-    //TODO: rewrite
     public void setConnection(Connection connection){
         for(int i = 0; i < this.device.getDeviceInterfaces().length; i++){
             if(this.device.getDeviceInterfaces()[i].getConnection() == null) {

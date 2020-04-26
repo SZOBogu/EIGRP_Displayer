@@ -30,7 +30,28 @@ class TopologyTableTest {
         assertEquals("D - dummy", topologyTable.getCodes());
     }
 
+
     @Test
-    void getBestPath() {
+    void updateTable() {
+    }
+
+    @Test
+    void updateEntry() {
+    }
+
+    @Test
+    void getAllEntriesForIP() {
+    }
+
+    @Test
+    void getBestEntryForIP() {
+    }
+
+    @Test
+    void getSuccessorEntriesForIP() {
+    }
+
+    @Test
+    void getSuccessorCount() {
     }
 }

@@ -5,6 +5,7 @@ import eigrp_displayer.messages.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RouterController extends DeviceController implements ClockDependent {
     private HashMap<RTPMessage, Integer> messagesSentWaitingForReply;
@@ -27,58 +28,6 @@ public class RouterController extends DeviceController implements ClockDependent
 
     public void setDevice(Router router){
         super.setDevice(router);
-    }
-
-    //unicast
-    public void sendMessage(RTPMessage message, int offset) {
-        for (DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()) {
-            Device device = deviceInterface.getConnection().getOtherDevice(this).getDevice();
-            IPAddress ip = device.getIp_address();
-            if (ip.equals(message.getReceiverAddress()))
-                MessageScheduler.getInstance().scheduleMessage(message, offset);
-        }
-    }
-
-    public void sendMessages(List<QueryMessage> messages, int offset){
-        for(QueryMessage query : messages){
-            this.sendMessage(query, offset);
-        }
-    }
-
-    public void sendCyclicMessage(CyclicMessage message, int offset){
-        for(DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()){
-            Device device = deviceInterface.getConnection().getOtherDevice(this).getDevice();
-            IPAddress ip = device.getIp_address();
-            if(ip.equals(message.getMessage().getReceiverAddress())){
-                MessageScheduler.getInstance().scheduleCyclicMessage(message, offset);
-            }
-        }
-    }
-
-    public void sendMessage(RTPMessage message) {
-        this.sendMessage(message, 0);
-    }
-
-    public void sendMessages(List<QueryMessage> messages){
-        this.sendMessages(messages, 0);
-    }
-
-
-    public void sendCyclicMessage(CyclicMessage message){
-        this.sendCyclicMessage(message, 0);
-    }
-
-    public void scheduleHellos(){
-        List<IPAddress> connectedDevicesAddresses = new ArrayList<>();
-
-        for(DeviceController controller : this.getAllConnectedDeviceControllers()){
-            connectedDevicesAddresses.add(controller.getDevice().getIp_address());
-        }
-        for(IPAddress ip : connectedDevicesAddresses){
-            CyclicMessage message = new CyclicMessage(
-                    new HelloMessage(this.getDevice().getIp_address(), ip), 15);
-            this.sendCyclicMessage(message);
-        }
     }
 
     public void respond(RTPMessage message){
@@ -134,7 +83,7 @@ public class RouterController extends DeviceController implements ClockDependent
                 entry.setCode("C");
 
                 MetricCalculator calculator = new MetricCalculator();
-                Connection connection = this.getConnectionWithDevice(otherDeviceController);
+                Connection connection = this.getConnectionWithDeviceController(otherDeviceController);
                 long metric = calculator.calculateMetric(this.getDevice(), connection);
                 entry.setFeasibleDistance(metric);
                 entry.setReportedDistance(0);
@@ -182,7 +131,7 @@ public class RouterController extends DeviceController implements ClockDependent
             if(!isReplySent) {
                 List<QueryMessage> queryMessages = new ArrayList<>();
                 List<DeviceController> allNeighboursButSenderOfQuery =
-                        this.getAllNeighboursButOne(queryMessage.getSenderAddress());
+                        this.getAllNeighbourControllersButOne(queryMessage.getSenderAddress());
                 for (DeviceController controller : allNeighboursButSenderOfQuery) {
                     QueryMessage qmsg = new QueryMessage(
                             this.getDevice().getIp_address(),
@@ -223,32 +172,38 @@ public class RouterController extends DeviceController implements ClockDependent
 
     @Override
     public void updateTime() {
-        //TODO: fix for various cases
         this.messagesSentWaitingForReply.replaceAll((k, v) -> v + 1);
+        this.messagesToTryToSendAgain.replaceAll((k, v) -> v + 1);
         while(this.messagesSentWaitingForReply.containsValue(17)){
             this.messagesSentWaitingForReply.values().removeIf(val -> 17 == val);
         }
+        for(Map.Entry<RTPMessage, Integer> record : this.messagesToTryToSendAgain.entrySet()) {
+            if(record.getValue() >= 15){
+                record.setValue(0);
+                this.sendMessage(record.getKey());
+            }
+        }
     }
 
-    public List<DeviceController> getAllNeighbours(){
-        List<DeviceController> deviceControllers = new ArrayList<>();
+    public List<DeviceController> getAllNeighbourControllers(){
+        List<DeviceController> deviceControllers = this.getAllConnectedDeviceControllers();
         List<IPAddress> ips = this.getDevice().getNeighbourTable().getAllNeighboursAddresses();
+        List<DeviceController> neighbourControllers = new ArrayList<>();
         try {
-            for (DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()) {
-                DeviceController controller = deviceInterface.getConnection().getOtherDevice(this);
-                if (controller != null && ips.contains(controller.getDevice().getIp_address())) {
-                    deviceControllers.add(controller);
+            for(DeviceController controller : deviceControllers){
+                if(ips.contains(controller.getDevice().getIp_address())){
+                    neighbourControllers.add(controller);
                 }
             }
-            return deviceControllers;
+            return neighbourControllers;
         }
         catch (Exception e){
-            return deviceControllers;
+            return neighbourControllers;
         }
     }
 
-    public List<DeviceController> getAllNeighboursButOne(IPAddress ipAddress){
-        List<DeviceController> deviceControllers = this.getAllNeighbours();
+    public List<DeviceController> getAllNeighbourControllersButOne(IPAddress ipAddress){
+        List<DeviceController> deviceControllers = this.getAllNeighbourControllers();
         deviceControllers.removeIf(controller -> controller.getDevice().getIp_address().equals(ipAddress));
         return deviceControllers;
     }

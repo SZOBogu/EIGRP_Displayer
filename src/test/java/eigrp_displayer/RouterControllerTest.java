@@ -1,7 +1,10 @@
 package eigrp_displayer;
 
+import eigrp_displayer.messages.RTPMessage;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -10,7 +13,6 @@ class RouterControllerTest {
     Router router = new Router("R");
     Router router0 = new Router("R0");
     Router router1 = new Router("R1");
-    Router router2 = new Router("R2");
     IPAddress ip = Mockito.mock(IPAddress.class);
     IPAddress ip0 = Mockito.mock(IPAddress.class);
     IPAddress ip1 = Mockito.mock(IPAddress.class);
@@ -18,7 +20,6 @@ class RouterControllerTest {
     RouterController controller = new RouterController(router);
     DeviceController deviceController0 = new DeviceController(router0);
     DeviceController deviceController1 = new DeviceController(router1);
-    DeviceController deviceController2 = new DeviceController(router2);
 
     Connection connection0 = new Cable();
     Connection connection1 = new Cable();
@@ -113,7 +114,10 @@ class RouterControllerTest {
     }
 
     @Test
-    void getConnectionWithDevice() {
+    void getConnectionWithDeviceController() {
+        init();
+        assertEquals(connection0, controller.getConnectionWithDeviceController(
+                deviceController0));
     }
 
     @Test
@@ -142,6 +146,7 @@ class RouterControllerTest {
 
     @Test
     void getMessagesSentWaitingForReply() {
+        assertEquals(new HashMap<RTPMessage, Integer>(), controller.getMessagesSentWaitingForReply());
     }
 
     @Test
@@ -169,32 +174,31 @@ class RouterControllerTest {
     }
 
     @Test
-    void getAllNeighbours() {
+    void getAllNeighbourControllers() {
         init();
         controller.getDevice().getNeighbourTable().formNeighbourship(ip1);
-        assertEquals(1, controller.getAllNeighbours().size());
-        assertEquals(deviceController1, controller.getAllNeighbours().get(0));
-//TODO: look into it
-//        controller.getDevice().getNeighbourTable().formNeighbourship(ip0);
-//        assertEquals(2, controller.getAllNeighbours().size());
-//        assertEquals(deviceController0, controller.getAllNeighbours().get(1));
+        assertEquals(1, controller.getAllNeighbourControllers().size());
+        assertEquals(deviceController1, controller.getAllNeighbourControllers().get(0));
+        controller.getDevice().getNeighbourTable().formNeighbourship(ip0);
+        assertEquals(2, controller.getAllNeighbourControllers().size());
+        assertEquals(deviceController1, controller.getAllNeighbourControllers().get(1));
     }
 
     @Test
-    void getAllNeighboursButOne() {
+    void getAllNeighbourControllersButOne() {
         init();
         IPAddress ip2 = Mockito.mock(IPAddress.class);
         router.getNeighbourTable().formNeighbourship(ip0);
         router.getNeighbourTable().formNeighbourship(ip1);
 
-        assertEquals(1, controller.getAllNeighboursButOne(ip0).size());
-        assertEquals(deviceController1, controller.getAllNeighboursButOne(ip0).get(0));
+        assertEquals(1, controller.getAllNeighbourControllersButOne(ip0).size());
+        assertEquals(deviceController1, controller.getAllNeighbourControllersButOne(ip0).get(0));
 
-        assertEquals(1, controller.getAllNeighboursButOne(ip1).size());
-        assertEquals(deviceController0, controller.getAllNeighboursButOne(ip1).get(0));
+        assertEquals(1, controller.getAllNeighbourControllersButOne(ip1).size());
+        assertEquals(deviceController0, controller.getAllNeighbourControllersButOne(ip1).get(0));
 
-        assertEquals(2, controller.getAllNeighboursButOne(ip2).size());
-        assertEquals(deviceController0, controller.getAllNeighboursButOne(ip2).get(0));
-        assertEquals(deviceController1, controller.getAllNeighboursButOne(ip2).get(1));
+        assertEquals(2, controller.getAllNeighbourControllersButOne(ip2).size());
+        assertEquals(deviceController0, controller.getAllNeighbourControllersButOne(ip2).get(0));
+        assertEquals(deviceController1, controller.getAllNeighbourControllersButOne(ip2).get(1));
     }
 }

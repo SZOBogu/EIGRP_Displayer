@@ -46,8 +46,8 @@ class NetworkTest {
     }
 
     @Test
-    void linkDevices() {
-        net.linkDevices(controller0, controller1);
+    void connectDevices() {
+        net.connectDevices(controller0, controller1);
         assertEquals(device0.getDeviceInterfaces()[0].getConnection(),
                 device1.getDeviceInterfaces()[0].getConnection());
         assertEquals(device1,

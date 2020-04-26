@@ -121,4 +121,14 @@ class CableTest {
         assertNull(cable.getOtherDevice(device));
         assertNull(cable.getOtherDevice(device0));
     }
+
+    @Test
+    void linkDevices() {
+        DeviceController device1 = Mockito.mock(DeviceController.class);
+        DeviceController device2 = Mockito.mock(DeviceController.class);
+
+        cable.linkDevices(device1, device2);
+        assertEquals(device1, cable.getDevice1());
+        assertEquals(device2, cable.getDevice2());
+    }
 }

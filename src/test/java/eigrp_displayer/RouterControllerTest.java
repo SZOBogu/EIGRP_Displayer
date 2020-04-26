@@ -7,7 +7,6 @@ import org.mockito.Mockito;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 class RouterControllerTest {
     Router router = new Router("R");
@@ -60,32 +59,6 @@ class RouterControllerTest {
     }
 
     @Test
-    void setConnection(){
-        controller.setConnection(connection0);
-        assertEquals(connection0, controller.getDevice().getDeviceInterfaces()[0].getConnection());
-        assertNull(controller.getDevice().getDeviceInterfaces()[1].getConnection());
-        assertNull(controller.getDevice().getDeviceInterfaces()[2].getConnection());
-        assertNull(controller.getDevice().getDeviceInterfaces()[3].getConnection());
-
-        controller.setConnection(connection1);
-        assertEquals(connection0, controller.getDevice().getDeviceInterfaces()[0].getConnection());
-        assertEquals(connection1, controller.getDevice().getDeviceInterfaces()[1].getConnection());
-        assertNull(controller.getDevice().getDeviceInterfaces()[2].getConnection());
-        assertNull(controller.getDevice().getDeviceInterfaces()[3].getConnection());
-    }
-
-    @Test
-    void getDevice() {
-        assertEquals(router, controller.getDevice());
-    }
-
-    @Test
-    void setDevice() {
-        controller.setDevice(router0);
-        assertEquals(router0, controller.getDevice());
-    }
-
-    @Test
     void sendMessages() {
     }
 
@@ -95,29 +68,6 @@ class RouterControllerTest {
 
     @Test
     void scheduleHellos() {
-    }
-
-
-    @Test
-    void getAllConnectedDeviceControllers() {
-        init();
-        assertEquals(2, controller.getAllConnectedDeviceControllers().size());
-        assertEquals(deviceController0, controller.getAllConnectedDeviceControllers().get(0));
-        assertEquals(deviceController1, controller.getAllConnectedDeviceControllers().get(1));
-    }
-
-    @Test
-    void getConnectedDeviceController() {
-        init();
-        assertEquals(deviceController0, controller.getConnectedDeviceController(ip0));
-        assertEquals(deviceController1, controller.getConnectedDeviceController(ip1));
-    }
-
-    @Test
-    void getConnectionWithDeviceController() {
-        init();
-        assertEquals(connection0, controller.getConnectionWithDeviceController(
-                deviceController0));
     }
 
     @Test

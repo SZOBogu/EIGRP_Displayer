@@ -10,7 +10,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TopologyTableTest {
     Router router = new Router("R");
+    EndDevice device = new EndDevice();
     RouterController controller = new RouterController(router);
+    DeviceController deviceController = new DeviceController(device);
     TopologyTable topologyTable = controller.getDevice().getTopologyTable();
     IPAddress ip0 = Mockito.mock(IPAddress.class);
     IPAddress ip1 = Mockito.mock(IPAddress.class);
@@ -19,6 +21,9 @@ class TopologyTableTest {
     RoutingTableEntry entry1 = new RoutingTableEntry(ip1);
     RoutingTableEntry entry2 = new RoutingTableEntry(ip2);
     RoutingTableEntry entry3 = new RoutingTableEntry(ip0);
+    Connection connection0 = new Cable();
+    Connection connection1 = new Cable();
+    Connection connection2 = new Cable();
 
     @BeforeEach
     void init(){
@@ -26,6 +31,10 @@ class TopologyTableTest {
         topologyTable.getEntries().add(entry1);
         topologyTable.getEntries().add(entry2);
         topologyTable.getEntries().add(entry3);
+
+        device.setIp_address(ip1);
+        connection0.linkDevices(controller, deviceController);
+        controller.setConnection(connection0);
     }
 
     @Test
@@ -55,7 +64,14 @@ class TopologyTableTest {
     @Test
     void updateTable() {
         //update(RouterController routerController, RoutingTableEntry receivedRoutingTableEntry, IPAddress sender)
+        init();
         TopologyTable receivedTopologyTable = new TopologyTable();
+        RoutingTableEntry betterEntry = new RoutingTableEntry(ip1);
+        RoutingTableEntry worseEntry = new RoutingTableEntry(ip1);
+        betterEntry.setFeasibleDistance(100);
+        worseEntry.setFeasibleDistance(10000);
+
+
     }
 
     @Test
@@ -68,12 +84,12 @@ class TopologyTableTest {
         betterEntry.setFeasibleDistance(100);
         worseEntry.setFeasibleDistance(10000);
 
-        topologyTable.update(betterEntry);
-        topologyTable.update(worseEntry);
+        topologyTable.update(controller, betterEntry, ip1);
+        topologyTable.update(controller, worseEntry, ip1);
 
-        assertEquals(betterEntry, topologyTable.getBestEntryForIP(ip1));
+        assertEquals(betterEntry, topologyTable.getBestEntryForIP(ip1));     //zawsze entry 1
         topologyTable.getEntries().remove(betterEntry);
-        assertEquals(entry1, topologyTable.getBestEntryForIP(ip1));
+        assertEquals(entry1, topologyTable.getBestEntryForIP(ip1));     //tez
     }
 
     @Test

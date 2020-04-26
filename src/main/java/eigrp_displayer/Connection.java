@@ -46,6 +46,11 @@ public abstract class Connection implements Addable {
         }
     }
 
+    public void linkDevices(DeviceController controller1, DeviceController controller2){
+        this.setDevice1(controller1);
+        this.setDevice2(controller2);
+    }
+
     public DeviceController getOtherDevice(DeviceController device){
         if(this.device1 == device){
             return this.device2;

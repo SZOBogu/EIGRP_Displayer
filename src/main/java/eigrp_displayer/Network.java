@@ -31,12 +31,11 @@ public class Network {
 
     }
 
-    public void linkDevices(DeviceController deviceController1, DeviceController deviceController2){
+    public void connectDevices(DeviceController deviceController1, DeviceController deviceController2){
         Cable cable = new Cable();
         deviceController1.setConnection(cable);
         deviceController2.setConnection(cable);
-        cable.setDevice1(deviceController1);
-        cable.setDevice2(deviceController2);
+        cable.linkDevices(deviceController1, deviceController2);
     }
 
     public DeviceController getDeviceController(IPAddress ipAddress){

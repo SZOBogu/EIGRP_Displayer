@@ -19,6 +19,7 @@ public class DeviceController {
 
     public DeviceController(Device device) {
         this.device = device;
+        //schedule hellos
     }
 
     public Device getDevice() {
@@ -27,14 +28,11 @@ public class DeviceController {
 
     public void setDevice(Device device) {
         this.device = device;
+        //schedule hellos
     }
 
     public List<RTPMessage> getMessageSchedule() {
         return messageSchedule;
-    }
-
-    public void setMessageSchedule(List<RTPMessage> messageSchedule) {
-        this.messageSchedule = messageSchedule;
     }
 
     public void sendMessage(RTPMessage message, int offset) {
@@ -129,7 +127,6 @@ public class DeviceController {
         return null;
     }
 
-    //TODO: test
     public Connection getConnectionWithDeviceController(DeviceController controller){
         for(DeviceInterface deviceInterface : this.device.getDeviceInterfaces()){
             Connection connection = deviceInterface.getConnection();

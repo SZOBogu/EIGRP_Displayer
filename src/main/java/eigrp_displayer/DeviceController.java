@@ -12,12 +12,13 @@ public class DeviceController {
     public DeviceController() {
         this.messageSchedule = new ArrayList<>();
         for(int i = 0; i <10000; i++){
-            messageSchedule.add(new NullMessage());
+            this.messageSchedule.add(new NullMessage());
         }
         MessageScheduler.getInstance().getSchedule().add(this.messageSchedule);
     }
 
     public DeviceController(Device device) {
+        this();
         this.device = device;
         //schedule hellos
     }
@@ -35,23 +36,47 @@ public class DeviceController {
         return messageSchedule;
     }
 
+    //TODO:fix me
     public void sendMessage(RTPMessage message, int offset) {
+        List<RTPMessage> messagesToRemove = new ArrayList<>();
         for (DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()) {
             Device device = deviceInterface.getConnection().getOtherDevice(this).getDevice();
             IPAddress ip = device.getIp_address();
             if (ip.equals(message.getReceiverAddress()) &&
                     Clock.getTime() + offset < this.getMessageSchedule().size()) {
-
-                this.getMessageSchedule().remove(Clock.getTime() + offset);
+                messagesToRemove.add(this.getMessageSchedule().get(Clock.getTime() + offset));
                 this.getMessageSchedule().add(Clock.getTime() + offset, message);
             }
         }
+        this.getMessageSchedule().removeAll(messagesToRemove);
     }
 
-    public void sendMessages(List<QueryMessage> messages, int offset){
-        for(QueryMessage query : messages){
-            this.sendMessage(query, offset);
+    public void sendMessage(RTPMessage message) {
+        this.sendMessage(message, 0);
+    }
+
+    //TODO:fix me
+    public void sendMessages(List<RTPMessage> messages, int offset){
+//        int spaceInScheduleLeft = 10000 - Clock.getTime() - offset;
+//
+//        if(spaceInScheduleLeft >= messages.size()) {
+//            for (int i = 0; i < messages.size(); i++) {
+//                this.sendMessage(messages.get(i), i + offset);
+//            }
+//        }
+//        else {
+//            for (int i = 0; i < spaceInScheduleLeft - messages.size(); i++) {
+//                this.sendMessage(messages.get(i), i + offset);
+//            }
+//        }
+
+        for(int i = 0; i < messages.size(); i++){
+            this.sendMessage(messages.get(i), i);
         }
+    }
+
+    public void sendMessages(List<RTPMessage> messages){
+        this.sendMessages(messages, 0);
     }
 
     public void sendCyclicMessage(CyclicMessage message, int offset){
@@ -68,15 +93,6 @@ public class DeviceController {
             }
         }
     }
-
-    public void sendMessage(RTPMessage message) {
-        this.sendMessage(message, 0);
-    }
-
-    public void sendMessages(List<QueryMessage> messages){
-        this.sendMessages(messages, 0);
-    }
-
 
     public void sendCyclicMessage(CyclicMessage message){
         this.sendCyclicMessage(message, 0);
@@ -100,21 +116,17 @@ public class DeviceController {
         System.out.println(""); //do not reply
     }
 
-
+    //TODO:fix me
     public List<DeviceController> getAllConnectedDeviceControllers(){
         List<DeviceController> deviceControllers = new ArrayList<>();
-        try {
-            for (DeviceInterface deviceInterface : this.device.getDeviceInterfaces()) {
-                DeviceController controller = deviceInterface.getConnection().getOtherDevice(this);
-                if (controller != null) {
-                    deviceControllers.add(controller);
-                }
+
+        for (DeviceInterface deviceInterface : this.device.getDeviceInterfaces()) {
+            DeviceController controller = deviceInterface.getConnection().getOtherDevice(this);
+            if (controller != null) {
+                deviceControllers.add(controller);
             }
-            return deviceControllers;
         }
-        catch (Exception e) {
-            return deviceControllers;
-        }
+        return deviceControllers;
     }
 
     public DeviceController getConnectedDeviceController(IPAddress ipAddress){

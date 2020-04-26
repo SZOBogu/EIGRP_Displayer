@@ -22,6 +22,12 @@ public class RouterController extends DeviceController implements ClockDependent
         this.setDevice(router);
     }
 
+    public void sendQueryMessages(List<QueryMessage> messages){
+        for(int i = 0; i < messages.size(); i++) {
+            this.sendMessage(messages.get(i), i);
+        }
+    }
+
     public Router getDevice(){
         return (Router)super.getDevice();
     }
@@ -139,7 +145,7 @@ public class RouterController extends DeviceController implements ClockDependent
                             queryMessage.getQueriedDeviceAddress());
                     queryMessages.add(qmsg);
                 }
-                this.sendMessages(queryMessages);
+                this.sendQueryMessages(queryMessages);
             }
         }
     }
@@ -184,24 +190,20 @@ public class RouterController extends DeviceController implements ClockDependent
             }
         }
     }
-
+    //TODO:fix me
     public List<DeviceController> getAllNeighbourControllers(){
         List<DeviceController> deviceControllers = this.getAllConnectedDeviceControllers();
         List<IPAddress> ips = this.getDevice().getNeighbourTable().getAllNeighboursAddresses();
         List<DeviceController> neighbourControllers = new ArrayList<>();
-        try {
-            for(DeviceController controller : deviceControllers){
-                if(ips.contains(controller.getDevice().getIp_address())){
-                    neighbourControllers.add(controller);
-                }
-            }
-            return neighbourControllers;
-        }
-        catch (Exception e){
-            return neighbourControllers;
-        }
-    }
 
+        for(DeviceController controller : deviceControllers){
+            if(ips.contains(controller.getDevice().getIp_address())){
+                neighbourControllers.add(controller);
+            }
+        }
+        return neighbourControllers;
+    }
+    //TODO:fix me
     public List<DeviceController> getAllNeighbourControllersButOne(IPAddress ipAddress){
         List<DeviceController> deviceControllers = this.getAllNeighbourControllers();
         deviceControllers.removeIf(controller -> controller.getDevice().getIp_address().equals(ipAddress));

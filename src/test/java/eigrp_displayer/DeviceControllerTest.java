@@ -1,7 +1,15 @@
 package eigrp_displayer;
 
+import eigrp_displayer.messages.HelloMessage;
+import eigrp_displayer.messages.NullMessage;
+import eigrp_displayer.messages.RTPMessage;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,14 +29,15 @@ class DeviceControllerTest {
     Connection connection1 = new Cable();
     Connection connection2 = new Cable();
 
-    void init(){
-        connection0.linkDevice(controller0);
-        connection0.linkDevice(controller1);
-        connection1.linkDevice(controller1);
-        connection1.linkDevice(controller2);
-        connection2.linkDevice(controller2);
-        connection2.linkDevice(controller0);
+    @BeforeEach
+    void resetClock(){
+        Clock.resetClock();
+    }
 
+    void init(){
+        connection0.linkDevices(controller0, controller1);
+        connection1.linkDevices(controller1, controller2);
+        connection2.linkDevices(controller2, controller0);
 
         device0.setIp_address(ip0);
         device1.setIp_address(ip1);
@@ -54,30 +63,73 @@ class DeviceControllerTest {
 
     @Test
     void getMessageSchedule() {
+        assertEquals(10000, controller0.getMessageSchedule().size());
+        for(RTPMessage message : controller0.getMessageSchedule()){
+            if(!(message instanceof NullMessage))
+                fail();
+        }
     }
 
     @Test
     void sendMessage() {
+        init();
+        HelloMessage message = new HelloMessage(ip0, ip1);
+        controller0.sendMessage(message);
+        assertEquals(message, controller0.getMessageSchedule().get(Clock.getTime()));
+        assertEquals(10000, controller0.getMessageSchedule().size());
+
+    }
+
+    @Test
+    void sendMessageWithOffset() {
+        init();
+        HelloMessage message = new HelloMessage(ip0, ip1);
+        int offset = 10;
+        controller0.sendMessage(message, offset);
+        assertEquals(message, controller0.getMessageSchedule().get(Clock.getTime() + offset));
+        assertEquals(10000, controller0.getMessageSchedule().size());
     }
 
     @Test
     void sendMessages() {
+        init();
+        HelloMessage message0 = new HelloMessage(ip0, ip1);
+        HelloMessage message1 = new HelloMessage(ip1, ip0);
+        HelloMessage message2 = new HelloMessage(ip0, ip0);
+
+        List<RTPMessage> messageList = new ArrayList<>(Arrays.asList(message0, message1, message2));
+        controller0.sendMessages(messageList);
+        assertEquals(message0, controller0.getMessageSchedule().get(Clock.getTime()));
+        assertEquals(message1, controller0.getMessageSchedule().get(Clock.getTime() + 1));
+        assertEquals(message2, controller0.getMessageSchedule().get(Clock.getTime() + 2));
+        assertEquals(10000, controller0.getMessageSchedule().size());
+
+    }
+
+    @Test
+    void sendMessagesWithOffset() {
+        init();
+        HelloMessage message0 = new HelloMessage(ip0, ip1);
+        HelloMessage message1 = new HelloMessage(ip1, ip0);
+        HelloMessage message2 = new HelloMessage(ip0, ip0);
+        int offset = 20;
+
+        List<RTPMessage> messageList = new ArrayList<>(Arrays.asList(message0, message1, message2));
+        controller0.sendMessages(messageList);
+        assertEquals(message0, controller0.getMessageSchedule().get(Clock.getTime() + offset));
+        assertEquals(message1, controller0.getMessageSchedule().get(Clock.getTime() + offset + 1));
+        assertEquals(message2, controller0.getMessageSchedule().get(Clock.getTime() + offset + 2));
+        assertEquals(10000, controller0.getMessageSchedule().size());
     }
 
     @Test
     void sendCyclicMessage() {
+
     }
 
     @Test
-    void testSendMessage() {
-    }
+    void sendCyclicMessageWithOffset() {
 
-    @Test
-    void testSendMessages() {
-    }
-
-    @Test
-    void testSendCyclicMessage() {
     }
 
     @Test

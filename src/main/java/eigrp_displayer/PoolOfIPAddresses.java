@@ -49,18 +49,15 @@ public class PoolOfIPAddresses {
     }
 
     public void releaseIPAddress(IPAddress ipAddress){
-        try {
-            for (IPAddress ipa : this.takenAddresses) {
-                if (ipa.equals(ipAddress)) {
-                    this.freeAddresses.add(ipAddress);
-                    this.takenAddresses.remove(ipAddress);
-                    sort(this.freeAddresses);
-                }
+        List<IPAddress> ipsToRemove = new ArrayList<>();
+        for (IPAddress ipa : this.takenAddresses) {
+            if (ipa.equals(ipAddress)) {
+                this.freeAddresses.add(ipAddress);
+                ipsToRemove.add(ipAddress);
             }
         }
-        catch (Exception e){
-            System.out.println("Exception " + e);
-        }
+        this.takenAddresses.removeAll(ipsToRemove);
+        sort(this.freeAddresses);
     }
 
     public boolean contains(IPAddress ipAddress){

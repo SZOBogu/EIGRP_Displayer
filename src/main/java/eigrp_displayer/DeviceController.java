@@ -73,16 +73,10 @@ public class DeviceController {
     }
 
     public void sendCyclicMessage(CyclicMessage message, int offset){
-        for(DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()){
-            Device device = deviceInterface.getConnection().getOtherDevice(this).getDevice();
-            IPAddress ip = device.getIp_address();
-            if(ip.equals(message.getMessage().getReceiverAddress())){
-                for(int i = Clock.getTime() ; i < this.getMessageSchedule().size(); i++){
-                    if(i + offset % message.getInterval() == 0) {
-                        this.getMessageSchedule().remove(Clock.getTime());
-                        this.getMessageSchedule().add(Clock.getTime(), message.getMessage());
-                    }
-                }
+        int trimmedOffset = message.getInterval() % offset;
+        for(int i = Clock.getTime(); i < this.messageSchedule.size(); i++){
+            if((i % message.getInterval()) == trimmedOffset) {
+                sendMessage(message.getMessage(), i + trimmedOffset);
             }
         }
     }

@@ -75,14 +75,12 @@ public class TopologyTable extends RoutingTable{
             return count - 1;
     }
 
-    //TODO:test
     public void update(RouterController controller, RoutingTable receivedRoutingTable, IPAddress sender){
         for(RoutingTableEntry entry : receivedRoutingTable.getEntries()){
             this.update(controller, entry, sender);
         }
     }
 
-    //TODO:test
     public void update(RouterController routerController, RoutingTableEntry receivedRoutingTableEntry, IPAddress sender) {
         long metricForConnectionWithSender = Long.MAX_VALUE;
         MetricCalculator calculator = new MetricCalculator();

@@ -1,5 +1,6 @@
 package eigrp_displayer;
 
+import eigrp_displayer.messages.CyclicMessage;
 import eigrp_displayer.messages.HelloMessage;
 import eigrp_displayer.messages.NullMessage;
 import eigrp_displayer.messages.RTPMessage;
@@ -128,12 +129,33 @@ class DeviceControllerTest {
 
     @Test
     void sendCyclicMessage() {
-
+        init();
+        HelloMessage message0 = new HelloMessage(ip0, ip1);
+        int interval = 15;
+        CyclicMessage cyclicMessage = new CyclicMessage(message0, interval);
+        controller0.sendCyclicMessage(cyclicMessage);
+        for(int i = 0; i < controller0.getMessageSchedule().size(); i++){
+            if(i % interval == 0)
+                assertEquals(message0, controller0.getMessageSchedule().get(i));
+            else
+                assertTrue(controller0.getMessageSchedule().get(i) instanceof NullMessage);
+        }
     }
 
     @Test
     void sendCyclicMessageWithOffset() {
-
+        init();
+        HelloMessage message0 = new HelloMessage(ip0, ip1);
+        int interval = 15;
+        int offset = 3;
+        CyclicMessage cyclicMessage = new CyclicMessage(message0, interval);
+        controller0.sendCyclicMessage(cyclicMessage, offset);
+        for(int i = 0; i < controller0.getMessageSchedule().size(); i++){
+            if((i % interval) == (interval % offset))
+                assertEquals(message0, controller0.getMessageSchedule().get(i));
+            else
+                assertTrue(controller0.getMessageSchedule().get(i) instanceof NullMessage);
+        }
     }
 
     @Test

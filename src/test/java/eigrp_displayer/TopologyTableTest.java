@@ -6,7 +6,7 @@ import org.mockito.Mockito;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TopologyTableTest {
     Router router = new Router("R");
@@ -71,7 +71,7 @@ class TopologyTableTest {
         betterEntry.setFeasibleDistance(100);
         worseEntry.setFeasibleDistance(10000);
 
-
+        fail();
     }
 
     @Test
@@ -90,6 +90,9 @@ class TopologyTableTest {
         assertEquals(betterEntry, topologyTable.getBestEntryForIP(ip1));     //zawsze entry 1
         topologyTable.getEntries().remove(betterEntry);
         assertEquals(entry1, topologyTable.getBestEntryForIP(ip1));     //tez
+        topologyTable.getEntries().remove(worseEntry);
+        topologyTable.getEntries().remove(betterEntry);
+        assertNull(topologyTable.getBestEntryForIP(ip1));     //tez
     }
 
     @Test

@@ -28,8 +28,15 @@ public class RoutingTable {
     }
 
     public void update(RoutingTableEntry bestPathEntry){
-        this.getEntries().removeIf(entry -> entry.getIp_address().equals(bestPathEntry.getIp_address()) &&
-                bestPathEntry.getFeasibleDistance() < entry.getFeasibleDistance());
+        for(int i = 0; i < this.entries.size(); i++){
+            if(this.entries.get(i).getIp_address().equals(bestPathEntry.getIp_address()) &&
+            bestPathEntry.getFeasibleDistance() < this.entries.get(i).getFeasibleDistance()){
+                this.entries.set(i , bestPathEntry);
+            }
+        }
+//        this.getEntries().removeIf(entry -> entry.getIp_address().equals(bestPathEntry.getIp_address()) &&
+//                bestPathEntry.getFeasibleDistance() < entry.getFeasibleDistance());
+//        this.getEntries().add(bestPathEntry);
     }
 
     @Override

@@ -23,4 +23,15 @@ public class DeviceInterface {
     public void setConnection(Connection connection) {
         this.connection = connection;
     }
+
+    public boolean checkIfOtherDeviceControllerConnected(DeviceController controller){
+        return this.connection != null && this.connection.getOtherDevice(controller) != null;
+    }
+
+    public DeviceController getOtherDeviceController(DeviceController controller){
+        if(this.checkIfOtherDeviceControllerConnected(controller))
+            return this.connection.getOtherDevice(controller);
+        else
+            return null;
+    }
 }

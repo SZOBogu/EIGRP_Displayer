@@ -1,8 +1,13 @@
 package eigrp_displayer;
 
-import eigrp_displayer.messages.*;
+import eigrp_displayer.messages.CyclicMessage;
+import eigrp_displayer.messages.HelloMessage;
+import eigrp_displayer.messages.NullMessage;
+import eigrp_displayer.messages.RTPMessage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class DeviceController {
@@ -36,42 +41,30 @@ public class DeviceController {
         return messageSchedule;
     }
 
-    //TODO:fix me
     public void sendMessage(RTPMessage message, int offset) {
-        List<RTPMessage> messagesToRemove = new ArrayList<>();
-        for (DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()) {
-            Device device = deviceInterface.getConnection().getOtherDevice(this).getDevice();
-            IPAddress ip = device.getIp_address();
-            if (ip.equals(message.getReceiverAddress()) &&
-                    Clock.getTime() + offset < this.getMessageSchedule().size()) {
-                messagesToRemove.add(this.getMessageSchedule().get(Clock.getTime() + offset));
-                this.getMessageSchedule().add(Clock.getTime() + offset, message);
+        for (DeviceInterface deviceInterface : new ArrayList<>(Arrays.asList(this.getDevice().getDeviceInterfaces()))) {
+            DeviceController deviceController = deviceInterface.getOtherDeviceController(this);
+
+            if (deviceController != null && deviceController.getDevice().getIp_address().equals(
+                    message.getReceiverAddress())) {
+                for (int i = Clock.getTime() + offset; i < this.messageSchedule.size(); i++) {
+                    if (this.messageSchedule.get(i) instanceof NullMessage) {
+                        this.getMessageSchedule().set(i, message);
+                        break;
+                    }
+                }
             }
+            this.getMessageSchedule().set(Clock.getTime() + offset, message);
         }
-        this.getMessageSchedule().removeAll(messagesToRemove);
     }
 
     public void sendMessage(RTPMessage message) {
         this.sendMessage(message, 0);
     }
 
-    //TODO:fix me
     public void sendMessages(List<RTPMessage> messages, int offset){
-//        int spaceInScheduleLeft = 10000 - Clock.getTime() - offset;
-//
-//        if(spaceInScheduleLeft >= messages.size()) {
-//            for (int i = 0; i < messages.size(); i++) {
-//                this.sendMessage(messages.get(i), i + offset);
-//            }
-//        }
-//        else {
-//            for (int i = 0; i < spaceInScheduleLeft - messages.size(); i++) {
-//                this.sendMessage(messages.get(i), i + offset);
-//            }
-//        }
-
         for(int i = 0; i < messages.size(); i++){
-            this.sendMessage(messages.get(i), i);
+            this.sendMessage(messages.get(i), offset + i);
         }
     }
 
@@ -113,20 +106,24 @@ public class DeviceController {
 
 
     public void respond(RTPMessage message){
-        System.out.println(""); //do not reply
+        System.out.println(""); //do not reply, only routers are supposed to do so
     }
 
-    //TODO:fix me
     public List<DeviceController> getAllConnectedDeviceControllers(){
-        List<DeviceController> deviceControllers = new ArrayList<>();
+        ArrayList<DeviceInterface> deviceInterfaces = new ArrayList(
+                Arrays.asList(this.device.getDeviceInterfaces()));
+        Iterator<DeviceInterface> iterator = deviceInterfaces.iterator() ;
+        List<DeviceController> controllers = new ArrayList<>();
 
-        for (DeviceInterface deviceInterface : this.device.getDeviceInterfaces()) {
-            DeviceController controller = deviceInterface.getConnection().getOtherDevice(this);
-            if (controller != null) {
-                deviceControllers.add(controller);
+        while(iterator.hasNext()){
+            DeviceInterface deviceInterface = iterator.next();
+            DeviceController controller = deviceInterface.getOtherDeviceController(this);
+            if(controller != null){
+                controllers.add(controller);
             }
         }
-        return deviceControllers;
+
+        return controllers;
     }
 
     public DeviceController getConnectedDeviceController(IPAddress ipAddress){

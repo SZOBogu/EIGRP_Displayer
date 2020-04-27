@@ -113,6 +113,8 @@ class RouterControllerTest {
 
     @Test
     void getInterface() {
+        assertEquals(router.getDeviceInterfaces()[0],
+                controller.getInterface(controller.getDevice().getRoutingTable().getEntry(ip0)));
     }
 
     @Test

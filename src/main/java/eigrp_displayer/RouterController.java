@@ -226,9 +226,11 @@ public class RouterController extends DeviceController implements ClockDependent
     //TODO:test
     public DeviceInterface getInterface(RoutingTableEntry entry){
         for(DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()){
-            if(deviceInterface.getConnection().getOtherDevice(this).getDevice().getIp_address()
-                    == entry.getIp_address()){
-                return deviceInterface;
+            if(deviceInterface.checkIfOtherDeviceControllerConnected(this)){
+                Device device = deviceInterface.getOtherDeviceController(this).getDevice();
+                if(device!=null && device.getIp_address().equals(entry.getIp_address())){
+                    return deviceInterface;
+                }
             }
         }
         return null;

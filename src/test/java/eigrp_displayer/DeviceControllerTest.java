@@ -74,10 +74,13 @@ class DeviceControllerTest {
     void sendMessage() {
         init();
         HelloMessage message = new HelloMessage(ip0, ip1);
+        HelloMessage message2 = new HelloMessage(ip0, ip1);
         controller0.sendMessage(message);
         assertEquals(message, controller0.getMessageSchedule().get(Clock.getTime()));
         assertEquals(10000, controller0.getMessageSchedule().size());
-
+        controller0.sendMessage(message2);
+        assertEquals(message2, controller0.getMessageSchedule().get(Clock.getTime() + 1));
+        assertEquals(10000, controller0.getMessageSchedule().size());
     }
 
     @Test
@@ -97,6 +100,7 @@ class DeviceControllerTest {
         HelloMessage message1 = new HelloMessage(ip1, ip0);
         HelloMessage message2 = new HelloMessage(ip0, ip0);
 
+
         List<RTPMessage> messageList = new ArrayList<>(Arrays.asList(message0, message1, message2));
         controller0.sendMessages(messageList);
         assertEquals(message0, controller0.getMessageSchedule().get(Clock.getTime()));
@@ -115,7 +119,7 @@ class DeviceControllerTest {
         int offset = 20;
 
         List<RTPMessage> messageList = new ArrayList<>(Arrays.asList(message0, message1, message2));
-        controller0.sendMessages(messageList);
+        controller0.sendMessages(messageList, offset);
         assertEquals(message0, controller0.getMessageSchedule().get(Clock.getTime() + offset));
         assertEquals(message1, controller0.getMessageSchedule().get(Clock.getTime() + offset + 1));
         assertEquals(message2, controller0.getMessageSchedule().get(Clock.getTime() + offset + 2));

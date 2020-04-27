@@ -27,17 +27,9 @@ public class RoutingTable {
         return null;
     }
 
-    //TODO: fix concurrentModException
     public void update(RoutingTableEntry bestPathEntry){
-        List<RoutingTableEntry> entriesToRemove = new ArrayList<>();
-            for (RoutingTableEntry entry : this.getEntries()) {
-                if (entry.getIp_address().equals(bestPathEntry.getIp_address()) &&
-                        bestPathEntry.getFeasibleDistance() < entry.getFeasibleDistance()) {
-                    entriesToRemove.add(entry);
-                    this.getEntries().add(bestPathEntry);
-                }
-            }
-            this.entries.removeAll(entriesToRemove);
+        this.getEntries().removeIf(entry -> entry.getIp_address().equals(bestPathEntry.getIp_address()) &&
+                bestPathEntry.getFeasibleDistance() < entry.getFeasibleDistance());
     }
 
     @Override

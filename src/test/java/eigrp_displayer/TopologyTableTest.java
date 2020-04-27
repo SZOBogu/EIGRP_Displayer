@@ -22,8 +22,6 @@ class TopologyTableTest {
     RoutingTableEntry entry2 = new RoutingTableEntry(ip2);
     RoutingTableEntry entry3 = new RoutingTableEntry(ip0);
     Connection connection0 = new Cable();
-    Connection connection1 = new Cable();
-    Connection connection2 = new Cable();
 
     @BeforeEach
     void init(){
@@ -63,36 +61,34 @@ class TopologyTableTest {
 
     @Test
     void updateTable() {
-        //update(RouterController routerController, RoutingTableEntry receivedRoutingTableEntry, IPAddress sender)
-        init();
         TopologyTable receivedTopologyTable = new TopologyTable();
         RoutingTableEntry betterEntry = new RoutingTableEntry(ip1);
         RoutingTableEntry worseEntry = new RoutingTableEntry(ip1);
         betterEntry.setFeasibleDistance(100);
         worseEntry.setFeasibleDistance(10000);
 
-        fail();
+        receivedTopologyTable.getEntries().add(betterEntry);
+        receivedTopologyTable.getEntries().add(worseEntry);
+
+        assertEquals(1, topologyTable.getAllEntriesForIP(ip1).size());
+        topologyTable.update(controller, receivedTopologyTable, ip1);
+        assertEquals(3, topologyTable.getAllEntriesForIP(ip1).size());
     }
 
     @Test
     void updateEntry() {
-       //update(RouterController controller, RoutingTable receivedRoutingTable, IPAddress sender){
-        init();
         entry1.setFeasibleDistance(1000);
         RoutingTableEntry betterEntry = new RoutingTableEntry(ip1);
         RoutingTableEntry worseEntry = new RoutingTableEntry(ip1);
         betterEntry.setFeasibleDistance(100);
         worseEntry.setFeasibleDistance(10000);
 
+        assertEquals(1, topologyTable.getAllEntriesForIP(ip1).size());
         topologyTable.update(controller, betterEntry, ip1);
+        assertEquals(2, topologyTable.getAllEntriesForIP(ip1).size());
         topologyTable.update(controller, worseEntry, ip1);
-
-        assertEquals(betterEntry, topologyTable.getBestEntryForIP(ip1));     //zawsze entry 1
-        topologyTable.getEntries().remove(betterEntry);
-        assertEquals(entry1, topologyTable.getBestEntryForIP(ip1));     //tez
-        topologyTable.getEntries().remove(worseEntry);
-        topologyTable.getEntries().remove(betterEntry);
-        assertNull(topologyTable.getBestEntryForIP(ip1));     //tez
+        assertEquals(3, topologyTable.getAllEntriesForIP(ip1).size());
+        assertEquals(2, topologyTable.getSuccessorCount(ip1));
     }
 
     @Test
@@ -101,6 +97,10 @@ class TopologyTableTest {
         assertEquals(2, entryList.size());
         assertEquals(entry0, entryList.get(0));
         assertEquals(entry3, entryList.get(1));
+
+        List<RoutingTableEntry> entryList0 = topologyTable.getAllEntriesForIP(ip1);
+        assertEquals(1, entryList0.size());
+        assertEquals(entry1, entryList0.get(0));
     }
 
     @Test

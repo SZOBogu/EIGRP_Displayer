@@ -89,8 +89,7 @@ public class TopologyTable extends RoutingTable{
         Connection connection = new Cable();
 
         for (DeviceInterface deviceInterface : routerController.getDevice().getDeviceInterfaces()) {
-            connection = deviceInterface.getConnection();
-            if (connection.getOtherDevice(routerController).getDevice().getIp_address().equals(sender)) {
+            if (deviceInterface.getOtherDeviceController(routerController).getDevice().getIp_address().equals(sender)) {
                 metricForConnectionWithSender = calculator.calculateMetric(
                         routerController.getDevice(), connection);
                 break;
@@ -101,11 +100,11 @@ public class TopologyTable extends RoutingTable{
         newEntry.setFeasibleDistance(receivedRoutingTableEntry.getFeasibleDistance()
                     + metricForConnectionWithSender);
 
-        updatedRoutingTableEntry(receivedRoutingTableEntry, metricForConnectionWithSender,
+        buildRoutingTableEntry(receivedRoutingTableEntry, metricForConnectionWithSender,
                 connection, receivedRoutingTableEntry.getPath());
     }
 
-    private void updatedRoutingTableEntry(RoutingTableEntry receivedRoutingTableEntry,
+    private void buildRoutingTableEntry(RoutingTableEntry receivedRoutingTableEntry,
                                                 long metricForConnectionWithSender, Connection connection,
                                                 List<Connection> path) {
         RoutingTableEntry updatedRoutingTableEntry =

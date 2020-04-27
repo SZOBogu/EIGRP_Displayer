@@ -34,9 +34,6 @@ public class RoutingTable {
                 this.entries.set(i , bestPathEntry);
             }
         }
-//        this.getEntries().removeIf(entry -> entry.getIp_address().equals(bestPathEntry.getIp_address()) &&
-//                bestPathEntry.getFeasibleDistance() < entry.getFeasibleDistance());
-//        this.getEntries().add(bestPathEntry);
     }
 
     @Override

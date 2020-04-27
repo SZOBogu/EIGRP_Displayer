@@ -1,9 +1,13 @@
 package eigrp_displayer;
 
+import java.util.Random;
+
 public abstract class Device implements Addable {
     private String name;
     private IPAddress ip_address;
     private DeviceInterface[] deviceInterfaces;
+    private final int messageSendingTimeOffset;
+
 
     public Device(){
         this(4);
@@ -14,6 +18,7 @@ public abstract class Device implements Addable {
         for(int i = 0; i < numberOfInterfaces; i++){
             this.deviceInterfaces[i] = new DeviceInterface("Interface " + i);
         }
+        this.messageSendingTimeOffset = new Random().nextInt(60);
     }
 
     public String getName() {
@@ -34,5 +39,9 @@ public abstract class Device implements Addable {
 
     public DeviceInterface[] getDeviceInterfaces() {
         return deviceInterfaces;
+    }
+
+    public int getMessageSendingTimeOffset() {
+        return messageSendingTimeOffset;
     }
 }

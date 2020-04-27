@@ -98,9 +98,8 @@ class DeviceControllerTest {
     void sendMessages() {
         init();
         HelloMessage message0 = new HelloMessage(ip0, ip1);
-        HelloMessage message1 = new HelloMessage(ip1, ip0);
-        HelloMessage message2 = new HelloMessage(ip0, ip0);
-
+        HelloMessage message1 = new HelloMessage(ip0, ip1);
+        HelloMessage message2 = new HelloMessage(ip0, ip1);
 
         List<RTPMessage> messageList = new ArrayList<>(Arrays.asList(message0, message1, message2));
         controller0.sendMessages(messageList);
@@ -115,8 +114,8 @@ class DeviceControllerTest {
     void sendMessagesWithOffset() {
         init();
         HelloMessage message0 = new HelloMessage(ip0, ip1);
-        HelloMessage message1 = new HelloMessage(ip1, ip0);
-        HelloMessage message2 = new HelloMessage(ip0, ip0);
+        HelloMessage message1 = new HelloMessage(ip1, ip1);
+        HelloMessage message2 = new HelloMessage(ip0, ip1);
         int offset = 20;
 
         List<RTPMessage> messageList = new ArrayList<>(Arrays.asList(message0, message1, message2));
@@ -160,6 +159,22 @@ class DeviceControllerTest {
 
     @Test
     void scheduleHellos() {
+        init();
+        int offset = controller0.getDevice().getMessageSendingTimeOffset();
+        List<IPAddress> ips = new ArrayList<>();
+        for(DeviceController controller : controller0.getAllConnectedDeviceControllers()){
+            ips.add(controller.getDevice().getIp_address());
+        }
+        controller0.scheduleHellos();
+
+        for(int i = 0; i < controller0.getMessageSchedule().size(); i++){
+            if((i % 15) == (15 % offset)) {
+                assertTrue(controller0.getMessageSchedule().get(i) instanceof HelloMessage);
+                assertTrue(ips.contains(controller0.getMessageSchedule().get(i).getReceiverAddress()));
+            }
+            else
+                assertTrue(controller0.getMessageSchedule().get(i) instanceof NullMessage);
+        }
     }
 
     @Test

@@ -25,7 +25,6 @@ public class DeviceController {
     public DeviceController(Device device) {
         this();
         this.device = device;
-        //schedule hellos
     }
 
     public Device getDevice() {
@@ -34,7 +33,6 @@ public class DeviceController {
 
     public void setDevice(Device device) {
         this.device = device;
-        //schedule hellos
     }
 
     public List<RTPMessage> getMessageSchedule() {
@@ -54,7 +52,6 @@ public class DeviceController {
                     }
                 }
             }
-            this.getMessageSchedule().set(Clock.getTime() + offset, message);
         }
     }
 
@@ -73,7 +70,11 @@ public class DeviceController {
     }
 
     public void sendCyclicMessage(CyclicMessage message, int offset){
-        int trimmedOffset = message.getInterval() % offset;
+        int trimmedOffset;
+        if (offset == 0)
+            trimmedOffset = 0;
+        else
+            trimmedOffset = message.getInterval() % offset;
         for(int i = Clock.getTime(); i < this.messageSchedule.size(); i++){
             if((i % message.getInterval()) == trimmedOffset) {
                 sendMessage(message.getMessage(), i + trimmedOffset);
@@ -94,7 +95,7 @@ public class DeviceController {
         for(IPAddress ip : connectedDevicesAddresses){
             CyclicMessage message = new CyclicMessage(
                     new HelloMessage(this.getDevice().getIp_address(), ip), 15);
-            this.sendCyclicMessage(message);
+            this.sendCyclicMessage(message, this.device.getMessageSendingTimeOffset());
         }
     }
 

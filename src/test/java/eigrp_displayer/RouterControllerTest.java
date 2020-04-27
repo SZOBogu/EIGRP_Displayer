@@ -25,13 +25,9 @@ class RouterControllerTest {
     Connection connection2 = new Cable();
 
     void init(){
-        connection0.linkDevice(controller);
-        connection0.linkDevice(deviceController0);
-        connection1.linkDevice(deviceController0);
-        connection1.linkDevice(deviceController1);
-        connection2.linkDevice(deviceController1);
-        connection2.linkDevice(controller);
-
+        connection0.linkDevices(controller, deviceController0);
+        connection1.linkDevices(deviceController0, deviceController1);
+        connection2.linkDevices(deviceController1, controller);
 
         router.setIp_address(ip);
         router0.setIp_address(ip0);
@@ -113,6 +109,9 @@ class RouterControllerTest {
 
     @Test
     void getInterface() {
+        init();
+        RoutingTableEntry entry = new RoutingTableEntry(ip0);
+        controller.getDevice().getRoutingTable().getEntries().add(entry);
         assertEquals(router.getDeviceInterfaces()[0],
                 controller.getInterface(controller.getDevice().getRoutingTable().getEntry(ip0)));
     }

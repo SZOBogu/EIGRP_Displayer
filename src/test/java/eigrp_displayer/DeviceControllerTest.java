@@ -43,12 +43,6 @@ class DeviceControllerTest {
         device0.setIp_address(ip0);
         device1.setIp_address(ip1);
         device2.setIp_address(ip2);
-
-        controller0.setConnection(connection0);
-        controller0.setConnection(connection2);
-        controller1.setConnection(connection0);
-        controller1.setConnection(connection1);
-        controller2.setConnection(connection1);
     }
 
     @Test

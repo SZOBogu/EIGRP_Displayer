@@ -32,12 +32,6 @@ class RouterControllerTest {
         router.setIp_address(ip);
         router0.setIp_address(ip0);
         router1.setIp_address(ip1);
-
-        controller.setConnection(connection0);
-        controller.setConnection(connection2);
-        deviceController0.setConnection(connection0);
-        deviceController0.setConnection(connection1);
-        deviceController1.setConnection(connection1);
     }
 
     @Test
@@ -152,5 +146,15 @@ class RouterControllerTest {
         assertEquals(2, controller.getAllNeighbourControllersButOne(ip2).size());
         assertEquals(deviceController0, controller.getAllNeighbourControllersButOne(ip2).get(0));
         assertEquals(deviceController1, controller.getAllNeighbourControllersButOne(ip2).get(1));
+    }
+
+    @Test
+    void getAddressOfNextDeviceOnPath() {
+        init();
+        Connection connection3 = new Cable();
+        Router router3 = new Router("R3");
+        RouterController routerController3 = new RouterController(router3);
+
+        connection3.linkDevices(deviceController1, routerController3);
     }
 }

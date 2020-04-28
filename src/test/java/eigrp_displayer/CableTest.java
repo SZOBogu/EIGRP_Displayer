@@ -100,7 +100,7 @@ class CableTest {
         cable.setDevice2(device);
         assertEquals(device ,cable.getDevice2());
     }
-
+    //TODO: update
     @Test
     void linkDevice(){
         assertNull(cable0.getDevice1());
@@ -122,6 +122,7 @@ class CableTest {
         assertNull(cable.getOtherDevice(device0));
     }
 
+    //TODO: update
     @Test
     void linkDevices() {
         DeviceController device1 = Mockito.mock(DeviceController.class);

@@ -23,7 +23,6 @@ public abstract class Connection implements Addable {
 
     public void setDevice1(DeviceController device1) {
         this.device1 = device1;
-//        this.callForUpdate();
     }
 
     public DeviceController getDevice2() {
@@ -32,23 +31,24 @@ public abstract class Connection implements Addable {
 
     public void setDevice2(DeviceController device2) {
         this.device2 = device2;
-//        this.callForUpdate();
     }
 
     public void linkDevice(DeviceController device){
         if(this.device1 == null){
             this.device1 = device;
-//            this.callForUpdate();
+            this.device1.setConnection(this);
         }
         else if(this.device2 == null){
             this.device2 = device;
-//            this.callForUpdate();
+            this.device2.setConnection(this);
         }
     }
 
     public void linkDevices(DeviceController controller1, DeviceController controller2){
         this.setDevice1(controller1);
+        this.device1.setConnection(this);
         this.setDevice2(controller2);
+        this.device2.setConnection(this);
     }
 
     public DeviceController getOtherDevice(DeviceController device){
@@ -68,7 +68,6 @@ public abstract class Connection implements Addable {
 
     public void setBandwidth(int bandwidth) {
         this.bandwidth = bandwidth;
-//        this.callForUpdate();
     }
 
     public int getDelay() {
@@ -77,7 +76,6 @@ public abstract class Connection implements Addable {
 
     public void setDelay(int delay) {
         this.delay = delay;
-//        this.callForUpdate();
     }
 
     public int getLoad() {
@@ -86,7 +84,6 @@ public abstract class Connection implements Addable {
 
     public void setLoad(int load) {
         this.load = load;
-//        this.callForUpdate();
     }
 
     public int getReliability() {
@@ -95,13 +92,5 @@ public abstract class Connection implements Addable {
 
     public void setReliability(int reliability) {
         this.reliability = reliability;
-   //     this.callForUpdate();
     }
-
-//    public void callForUpdate(){
-//        if(this.device1 != null)
-//            this.device1.checkConnection(this);
-//        if(this.device2 != null)
-//            this.device2.checkConnection(this);
-//    }
 }

@@ -32,7 +32,6 @@ class TopologyTableTest {
 
         device.setIp_address(ip1);
         connection0.linkDevices(controller, deviceController);
-        controller.setConnection(connection0);
     }
 
     @Test

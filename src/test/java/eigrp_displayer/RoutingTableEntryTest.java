@@ -30,14 +30,9 @@ class RoutingTableEntryTest {
     void init(){
         entry.setPath(path);
 
-        connection1.linkDevice(routerController0);
-        connection1.linkDevice(routerController1);
-
-        connection2.linkDevice(routerController1);
-        connection2.linkDevice(routerController2);
-
-        connection3.linkDevice(routerController2);
-        connection3.linkDevice(routerController3);
+        connection1.linkDevices(routerController0, routerController1);
+        connection2.linkDevices(routerController1, routerController2);
+        connection3.linkDevices(routerController2, routerController3);
     }
 
     @Test

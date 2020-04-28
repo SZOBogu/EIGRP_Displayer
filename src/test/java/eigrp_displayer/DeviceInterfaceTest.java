@@ -9,15 +9,10 @@ class DeviceInterfaceTest {
     DeviceInterface deviceInterface0 = new DeviceInterface();
     DeviceInterface deviceInterface1 = new DeviceInterface("Test");
     Connection connection = new Cable();
-    Device device0 = Mockito.mock(Device.class);
-    Device device1 = Mockito.mock(Device.class);
+    Device device0 = new EndDevice();
+    Device device1 = new EndDevice();
     DeviceController controller0 = new DeviceController(device0);
     DeviceController controller1 = new DeviceController(device1);
-
-    void init(){
-        connection.linkDevices(controller0, controller1);
-        deviceInterface0.setConnection(connection);
-    }
 
     @Test
     void getName() {
@@ -39,17 +34,19 @@ class DeviceInterfaceTest {
 
     @Test
     void checkIfOtherDeviceControllerConnected() {
-        init();
-        assertTrue(deviceInterface0.checkIfOtherDeviceControllerConnected(controller0));
-        assertTrue(deviceInterface0.checkIfOtherDeviceControllerConnected(controller1));
-        assertFalse(deviceInterface1.checkIfOtherDeviceControllerConnected(controller1));
+        device0.setIp_address(Mockito.mock(IPAddress.class));
+        device1.setIp_address(Mockito.mock(IPAddress.class));
+
+        connection.linkDevices(controller0, controller1);
+        assertTrue(controller0.getDevice().getDeviceInterfaces()[0].checkIfOtherDeviceControllerConnected(controller1));
+        assertTrue(controller1.getDevice().getDeviceInterfaces()[0].checkIfOtherDeviceControllerConnected(controller0));
+        assertFalse(controller1.getDevice().getDeviceInterfaces()[1].checkIfOtherDeviceControllerConnected(controller1));
     }
 
     @Test
     void getOtherDeviceController() {
-        init();
-        assertEquals(controller0, deviceInterface0.getOtherDeviceController(controller1));
-        assertEquals(controller0, deviceInterface0.getOtherDeviceController(controller1));
-        assertNull(deviceInterface1.getOtherDeviceController(controller1));
+        connection.linkDevices(controller0, controller1);
+        assertEquals(controller0, controller0.getDevice().getDeviceInterfaces()[0].getOtherDeviceController(controller1));
+        assertEquals(controller1, controller0.getDevice().getDeviceInterfaces()[0].getOtherDeviceController(controller0));
     }
 }

@@ -208,7 +208,7 @@ public class RouterController extends DeviceController implements ClockDependent
         }
         return neighbourControllers;
     }
-    //TODO:fix me
+
     public List<DeviceController> getAllNeighbourControllersButOne(IPAddress ipAddress){
         List<DeviceController> deviceControllers = this.getAllNeighbourControllers();
         deviceControllers.removeIf(controller -> controller.getDevice().getIp_address().equals(ipAddress));
@@ -241,7 +241,6 @@ public class RouterController extends DeviceController implements ClockDependent
         return null;
     }
 
-    //TODO: tests
     public DeviceInterface getInterface(IPAddress ipAddress){
         for(DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()){
             if(deviceInterface.checkIfOtherDeviceControllerConnected(this)){

@@ -46,10 +46,6 @@ class RouterControllerTest {
     }
 
     @Test
-    void receiveMessage() {
-    }
-
-    @Test
     void respond() {
 
     }
@@ -60,10 +56,6 @@ class RouterControllerTest {
 
     @Test
     void sendCyclicMessage() {
-    }
-
-    @Test
-    void scheduleHellos() {
     }
 
     @Test
@@ -108,12 +100,21 @@ class RouterControllerTest {
     }
 
     @Test
-    void getInterface() {
+    void getInterfaceEntry() {
         init();
         RoutingTableEntry entry = new RoutingTableEntry(ip0);
         controller.getDevice().getRoutingTable().getEntries().add(entry);
         assertEquals(router.getDeviceInterfaces()[0],
                 controller.getInterface(controller.getDevice().getRoutingTable().getEntry(ip0)));
+    }
+
+    @Test
+    void getInterfaceIP() {
+        init();
+        RoutingTableEntry entry = new RoutingTableEntry(ip0);
+        controller.getDevice().getRoutingTable().getEntries().add(entry);
+        assertEquals(router.getDeviceInterfaces()[0],
+                controller.getInterface(ip0));
     }
 
     @Test

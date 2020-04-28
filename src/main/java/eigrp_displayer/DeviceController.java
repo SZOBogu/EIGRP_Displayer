@@ -15,10 +15,7 @@ public class DeviceController {
     private List<RTPMessage> messageSchedule;
 
     public DeviceController() {
-        this.messageSchedule = new ArrayList<>();
-        for(int i = 0; i <10000; i++){
-            this.messageSchedule.add(new NullMessage());
-        }
+        this.clearSchedule();
         MessageScheduler.getInstance().getSchedule().add(this.messageSchedule);
     }
 
@@ -73,11 +70,13 @@ public class DeviceController {
         int trimmedOffset;
         if (offset == 0)
             trimmedOffset = 0;
+        else if(offset < message.getInterval())
+            trimmedOffset = offset;
         else
-            trimmedOffset = message.getInterval() % offset;
-        for(int i = Clock.getTime(); i < this.messageSchedule.size(); i++){
+            trimmedOffset = offset % message.getInterval();
+        for(int i = Clock.getTime() + offset; i < this.messageSchedule.size(); i++){
             if((i % message.getInterval()) == trimmedOffset) {
-                sendMessage(message.getMessage(), i + trimmedOffset);
+                sendMessage(message.getMessage(), i);
             }
         }
     }
@@ -94,7 +93,7 @@ public class DeviceController {
         }
         for(IPAddress ip : connectedDevicesAddresses){
             CyclicMessage message = new CyclicMessage(
-                    new HelloMessage(this.getDevice().getIp_address(), ip), 15);
+                    new HelloMessage(this.getDevice().getIp_address(), ip), 60);
             this.sendCyclicMessage(message, this.device.getMessageSendingTimeOffset());
         }
     }
@@ -151,6 +150,13 @@ public class DeviceController {
                 this.device.getDeviceInterfaces()[i].setConnection(connection);
                 break;
             }
+        }
+    }
+
+    public void clearSchedule(){
+        this.messageSchedule = new ArrayList<>();
+        for(int i = 0; i <10000; i++){
+            this.messageSchedule.add(new NullMessage());
         }
     }
 }

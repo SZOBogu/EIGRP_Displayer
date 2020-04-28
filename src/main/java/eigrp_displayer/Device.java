@@ -6,7 +6,7 @@ public abstract class Device implements Addable {
     private String name;
     private IPAddress ip_address;
     private DeviceInterface[] deviceInterfaces;
-    private final int messageSendingTimeOffset;
+    private Integer messageSendingTimeOffset;
 
 
     public Device(){
@@ -43,5 +43,12 @@ public abstract class Device implements Addable {
 
     public int getMessageSendingTimeOffset() {
         return messageSendingTimeOffset;
+    }
+
+    public void setMessageSendingTimeOffset(Integer messageSendingTimeOffset) {
+        if(messageSendingTimeOffset < 0)
+            this.messageSendingTimeOffset = 0;
+        else
+            this.messageSendingTimeOffset = messageSendingTimeOffset;
     }
 }

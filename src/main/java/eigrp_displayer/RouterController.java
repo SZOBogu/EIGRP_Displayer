@@ -37,21 +37,26 @@ public class RouterController extends DeviceController implements ClockDependent
     }
 
     public void respond(RTPMessage message){
-        if(message instanceof QueryMessage){
-            this.respondQuery((QueryMessage)message);
+        if(message.getReceiverAddress().equals(this.getDevice().getIp_address())) {
+            if (message instanceof QueryMessage) {
+                this.respondQuery((QueryMessage) message);
+            } else if (message instanceof HelloMessage) {
+                this.respondHello((HelloMessage) message);
+            } else if (message instanceof ACKMessage) {
+                this.respondACK((ACKMessage) message);
+            } else if (message instanceof UpdateMessage) {
+                this.respondUpdate((UpdateMessage) message);
+            } else if (message instanceof ReplyMessage) {
+                this.respondReply((ReplyMessage) message);
+            }
         }
-        else if(message instanceof HelloMessage){
-            this.respondHello((HelloMessage)message);
+        else{
+            this.passMessageFurther(message);
         }
-        else if(message instanceof ACKMessage){
-            this.respondACK((ACKMessage)message);
-        }
-        else if(message instanceof UpdateMessage){
-            this.respondUpdate((UpdateMessage)message);
-        }
-        else if(message instanceof ReplyMessage) {
-            this.respondReply((ReplyMessage)message);
-        }
+    }
+
+    public void passMessageFurther(RTPMessage message){
+
     }
 
     public void respondACK(ACKMessage ack){
@@ -223,17 +228,35 @@ public class RouterController extends DeviceController implements ClockDependent
         }
     }
 
-    //TODO:test
-    public DeviceInterface getInterface(RoutingTableEntry entry){
+    //TODO: tests
+    public IPAddress getAddressOfNextDeviceOnPath(IPAddress ip){
+        List<DeviceController> controllers = this.getAllNeighbourControllers();
+
+        for(DeviceController controller : controllers){
+            IPAddress contIp = controller.getDevice().getIp_address();
+            if(contIp.equals(ip)){
+                return contIp;
+            }
+        }
+        return null;
+    }
+
+    //TODO: tests
+    public DeviceInterface getInterface(IPAddress ipAddress){
         for(DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()){
             if(deviceInterface.checkIfOtherDeviceControllerConnected(this)){
                 Device device = deviceInterface.getOtherDeviceController(this).getDevice();
-                if(device!=null && device.getIp_address().equals(entry.getIp_address())){
+                if(device!=null && device.getIp_address().equals(ipAddress)){
                     return deviceInterface;
                 }
             }
         }
         return null;
+    }
+
+
+    public DeviceInterface getInterface(RoutingTableEntry entry){
+        return this.getInterface(entry.getIp_address());
     }
 
     //TODO: test (have fun dawg)

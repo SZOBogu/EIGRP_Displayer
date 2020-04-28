@@ -93,6 +93,14 @@ class RouterTest {
     }
 
     @Test
+    void setMessageSendingTimeOffset() {
+        router.setMessageSendingTimeOffset(10);
+        assertEquals(10, router.getMessageSendingTimeOffset());
+        router.setMessageSendingTimeOffset(-10);
+        assertEquals(0, router.getMessageSendingTimeOffset());
+    }
+
+    @Test
     void getRoutingTable() {
         assertEquals(new RoutingTable(), router.getRoutingTable());
     }

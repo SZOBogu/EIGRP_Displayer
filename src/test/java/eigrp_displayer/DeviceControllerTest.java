@@ -106,8 +106,11 @@ class DeviceControllerTest {
         assertEquals(message0, controller0.getMessageSchedule().get(Clock.getTime()));
         assertEquals(message1, controller0.getMessageSchedule().get(Clock.getTime() + 1));
         assertEquals(message2, controller0.getMessageSchedule().get(Clock.getTime() + 2));
-        assertEquals(10000, controller0.getMessageSchedule().size());
 
+        for(int i = Clock.getTime() + 3; i < controller0.getMessageSchedule().size(); i++){
+            assertTrue(controller0.getMessageSchedule().get(i) instanceof NullMessage);
+        }
+        assertEquals(10000, controller0.getMessageSchedule().size());
     }
 
     @Test
@@ -123,6 +126,9 @@ class DeviceControllerTest {
         assertEquals(message0, controller0.getMessageSchedule().get(Clock.getTime() + offset));
         assertEquals(message1, controller0.getMessageSchedule().get(Clock.getTime() + offset + 1));
         assertEquals(message2, controller0.getMessageSchedule().get(Clock.getTime() + offset + 2));
+        for(int i = Clock.getTime() + offset + 3; i < controller0.getMessageSchedule().size(); i++){
+            assertTrue(controller0.getMessageSchedule().get(i) instanceof NullMessage);
+        }
         assertEquals(10000, controller0.getMessageSchedule().size());
     }
 
@@ -150,7 +156,7 @@ class DeviceControllerTest {
         CyclicMessage cyclicMessage = new CyclicMessage(message0, interval);
         controller0.sendCyclicMessage(cyclicMessage, offset);
         for(int i = 0; i < controller0.getMessageSchedule().size(); i++){
-            if((i % interval) == (interval % offset))
+            if(((i % interval) == offset))
                 assertEquals(message0, controller0.getMessageSchedule().get(i));
             else
                 assertTrue(controller0.getMessageSchedule().get(i) instanceof NullMessage);
@@ -159,21 +165,33 @@ class DeviceControllerTest {
 
     @Test
     void scheduleHellos() {
+        //sometimes doesn't work, randomness comes from random offset in device
         init();
-        int offset = controller0.getDevice().getMessageSendingTimeOffset();
         List<IPAddress> ips = new ArrayList<>();
         for(DeviceController controller : controller0.getAllConnectedDeviceControllers()){
             ips.add(controller.getDevice().getIp_address());
         }
-        controller0.scheduleHellos();
+        assertEquals(2, ips.size());
 
-        for(int i = 0; i < controller0.getMessageSchedule().size(); i++){
-            if((i % 15) == (15 % offset)) {
-                assertTrue(controller0.getMessageSchedule().get(i) instanceof HelloMessage);
-                assertTrue(ips.contains(controller0.getMessageSchedule().get(i).getReceiverAddress()));
-            }
+        for(int i = 0; i < 120; i++) {
+            int offset;
+
+            if (i == 0)
+                offset = 0;
+            else if(i < 60)
+                offset = i;
             else
-                assertTrue(controller0.getMessageSchedule().get(i) instanceof NullMessage);
+                offset = i % 60;
+
+            controller0.getDevice().setMessageSendingTimeOffset(i);
+            controller0.scheduleHellos();
+            for (int j = i; j < controller0.getMessageSchedule().size(); j++) {
+                if (((j % 60) == offset || ((j % 60) == offset + 1))) {
+                    assertTrue(controller0.getMessageSchedule().get(j) instanceof HelloMessage,
+                            "Not hello: " + j + " offset: " + offset);
+                }
+            }
+            controller0.clearSchedule();
         }
     }
 
@@ -220,5 +238,20 @@ class DeviceControllerTest {
         assertEquals(connection1, controller0.getDevice().getDeviceInterfaces()[1].getConnection());
         assertNull(controller0.getDevice().getDeviceInterfaces()[2].getConnection());
         assertNull(controller0.getDevice().getDeviceInterfaces()[3].getConnection());
+    }
+
+    @Test
+    void clearSchedule() {
+        init();
+        HelloMessage message = new HelloMessage(ip0, ip1);
+        int offset = 10;
+        controller0.sendMessage(message, offset);
+        assertEquals(message, controller0.getMessageSchedule().get(Clock.getTime() + offset));
+        assertEquals(10000, controller0.getMessageSchedule().size());
+
+        controller0.clearSchedule();
+        for(int i = 0; i < controller0.getMessageSchedule().size(); i++){
+            assertTrue(controller0.getMessageSchedule().get(i) instanceof NullMessage);
+        }
     }
 }

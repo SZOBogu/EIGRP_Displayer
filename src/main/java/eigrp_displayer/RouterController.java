@@ -260,8 +260,8 @@ public class RouterController extends DeviceController implements ClockDependent
 
     //TODO: test (have fun dawg)
     public String printTopologyTable() {
-        StringBuilder string = new StringBuilder(this.getDevice().getTopologyTable().getDescription() + "\n\n"
-                + this.getDevice().getTopologyTable().getCodes() + "\n\n");
+        StringBuilder string = new StringBuilder(this.getDevice().getTopologyTable().getDescription() + "\n"
+                + this.getDevice().getTopologyTable().getCodes() + "\n");
 
         for(RoutingTableEntry entry : this.getDevice().getTopologyTable().getEntries()){
 

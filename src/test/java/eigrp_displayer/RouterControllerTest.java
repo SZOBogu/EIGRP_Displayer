@@ -111,12 +111,22 @@ class RouterControllerTest {
                 controller.getInterface(ip0));
     }
 
+    //TODO: add some records
     @Test
     void printTopologyTable() {
-    }
+        String string = "IP-EIGRP Topology Table for AS 1\n" +
+                "Codes: P - Passive, A - Active, U - Update, Q - Query, R - Reply, r - Reply status\n";
 
+        assertEquals(string, controller.printTopologyTable());
+    }
+    //TODO: add some records
     @Test
     void printRoutingTable() {
+        IPAddress ip = Mockito.mock(IPAddress.class);
+        controller.getDevice().setIp_address(ip);
+        String string = ip + "\\" + MessageScheduler.getInstance().getNetwork().getMask().getMask() + " isn't variably subnetted, 0 subnets, 1 masks\n";
+
+        assertEquals(string, controller.printRoutingTable());
     }
 
     @Test
@@ -148,6 +158,7 @@ class RouterControllerTest {
         assertEquals(deviceController1, controller.getAllNeighbourControllersButOne(ip2).get(1));
     }
 
+    //TODO: finish it
     @Test
     void getAddressOfNextDeviceOnPath() {
         init();

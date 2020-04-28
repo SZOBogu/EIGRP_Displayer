@@ -10,6 +10,14 @@ public class Network {
     private PoolOfIPAddresses pool;
     private List<DeviceController> deviceControllers;
 
+    public Network(){
+        this(
+                new IPAddress(192,168,0,0),
+                new IPAddress(192,168,0,255),
+                new Mask(24)
+                );
+    }
+
     public Network(IPAddress networkAddress, IPAddress broadcastAddress, Mask mask){
         this.networkAddress = networkAddress;
         this.broadcastAddress = broadcastAddress;

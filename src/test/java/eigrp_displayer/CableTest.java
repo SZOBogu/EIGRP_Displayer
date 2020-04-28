@@ -2,7 +2,6 @@ package eigrp_displayer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -10,13 +9,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class CableTest {
     Cable cable = new Cable();
     Cable cable0 = new Cable("Dummy Cable", 10, 11, 12,13);
-    DeviceController device = Mockito.mock(DeviceController.class);
-    DeviceController device0 = Mockito.mock(DeviceController.class);
+    Device device = new EndDevice();
+    Device device1 = new EndDevice();
+    DeviceController controller = new DeviceController(device);
+    DeviceController controller0 = new DeviceController(device1);
 
     @BeforeEach
     void init(){
-        cable.setDevice1(device);
-        cable.setDevice2(device0);
+        cable.setDevice1(controller);
+        cable.setDevice2(controller0);
     }
 
     @Test
@@ -81,55 +82,54 @@ class CableTest {
 
     @Test
     void getDevice1() {
-        assertEquals(device ,cable.getDevice1());
+        assertEquals(controller ,cable.getDevice1());
     }
 
     @Test
     void setDevice1() {
-        cable.setDevice1(device0);
-        assertEquals(device0 ,cable.getDevice1());
+        cable.setDevice1(controller0);
+        assertEquals(controller0 ,cable.getDevice1());
     }
 
     @Test
     void getDevice2() {
-        assertEquals(device0 ,cable.getDevice2());
+        assertEquals(controller0 ,cable.getDevice2());
     }
 
     @Test
     void setDevice2() {
-        cable.setDevice2(device);
-        assertEquals(device ,cable.getDevice2());
+        cable.setDevice2(controller);
+        assertEquals(controller ,cable.getDevice2());
     }
-    //TODO: update
     @Test
     void linkDevice(){
         assertNull(cable0.getDevice1());
         assertNull(cable0.getDevice2());
-        cable0.linkDevice(device);
-        assertEquals(device, cable0.getDevice1());
+        cable0.linkDevice(controller);
+        assertEquals(controller, cable0.getDevice1());
         assertNull(cable0.getDevice2());
-        cable0.linkDevice(device0);
-        assertEquals(device, cable0.getDevice1());
-        assertEquals(device0, cable0.getDevice2());
+        assertEquals(cable0, controller.getDevice().getDeviceInterfaces()[0].getConnection());
+        cable0.linkDevice(controller0);
+        assertEquals(controller, cable0.getDevice1());
+        assertEquals(controller0, cable0.getDevice2());
+        assertEquals(cable0, controller0.getDevice().getDeviceInterfaces()[0].getConnection());
     }
 
     @Test
     void getOtherDevice() {
-        assertEquals(device0, cable.getOtherDevice(device));
-        assertEquals(device, cable.getOtherDevice(device0));
+        assertEquals(controller0, cable.getOtherDevice(controller));
+        assertEquals(controller, cable.getOtherDevice(controller0));
         cable.setDevice1(null);
-        assertNull(cable.getOtherDevice(device));
-        assertNull(cable.getOtherDevice(device0));
+        assertNull(cable.getOtherDevice(controller));
+        assertNull(cable.getOtherDevice(controller0));
     }
 
-    //TODO: update
     @Test
     void linkDevices() {
-        DeviceController device1 = Mockito.mock(DeviceController.class);
-        DeviceController device2 = Mockito.mock(DeviceController.class);
-
-        cable.linkDevices(device1, device2);
-        assertEquals(device1, cable.getDevice1());
-        assertEquals(device2, cable.getDevice2());
+       cable.linkDevices(controller, controller0);
+        assertEquals(controller, cable.getDevice1());
+        assertEquals(controller0, cable.getDevice2());
+        assertEquals(cable, controller.getDevice().getDeviceInterfaces()[0].getConnection());
+        assertEquals(cable, controller0.getDevice().getDeviceInterfaces()[0].getConnection());
     }
 }

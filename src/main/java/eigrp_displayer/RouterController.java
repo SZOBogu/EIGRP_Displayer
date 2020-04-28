@@ -195,7 +195,7 @@ public class RouterController extends DeviceController implements ClockDependent
             }
         }
     }
-    //TODO:fix me
+
     public List<DeviceController> getAllNeighbourControllers(){
         List<DeviceController> deviceControllers = this.getAllConnectedDeviceControllers();
         List<IPAddress> ips = this.getDevice().getNeighbourTable().getAllNeighboursAddresses();

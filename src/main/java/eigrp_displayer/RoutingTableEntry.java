@@ -11,7 +11,6 @@ public class RoutingTableEntry {
     private long reportedDistance;
     private int ticksSinceLastHelloMessage = 0;
     private List<Connection> path;
-    private List<Connection> successorPath;
 
     public RoutingTableEntry(IPAddress ip_address){
         this("P", ip_address);
@@ -23,7 +22,6 @@ public class RoutingTableEntry {
         this.feasibleDistance = Long.MAX_VALUE;
         this.reportedDistance = Long.MAX_VALUE;
         this.path = new ArrayList<>();
-        this.successorPath = new ArrayList<>();
     }
 
     public String getCode() {
@@ -66,13 +64,6 @@ public class RoutingTableEntry {
         this.path = path;
     }
 
-    public List<Connection> getSuccessorPath() {
-        return successorPath;
-    }
-
-    public void setSuccessorPath(List<Connection> successorPath) {
-        this.successorPath = successorPath;
-    }
 
     public int getTicksSinceLastHelloMessage() {
         return this.ticksSinceLastHelloMessage;

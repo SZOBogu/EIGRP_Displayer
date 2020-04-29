@@ -4,6 +4,7 @@ import eigrp_displayer.messages.RTPMessage;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -19,8 +20,8 @@ class RouterControllerTest {
     IPAddress ip1 = Mockito.mock(IPAddress.class);
 
     RouterController controller = new RouterController(router);
-    DeviceController deviceController0 = new DeviceController(router0);
-    DeviceController deviceController1 = new DeviceController(router1);
+    RouterController deviceController0 = new RouterController(router0);
+    RouterController deviceController1 = new RouterController(router1);
 
     Connection connection0 = new Cable();
     Connection connection1 = new Cable();
@@ -202,14 +203,28 @@ class RouterControllerTest {
         assertEquals(deviceController1, controller.getAllNeighbourControllersButOne(ip2).get(1));
     }
 
-    //TODO: finish it
     @Test
     void getAddressOfNextDeviceOnPath() {
         init();
         Connection connection3 = new Cable();
         Router router3 = new Router("R3");
+        IPAddress ipAddress = Mockito.mock(IPAddress.class);
         RouterController routerController3 = new RouterController(router3);
+        router3.setIp_address(ipAddress);
 
         connection3.linkDevices(deviceController1, routerController3);
+
+        ArrayList<Connection> bestPath = new ArrayList<>(Arrays.asList(connection3, connection2));
+        ArrayList<Connection> successorPath = new ArrayList<>(Arrays.asList(connection3, connection1, connection0));
+        RoutingTableEntry bestEntry = new RoutingTableEntry(ip);
+        RoutingTableEntry successorEntry = new RoutingTableEntry(ip);
+        bestEntry.setPath(bestPath);
+        successorEntry.setPath(successorPath);
+
+        routerController3.getDevice().getTopologyTable().getEntries().add(bestEntry);
+        routerController3.getDevice().getTopologyTable().getEntries().add(successorEntry);
+        routerController3.getDevice().getRoutingTable().getEntries().add(bestEntry);
+
+        assertEquals(ip1, routerController3.getAddressOfNextDeviceOnPath(ip));
     }
 }

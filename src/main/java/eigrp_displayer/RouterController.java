@@ -217,7 +217,7 @@ public class RouterController extends DeviceController implements ClockDependent
 
     public void update(RoutingTableEntry entry, IPAddress senderAddress){
         this.getDevice().getTopologyTable().update(this, entry, senderAddress);
-        RoutingTableEntry bestEntry = this.getDevice().getTopologyTable().getBestEntryForIP(senderAddress);
+        RoutingTableEntry bestEntry = this.getDevice().getTopologyTable().getBestEntryForIP(entry.getIp_address());
         this.getDevice().getRoutingTable().update(bestEntry);
     }
 
@@ -227,17 +227,16 @@ public class RouterController extends DeviceController implements ClockDependent
         }
     }
 
-    //TODO: tests
-    public IPAddress getAddressOfNextDeviceOnPath(IPAddress ip){
-        List<DeviceController> controllers = this.getAllNeighbourControllers();
+    public IPAddress getAddressOfNextDeviceOnPath(IPAddress targetIP){
+        Router device = this.getDevice();
+        RoutingTable routingTable = device.getRoutingTable();
+        RoutingTableEntry entry = routingTable.getEntry(targetIP);
+        List<Connection> connections = entry.getPath();
+        Connection connection = connections.get(0);
+        DeviceController controller = connection.getOtherDevice(this);
+        Device device0 = controller.getDevice();
 
-        for(DeviceController controller : controllers){
-            IPAddress contIp = controller.getDevice().getIp_address();
-            if(contIp.equals(ip)){
-                return contIp;
-            }
-        }
-        return null;
+        return device0.getIp_address();
     }
 
     public DeviceInterface getInterface(IPAddress ipAddress){

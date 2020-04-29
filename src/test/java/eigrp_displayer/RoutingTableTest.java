@@ -37,15 +37,12 @@ class RoutingTableTest {
 
     @Test
     void updateEntry() {
-        routingTable.getEntries().add(entry0);
-
         RoutingTableEntry betterEntry = new RoutingTableEntry(ip0);
         RoutingTableEntry worseEntry = new RoutingTableEntry(ip0);
         betterEntry.setFeasibleDistance(100);
         worseEntry.setFeasibleDistance(10000);
 
         routingTable.update(betterEntry);
-        entry0.setFeasibleDistance(1000);
         routingTable.update(worseEntry);
 
         assertEquals(betterEntry, routingTable.getEntry(ip0));

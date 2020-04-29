@@ -139,10 +139,6 @@ public class DeviceController {
         }
         return null;
     }
-    //TODO: implement, rename, test
-    public void updateMetric(Connection connection){
-        //przelicz trasy
-    }
 
     public void setConnection(Connection connection){
         for(int i = 0; i < this.device.getDeviceInterfaces().length; i++){

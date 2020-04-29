@@ -215,7 +215,6 @@ public class RouterController extends DeviceController implements ClockDependent
         return deviceControllers;
     }
 
-    //TODO: tests
     public void update(RoutingTableEntry entry, IPAddress senderAddress){
         this.getDevice().getTopologyTable().update(this, entry, senderAddress);
         RoutingTableEntry bestEntry = this.getDevice().getTopologyTable().getBestEntryForIP(senderAddress);
@@ -258,7 +257,6 @@ public class RouterController extends DeviceController implements ClockDependent
         return this.getInterface(entry.getIp_address());
     }
 
-    //TODO: test (have fun dawg)
     public String printTopologyTable() {
         StringBuilder string = new StringBuilder(this.getDevice().getTopologyTable().getDescription() + "\n"
                 + this.getDevice().getTopologyTable().getCodes() + "\n");

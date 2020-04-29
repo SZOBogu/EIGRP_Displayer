@@ -81,13 +81,16 @@ public class TopologyTable extends RoutingTable{
         }
     }
 
-    public void update(RouterController routerController, RoutingTableEntry receivedRoutingTableEntry, IPAddress sender) {
+    public void update(RouterController routerController, RoutingTableEntry receivedRoutingTableEntry,
+                       IPAddress sender) {
         long metricForConnectionWithSender = Long.MAX_VALUE;
         MetricCalculator calculator = new MetricCalculator();
         Connection connection = new Cable();
 
         for (DeviceInterface deviceInterface : routerController.getDevice().getDeviceInterfaces()) {
-            if (deviceInterface.getOtherDeviceController(routerController).getDevice().getIp_address().equals(sender)) {
+            if (deviceInterface.getOtherDeviceController(routerController).
+                    getDevice().getIp_address().equals(sender)) {
+
                 metricForConnectionWithSender = calculator.calculateMetric(
                         routerController.getDevice(), connection);
                 break;

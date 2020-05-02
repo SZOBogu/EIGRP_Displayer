@@ -13,6 +13,7 @@ class NeighbourTableTest {
     IPAddress ip0 = Mockito.mock(IPAddress.class);
     IPAddress ip1 = Mockito.mock(IPAddress.class);
     IPAddress ip2 = Mockito.mock(IPAddress.class);
+    DeviceInterface deviceInterface = new DeviceInterface("Interface");
 
     @Test
     void getDescription() {
@@ -21,9 +22,9 @@ class NeighbourTableTest {
 
     @Test
     void getEntry() {
-        neighbourTable.formNeighbourship(ip0);
-        neighbourTable.formNeighbourship(ip1);
-        neighbourTable.formNeighbourship(ip2);
+        neighbourTable.formNeighbourship(deviceInterface, ip0);
+        neighbourTable.formNeighbourship(deviceInterface, ip1);
+        neighbourTable.formNeighbourship(deviceInterface, ip2);
 
         assertEquals(ip0, neighbourTable.getEntry(ip0).getNeighbourAddress());
         assertEquals(ip1, neighbourTable.getEntry(ip1).getNeighbourAddress());
@@ -38,11 +39,11 @@ class NeighbourTableTest {
     @Test
     void formNeighbourship() {
         assertEquals(0 , neighbourTable.getEntries().size());
-        neighbourTable.formNeighbourship(ip0);
+        neighbourTable.formNeighbourship(deviceInterface, ip0);
         assertEquals(1 , neighbourTable.getEntries().size());
         assertEquals(ip0, neighbourTable.getEntries().get(0).getNeighbourAddress());
-        neighbourTable.formNeighbourship(ip1);
-        neighbourTable.formNeighbourship(ip2);
+        neighbourTable.formNeighbourship(deviceInterface, ip1);
+        neighbourTable.formNeighbourship(deviceInterface, ip2);
         assertEquals(3 , neighbourTable.getEntries().size());
     }
 
@@ -50,8 +51,8 @@ class NeighbourTableTest {
     void removeNeighbourship() {
         IPAddress ip2 = Mockito.mock(IPAddress.class);
 
-        neighbourTable.formNeighbourship(ip0);
-        neighbourTable.formNeighbourship(ip1);
+        neighbourTable.formNeighbourship(deviceInterface, ip0);
+        neighbourTable.formNeighbourship(deviceInterface, ip1);
 
         assertEquals(2, neighbourTable.getAllNeighboursAddresses().size());
         neighbourTable.removeNeighbourship(ip0);
@@ -66,9 +67,9 @@ class NeighbourTableTest {
     void testToString() {
         StringBuilder string = new StringBuilder(neighbourTable.getDescription() + '\n' +
                 "H\tAddress\tInterface\tHold\tUptime\tSRTT\tRTO\tQ Cnt\tSeq Num\n");
-        neighbourTable.formNeighbourship(ip0);
-        neighbourTable.formNeighbourship(ip1);
-        neighbourTable.formNeighbourship(ip2);
+        neighbourTable.formNeighbourship(deviceInterface, ip0);
+        neighbourTable.formNeighbourship(deviceInterface, ip1);
+        neighbourTable.formNeighbourship(deviceInterface, ip2);
 
         for(int i = 0 ; i < neighbourTable.getEntries().size(); i++){
             string.append(i).append("\t").append(neighbourTable.getEntries().get(i).toString()).append("\n");
@@ -80,8 +81,8 @@ class NeighbourTableTest {
     void updateTime() {
         Clock.getClockDependents().clear();
         neighbourTable = new NeighbourTable();
-        neighbourTable.formNeighbourship(ip0);
-        neighbourTable.formNeighbourship(ip1);
+        neighbourTable.formNeighbourship(deviceInterface, ip0);
+        neighbourTable.formNeighbourship(deviceInterface, ip1);
         neighbourTable.getEntries().get(1).setHold(20);
         assertEquals(1, Clock.getClockDependents().size());
         assertEquals(neighbourTable, Clock.getClockDependents().get(0));
@@ -100,8 +101,8 @@ class NeighbourTableTest {
 
     @Test
     void checkIfPresent() {
-        neighbourTable.formNeighbourship(ip0);
-        neighbourTable.formNeighbourship(ip1);
+        neighbourTable.formNeighbourship(deviceInterface, ip0);
+        neighbourTable.formNeighbourship(deviceInterface, ip1);
 
         assertTrue(neighbourTable.checkIfPresent(ip0));
         assertTrue(neighbourTable.checkIfPresent(ip1));
@@ -112,8 +113,8 @@ class NeighbourTableTest {
 
     @Test
     void getAllNeighboursAddresses() {
-        neighbourTable.formNeighbourship(ip0);
-        neighbourTable.formNeighbourship(ip1);
+        neighbourTable.formNeighbourship(deviceInterface, ip0);
+        neighbourTable.formNeighbourship(deviceInterface, ip1);
         List<IPAddress> neighbourIPs = neighbourTable.getAllNeighboursAddresses();
 
         assertEquals(2, neighbourIPs.size());

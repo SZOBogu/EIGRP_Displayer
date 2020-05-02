@@ -11,7 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class NeighbourTableEntryTest {
     IPAddress ip0 = new IPAddress(192,168,100,1);
     IPAddress ip1 = Mockito.mock(IPAddress.class);
-    NeighbourTableEntry entry = new NeighbourTableEntry(ip0);
+    DeviceInterface deviceInterface = new DeviceInterface("Interface");
+    NeighbourTableEntry entry = new NeighbourTableEntry(deviceInterface, ip0);
     @Test
     void getNeighbourAddress() {
         assertEquals(ip0, entry.getNeighbourAddress());
@@ -44,7 +45,7 @@ class NeighbourTableEntryTest {
                             fourthOctet,
                             splittedEntry[0]);
 
-            assertTrue(splittedEntry[1].matches("Interface [0-3]\\\\[0-3]"), " " + splittedEntry[1]);
+            assertEquals(deviceInterface.getName(), splittedEntry[1]);
             assertEquals("15", splittedEntry[2]);
 
             assertTrue(splittedEntry[3].matches("^00:0[0-1]:[0-5][0-9]$|00:00"), " " + splittedEntry[3]);

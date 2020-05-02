@@ -76,7 +76,10 @@ public class RouterController extends DeviceController implements ClockDependent
             if(otherDeviceController.getDevice() instanceof Router) {
                 RComparator comparator = new RComparator();
                 if (comparator.compare(this.getDevice(), (Router)otherDeviceController.getDevice())) {
-                    this.getDevice().getNeighbourTable().formNeighbourship(helloMessage.getSenderAddress());
+
+                    this.getDevice().getNeighbourTable().formNeighbourship(
+                            this.getInterface(helloMessage.getSenderAddress()), helloMessage.getSenderAddress());
+
                     UpdateMessage updateMessage = new UpdateMessage(this.getDevice().getIp_address(),
                             helloMessage.getSenderAddress(), this.getDevice().getTopologyTable());
                     this.sendMessage(updateMessage);
@@ -85,7 +88,9 @@ public class RouterController extends DeviceController implements ClockDependent
             if(otherDeviceController.getDevice() instanceof EndDevice ||
                     otherDeviceController.getDevice() instanceof ExternalNetwork) {
                 //TODO: look for unexpected cases of not replying/looping/whatever
-                this.getDevice().getNeighbourTable().formNeighbourship(helloMessage.getSenderAddress());
+                this.getDevice().getNeighbourTable().formNeighbourship(
+                        this.getInterface(helloMessage.getSenderAddress()), helloMessage.getSenderAddress());
+
                 //AND make new record in routing and topology tables
                 RoutingTableEntry entry = new RoutingTableEntry(
                         otherDeviceController.getDevice().getIp_address());

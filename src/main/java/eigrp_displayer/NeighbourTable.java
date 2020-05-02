@@ -30,8 +30,8 @@ public class NeighbourTable implements ClockDependent{
         return null;
     }
 
-    public void formNeighbourship(IPAddress ipAddress){
-        NeighbourTableEntry entry = new NeighbourTableEntry(ipAddress);
+    public void formNeighbourship(DeviceInterface deviceInterface,IPAddress ipAddress){
+        NeighbourTableEntry entry = new NeighbourTableEntry(deviceInterface, ipAddress);
         this.entries.add(entry);
     }
 

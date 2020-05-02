@@ -27,13 +27,13 @@ public class NeighbourTableEntry{
     private int seqNum;
     private int ticksSinceLastHello;
 
-    public NeighbourTableEntry(IPAddress neighbourAddress){
+    public NeighbourTableEntry(DeviceInterface deviceInterface, IPAddress neighbourAddress){
         this.neighbourAddress = neighbourAddress;
 
         //fill the rest with bullshit
         Random random = new Random();
         //TODO: use actual interface
-        this.netInterface = "Interface " + random.nextInt(4) + "\\" + random.nextInt(4);
+        this.netInterface = deviceInterface.getName();
         this.hold = 15;
         this.uptime = LocalTime.of(0, random.nextInt(1), random.nextInt(60));
         this.srtt = random.nextInt(300);

@@ -32,6 +32,7 @@ public class NeighbourTableEntry{
 
         //fill the rest with bullshit
         Random random = new Random();
+        //TODO: use actual interface
         this.netInterface = "Interface " + random.nextInt(4) + "\\" + random.nextInt(4);
         this.hold = 15;
         this.uptime = LocalTime.of(0, random.nextInt(1), random.nextInt(60));

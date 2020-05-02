@@ -1,6 +1,6 @@
 package eigrp_displayer;
 
-import eigrp_displayer.messages.RTPMessage;
+import eigrp_displayer.messages.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RouterControllerTest {
     Router router = new Router("R");
@@ -20,26 +19,21 @@ class RouterControllerTest {
     IPAddress ip1 = Mockito.mock(IPAddress.class);
 
     RouterController controller = new RouterController(router);
-    RouterController deviceController0 = new RouterController(router0);
-    RouterController deviceController1 = new RouterController(router1);
+    RouterController controller0 = new RouterController(router0);
+    RouterController controller1 = new RouterController(router1);
 
     Connection connection0 = new Cable();
     Connection connection1 = new Cable();
     Connection connection2 = new Cable();
 
     void init(){
-        connection0.linkDevices(controller, deviceController0);
-        connection1.linkDevices(deviceController0, deviceController1);
-        connection2.linkDevices(deviceController1, controller);
+        connection0.linkDevices(controller, controller0);
+        connection1.linkDevices(controller0, controller1);
+        connection2.linkDevices(controller1, controller);
 
         router.setIp_address(ip);
         router0.setIp_address(ip0);
         router1.setIp_address(ip1);
-    }
-
-    @Test
-    void sendMessage() {
-
     }
 
     @Test
@@ -48,35 +42,151 @@ class RouterControllerTest {
     }
 
     @Test
-    void sendMessages() {
-    }
-
-    @Test
-    void sendCyclicMessage() {
-    }
-
-    @Test
-    void updateMetric() {
-    }
-
-    @Test
     void respondACK() {
+        init();
+        ACKMessage ack = new ACKMessage(ip, ip0);
+        ReplyMessage replyGoodIP = new ReplyMessage(ip0, ip, Mockito.mock(RoutingTableEntry.class));
+        UpdateMessage updateGoodIP = new UpdateMessage(ip0, ip, Mockito.mock(TopologyTable.class));
+        ReplyMessage replyWrongIP = new ReplyMessage(ip0, ip1, Mockito.mock(RoutingTableEntry.class));
+        RTPMessage outOfPlaceMsg = Mockito.mock(RTPMessage.class);
+
+        HashMap<RTPMessage, Integer> messageMap = new HashMap<>();
+        messageMap.put(replyGoodIP, 0);
+        messageMap.put(updateGoodIP, 0);
+        messageMap.put(replyWrongIP, 0);
+        messageMap.put(outOfPlaceMsg, 0);
+
+        //debugging shows that keys are properly deleted despite contains() being always false
+        controller0.setMessagesToTryToSendAgain(messageMap);
+        assertEquals(4, controller0.getMessagesToTryToSendAgain().size());
+        controller0.respondACK(ack);
+        assertEquals(3, controller0.getMessagesToTryToSendAgain().size());
+        controller0.respondACK(ack);
+        assertEquals(2, controller0.getMessagesToTryToSendAgain().size());
+        controller0.respondACK(ack);
+        assertEquals(2, controller0.getMessagesToTryToSendAgain().size());
+        controller0.respondACK(ack);
+        assertEquals(2, controller0.getMessagesToTryToSendAgain().size());
     }
 
     @Test
-    void respondHello() {
+    void respondHelloWhenAlreadyNeighbours() {
+        HelloMessage hello = new HelloMessage(ip, ip0);
+        controller0.getDevice().getNeighbourTable().formNeighbourship(ip);
+        NeighbourTableEntry entry = controller0.getDevice().getNeighbourTable().getEntries().get(0);
+        entry.setTicksSinceLastHello(10);
+        assertEquals(1, controller0.getDevice().getNeighbourTable().getAllNeighboursAddresses().size());
+        controller0.respondHello(hello);
+        assertEquals(1, controller0.getDevice().getNeighbourTable().getAllNeighboursAddresses().size());
+        assertEquals(entry, controller0.getDevice().getNeighbourTable().getEntries().get(0));
+        assertEquals(0, entry.getTicksSinceLastHello());
+    }
+
+    @Test
+    void respondHelloFromNewRouter(){
+        init();
+        HelloMessage hello = new HelloMessage(ip, ip0);
+        assertTrue(controller0.getDevice().getNeighbourTable().getAllNeighboursAddresses().isEmpty());
+        controller0.respondHello(hello);
+        assertEquals(1, controller0.getDevice().getNeighbourTable().getAllNeighboursAddresses().size());
+        assertEquals(ip, controller0.getDevice().getNeighbourTable().getAllNeighboursAddresses().get(0));
+        assertTrue(controller0.getMessageSchedule().get(Clock.getTime()) instanceof UpdateMessage);
+    }
+
+    @Test
+    void respondHelloFormEndDevice(){
+        init();
+        IPAddress ip3 = Mockito.mock(IPAddress.class);
+        EndDevice device = new EndDevice();
+        device.setIp_address(ip3);
+        DeviceController deviceController = new DeviceController(device);
+        Connection connection3 = new Cable();
+        connection3.linkDevices(controller0, deviceController);
+
+        HelloMessage helloMessage = new HelloMessage(ip3, ip0);
+
+        assertTrue(controller0.getDevice().getNeighbourTable().getAllNeighboursAddresses().isEmpty());
+        assertNull(controller0.getDevice().getRoutingTable().getEntry(ip3));
+        assertTrue(controller0.getDevice().getTopologyTable().getAllEntriesForIP(ip3).isEmpty());
+
+        controller0.respond(helloMessage);
+
+        assertFalse(controller0.getDevice().getNeighbourTable().getAllNeighboursAddresses().isEmpty());
+        assertNotNull(controller0.getDevice().getRoutingTable().getEntry(ip3));
+        assertFalse(controller0.getDevice().getTopologyTable().getAllEntriesForIP(ip3).isEmpty());
+    }
+    @Test
+    void respondQueryLoopedBack() {
+        init();
+        QueryMessage queryMessage = new QueryMessage(ip, ip0, ip1);
+        QueryMessage loopedBackQueryMessage = new QueryMessage(ip0, ip, ip1);
+        QueryMessage supposedToStayQueryMessage = new QueryMessage(ip0, ip, Mockito.mock(IPAddress.class));
+
+        HashMap<RTPMessage, Integer> messageMap = new HashMap<>();
+        messageMap.put(loopedBackQueryMessage, 0);
+        messageMap.put(supposedToStayQueryMessage, 0);
+        controller0.setMessagesSentWaitingForReply(messageMap);
+
+        assertEquals(2, controller0.getMessagesSentWaitingForReply().size());
+        controller0.respondQuery(queryMessage);
+        //debugging shows that correct one stays
+        assertEquals(1, controller0.getMessagesSentWaitingForReply().size());
+        assertTrue(controller0.getMessagesSentWaitingForReply().containsKey(supposedToStayQueryMessage));
+        assertTrue(controller0.getMessageSchedule().get(Clock.getTime()) instanceof ACKMessage);
     }
 
     @Test
     void respondQuery() {
+        init();
+        QueryMessage queryMessage = new QueryMessage(ip, ip0, ip1);
+        RoutingTableEntry entry = new RoutingTableEntry(ip1);
+        controller0.getDevice().getRoutingTable().getEntries().add(entry);
+
+        controller0.respondQuery(queryMessage);
+        assertTrue(controller0.getMessageSchedule().get(Clock.getTime()) instanceof ACKMessage);
+        ReplyMessage reply = (ReplyMessage) controller0.getMessageSchedule().get(Clock.getTime()+1);
+        assertEquals(entry, reply.getRoutingTableEntry());
     }
 
     @Test
     void respondUpdate() {
+        init();
+        TopologyTable table = new TopologyTable();
+        RoutingTableEntry entry0 = new RoutingTableEntry(ip1);
+        entry0.setReportedDistance(100000000);
+        entry0.setFeasibleDistance(100000000);
+        controller0.getDevice().getTopologyTable().getEntries().add(entry0);
+        controller0.getDevice().getRoutingTable().getEntries().add(entry0);
+
+        RoutingTableEntry entry1 = new RoutingTableEntry(ip1);
+        table.getEntries().add(entry1);
+        UpdateMessage updateMessage = new UpdateMessage(ip, ip0, table);
+        entry1.setReportedDistance(10);
+        entry1.setFeasibleDistance(10);
+
+        RoutingTableEntry initialEntry = controller0.getDevice().getRoutingTable().getEntry(ip1);
+        long initialBestPathMetric = controller0.getDevice().getTopologyTable().getBestEntryForIP(ip1).getFeasibleDistance();
+        controller0.respond(updateMessage);
+        assertNotEquals(initialEntry, controller0.getDevice().getRoutingTable().getEntry(ip1));
+        long bestEntryMetric = controller0.getDevice().getTopologyTable().getBestEntryForIP(ip1).getFeasibleDistance();
+        assertTrue(initialBestPathMetric > bestEntryMetric);
+        assertTrue(controller0.getMessageSchedule().get(Clock.getTime()) instanceof ACKMessage);
     }
 
     @Test
     void respondReply() {
+        init();
+        RoutingTableEntry entry0 = new RoutingTableEntry(ip1);
+        ReplyMessage replyMessage = new ReplyMessage(ip, ip0, entry0);
+
+        assertNull(controller0.getDevice().getRoutingTable().getEntry(ip1));
+        assertTrue(controller0.getDevice().getTopologyTable().getAllEntriesForIP(ip1).isEmpty());
+
+        controller0.respond(replyMessage);
+        assertTrue(controller0.getMessageSchedule().get(Clock.getTime()) instanceof ACKMessage);
+
+        assertNotNull(controller0.getDevice().getRoutingTable().getEntry(ip1));
+        assertFalse(controller0.getDevice().getTopologyTable().getAllEntriesForIP(ip1).isEmpty());
     }
 
     @Test
@@ -179,10 +289,10 @@ class RouterControllerTest {
         init();
         controller.getDevice().getNeighbourTable().formNeighbourship(ip1);
         assertEquals(1, controller.getAllNeighbourControllers().size());
-        assertEquals(deviceController1, controller.getAllNeighbourControllers().get(0));
+        assertEquals(controller1, controller.getAllNeighbourControllers().get(0));
         controller.getDevice().getNeighbourTable().formNeighbourship(ip0);
         assertEquals(2, controller.getAllNeighbourControllers().size());
-        assertEquals(deviceController1, controller.getAllNeighbourControllers().get(1));
+        assertEquals(controller1, controller.getAllNeighbourControllers().get(1));
     }
 
     @Test
@@ -193,14 +303,14 @@ class RouterControllerTest {
         router.getNeighbourTable().formNeighbourship(ip1);
 
         assertEquals(1, controller.getAllNeighbourControllersButOne(ip0).size());
-        assertEquals(deviceController1, controller.getAllNeighbourControllersButOne(ip0).get(0));
+        assertEquals(controller1, controller.getAllNeighbourControllersButOne(ip0).get(0));
 
         assertEquals(1, controller.getAllNeighbourControllersButOne(ip1).size());
-        assertEquals(deviceController0, controller.getAllNeighbourControllersButOne(ip1).get(0));
+        assertEquals(controller0, controller.getAllNeighbourControllersButOne(ip1).get(0));
 
         assertEquals(2, controller.getAllNeighbourControllersButOne(ip2).size());
-        assertEquals(deviceController0, controller.getAllNeighbourControllersButOne(ip2).get(0));
-        assertEquals(deviceController1, controller.getAllNeighbourControllersButOne(ip2).get(1));
+        assertEquals(controller0, controller.getAllNeighbourControllersButOne(ip2).get(0));
+        assertEquals(controller1, controller.getAllNeighbourControllersButOne(ip2).get(1));
     }
 
     @Test
@@ -212,7 +322,7 @@ class RouterControllerTest {
         RouterController routerController3 = new RouterController(router3);
         router3.setIp_address(ipAddress);
 
-        connection3.linkDevices(deviceController1, routerController3);
+        connection3.linkDevices(controller1, routerController3);
 
         ArrayList<Connection> bestPath = new ArrayList<>(Arrays.asList(connection3, connection2));
         ArrayList<Connection> successorPath = new ArrayList<>(Arrays.asList(connection3, connection1, connection0));

@@ -7,7 +7,7 @@ import java.util.Objects;
 public class NeighbourTable implements ClockDependent{
     private String description;
     private List<NeighbourTableEntry> entries;
-    
+
     public NeighbourTable(){
         this.description = "IP-EIGRP neighbours table for process 1";
         this.entries = new ArrayList<>();
@@ -22,9 +22,22 @@ public class NeighbourTable implements ClockDependent{
         return entries;
     }
 
+    //TODO: test
+    public NeighbourTableEntry getEntry(IPAddress ip) {
+        for(NeighbourTableEntry entry : this.entries){
+            if(entry.getNeighbourAddress().equals(ip))
+                return entry;
+        }
+        return null;
+    }
+
     public void formNeighbourship(IPAddress ipAddress){
         NeighbourTableEntry entry = new NeighbourTableEntry(ipAddress);
         this.entries.add(entry);
+    }
+
+    public void removeNeighbourship(IPAddress ipAddress){
+        this.entries.removeIf(entry -> entry.getNeighbourAddress().equals(ipAddress));
     }
 
     public boolean checkIfPresent(IPAddress ip){
@@ -41,10 +54,6 @@ public class NeighbourTable implements ClockDependent{
             ips.add(entry.getNeighbourAddress());
         }
         return ips;
-    }
-
-    public void removeNeighbourship(IPAddress ipAddress){
-        this.entries.removeIf(entry -> entry.getNeighbourAddress().equals(ipAddress));
     }
 
     @Override

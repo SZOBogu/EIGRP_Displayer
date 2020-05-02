@@ -1,28 +1,34 @@
 package eigrp_displayer;
 
 import eigrp_displayer.messages.CyclicMessage;
-import eigrp_displayer.messages.NullMessage;
 import eigrp_displayer.messages.RTPMessage;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class MessageSchedulerTest {
     RTPMessage message = Mockito.mock(RTPMessage.class);
     Network network = Mockito.mock(Network.class);
     CyclicMessage cyclicMessage = new CyclicMessage(message, 10);
-    Device device = Mockito.mock(Device.class);
+    Device device = new EndDevice();
     DeviceController controller = new DeviceController(device);
+    Router router = new Router("Rtest");
+    RouterController controller0 = new RouterController(router);
+    Connection con = new Cable();
+    MessageScheduler scheduler = MessageScheduler.getInstance();
 
     @BeforeEach
-    void setUp(){
-        MessageScheduler.getInstance().clear();
+    void init(){
+        device.setIp_address(Mockito.mock(IPAddress.class));
+        router.setIp_address(Mockito.mock(IPAddress.class));
+        con.linkDevices(controller, controller0);
+        controller.addSelfToScheduler();
+        controller0.addSelfToScheduler();
+        scheduler.clear();
     }
 
     @Test
@@ -43,15 +49,43 @@ class MessageSchedulerTest {
 
     @Test
     void clear() {
-        for(List<RTPMessage> list : MessageScheduler.getInstance().getSchedule()){
-            for(RTPMessage message : list){
-                assertTrue(message instanceof NullMessage);
+        controller.scheduleHellos();
+        scheduler.clear();
+
+        assertEquals(2, scheduler.getSchedule().size());
+        assertEquals(10000, scheduler.getSchedule().get(0).size());
+        assertEquals(10000, scheduler.getSchedule().get(1).size());
+
+        for(int i = 0; i < scheduler.getSchedule().size(); i++){
+            for(int j = 0; j < scheduler.getSchedule().get(i).size(); j++){
+                assertNull(scheduler.getSchedule().get(i).get(j));
             }
         }
     }
 
     @Test
     void getTicksToAnotherMessage() {
+        controller.getDevice().setMessageSendingTimeOffset(0);
+        controller0.getDevice().setMessageSendingTimeOffset(100);
 
+        controller.scheduleHellos();
+        controller0.scheduleHellos();
+
+        assertEquals(100, MessageScheduler.getInstance().getTicksToAnotherMessage());
+    }
+
+    @Test
+    void getSchedule() {
+        assertEquals(2, MessageScheduler.getInstance().getSchedule().size());
+    }
+
+    @Test
+    void updateTime() {
+
+    }
+
+    @AfterEach
+    void destroy(){
+        scheduler.getSchedule().clear();
     }
 }

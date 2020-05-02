@@ -2,7 +2,6 @@ package eigrp_displayer;
 
 import eigrp_displayer.messages.CyclicMessage;
 import eigrp_displayer.messages.HelloMessage;
-import eigrp_displayer.messages.NullMessage;
 import eigrp_displayer.messages.RTPMessage;
 
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ public class DeviceController {
 
     public DeviceController() {
         this.clearSchedule();
-        MessageScheduler.getInstance().getSchedule().add(this.messageSchedule);
     }
 
     public DeviceController(Device device) {
@@ -36,6 +34,10 @@ public class DeviceController {
         return messageSchedule;
     }
 
+    public void addSelfToScheduler(){
+        MessageScheduler.getInstance().getSchedule().add(this.messageSchedule);
+    }
+
     public void sendMessage(RTPMessage message, int offset) {
         for (DeviceInterface deviceInterface : new ArrayList<>(Arrays.asList(this.getDevice().getDeviceInterfaces()))) {
             DeviceController deviceController = deviceInterface.getOtherDeviceController(this);
@@ -43,7 +45,7 @@ public class DeviceController {
             if (deviceController != null && deviceController.getDevice().getIp_address().equals(
                     message.getReceiverAddress())) {
                 for (int i = Clock.getTime() + offset; i < this.messageSchedule.size(); i++) {
-                    if (this.messageSchedule.get(i) instanceof NullMessage) {
+                    if (this.messageSchedule.get(i) == null) {
                         this.getMessageSchedule().set(i, message);
                         break;
                     }
@@ -104,7 +106,7 @@ public class DeviceController {
     }
 
     public List<DeviceController> getAllConnectedDeviceControllers(){
-        ArrayList<DeviceInterface> deviceInterfaces = new ArrayList(
+        List<DeviceInterface> deviceInterfaces = new ArrayList(
                 Arrays.asList(this.device.getDeviceInterfaces()));
         Iterator<DeviceInterface> iterator = deviceInterfaces.iterator() ;
         List<DeviceController> controllers = new ArrayList<>();
@@ -152,7 +154,7 @@ public class DeviceController {
     public void clearSchedule(){
         this.messageSchedule = new ArrayList<>();
         for(int i = 0; i <10000; i++){
-            this.messageSchedule.add(new NullMessage());
+            this.messageSchedule.add(null);
         }
     }
 }

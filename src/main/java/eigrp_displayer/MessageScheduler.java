@@ -1,9 +1,9 @@
 package eigrp_displayer;
 
-import eigrp_displayer.messages.NullMessage;
 import eigrp_displayer.messages.RTPMessage;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MessageScheduler implements ClockDependent{
@@ -32,22 +32,30 @@ public class MessageScheduler implements ClockDependent{
 
     public void clear(){
         for (List<RTPMessage> rtpMessages : this.schedule) {
-            rtpMessages.replaceAll(value -> new NullMessage());
+            rtpMessages.clear();
+            for (int j = 0; j < 10000; j++) {
+                rtpMessages.add(null);
+            }
         }
     }
 
     //TODO: tests
     public int getTicksToAnotherMessage(){
-        int tickCounter = 0;
-        for(int i = Clock.getTime(); i < 10000; i++){
-            for(int j = 0 ; j < this.schedule.size(); j++){
-                if(!(this.schedule.get(i).get(j) instanceof NullMessage)){
-                    break;
+        List<Integer> indexesOfClosestOccurrences = new ArrayList<>();
+
+        for(List<RTPMessage> messageList : this.schedule){
+            for(int i = Clock.getTime(); i < messageList.size(); i++){
+                 if(messageList.get(i) != null){
+                     indexesOfClosestOccurrences.add(i);
+                     break;
                 }
-                tickCounter ++;
             }
         }
-        return tickCounter;
+        Collections.sort(indexesOfClosestOccurrences);
+        if(indexesOfClosestOccurrences.isEmpty())
+            return this.schedule.size();
+        else
+            return indexesOfClosestOccurrences.get(1) - indexesOfClosestOccurrences.get(0);
     }
 
     @Override
@@ -56,5 +64,6 @@ public class MessageScheduler implements ClockDependent{
             RTPMessage message = this.schedule.get(Clock.getTime()).get(i);
             this.network.getDeviceController(message.getReceiverAddress()).respond(message);
         }
+        Clock.incrementClock(this.getTicksToAnotherMessage());
     }
 }

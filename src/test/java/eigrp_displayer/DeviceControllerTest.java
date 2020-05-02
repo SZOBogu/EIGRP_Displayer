@@ -2,7 +2,6 @@ package eigrp_displayer;
 
 import eigrp_displayer.messages.CyclicMessage;
 import eigrp_displayer.messages.HelloMessage;
-import eigrp_displayer.messages.NullMessage;
 import eigrp_displayer.messages.RTPMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,7 +59,7 @@ class DeviceControllerTest {
     void getMessageSchedule() {
         assertEquals(10000, controller0.getMessageSchedule().size());
         for(RTPMessage message : controller0.getMessageSchedule()){
-            if(!(message instanceof NullMessage))
+            if(message  != null)
                 fail();
         }
     }
@@ -102,7 +101,7 @@ class DeviceControllerTest {
         assertEquals(message2, controller0.getMessageSchedule().get(Clock.getTime() + 2));
 
         for(int i = Clock.getTime() + 3; i < controller0.getMessageSchedule().size(); i++){
-            assertTrue(controller0.getMessageSchedule().get(i) instanceof NullMessage);
+            assertNull(controller0.getMessageSchedule().get(i));
         }
         assertEquals(10000, controller0.getMessageSchedule().size());
     }
@@ -121,7 +120,7 @@ class DeviceControllerTest {
         assertEquals(message1, controller0.getMessageSchedule().get(Clock.getTime() + offset + 1));
         assertEquals(message2, controller0.getMessageSchedule().get(Clock.getTime() + offset + 2));
         for(int i = Clock.getTime() + offset + 3; i < controller0.getMessageSchedule().size(); i++){
-            assertTrue(controller0.getMessageSchedule().get(i) instanceof NullMessage);
+            assertNull(controller0.getMessageSchedule().get(i));
         }
         assertEquals(10000, controller0.getMessageSchedule().size());
     }
@@ -137,7 +136,7 @@ class DeviceControllerTest {
             if(i % interval == 0)
                 assertEquals(message0, controller0.getMessageSchedule().get(i));
             else
-                assertTrue(controller0.getMessageSchedule().get(i) instanceof NullMessage);
+                assertNull(controller0.getMessageSchedule().get(i));
         }
     }
 
@@ -149,11 +148,11 @@ class DeviceControllerTest {
         int offset = 3;
         CyclicMessage cyclicMessage = new CyclicMessage(message0, interval);
         controller0.sendCyclicMessage(cyclicMessage, offset);
-        for(int i = 0; i < controller0.getMessageSchedule().size(); i++){
+        for(int i = offset; i < controller0.getMessageSchedule().size(); i++){
             if(((i % interval) == offset))
                 assertEquals(message0, controller0.getMessageSchedule().get(i));
             else
-                assertTrue(controller0.getMessageSchedule().get(i) instanceof NullMessage);
+                assertNull(controller0.getMessageSchedule().get(i));
         }
     }
 
@@ -245,7 +244,11 @@ class DeviceControllerTest {
 
         controller0.clearSchedule();
         for(int i = 0; i < controller0.getMessageSchedule().size(); i++){
-            assertTrue(controller0.getMessageSchedule().get(i) instanceof NullMessage);
+            assertNull(controller0.getMessageSchedule().get(i));
         }
+    }
+
+    @Test
+    void addSelfToScheduler() {
     }
 }

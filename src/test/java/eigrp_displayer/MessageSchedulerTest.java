@@ -85,7 +85,7 @@ class MessageSchedulerTest {
     }
 
     @AfterEach
-    void destroy(){
+    void tearDown(){
         scheduler.getSchedule().clear();
     }
 }

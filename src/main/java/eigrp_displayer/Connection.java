@@ -52,10 +52,10 @@ public abstract class Connection implements Addable {
     }
 
     public DeviceController getOtherDevice(DeviceController device){
-        if(this.device1 == device){
+        if(this.device1 != null && this.device1 == device){
             return this.device2;
         }
-        else if(this.device2 == device){
+        else if(this.device2 != null && this.device2 == device){
             return this.device1;
         }
         else

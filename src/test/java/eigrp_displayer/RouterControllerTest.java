@@ -270,18 +270,55 @@ class RouterControllerTest {
     //TODO: add some records
     @Test
     void printTopologyTable() {
+        init();
         String string = "IP-EIGRP Topology Table for AS 1\n" +
                 "Codes: P - Passive, A - Active, U - Update, Q - Query, R - Reply, r - Reply status\n";
 
         assertEquals(string, controller.printTopologyTable());
+
+        RoutingTableEntry entry = new RoutingTableEntry(ip0);
+        RoutingTableEntry entry1 = new RoutingTableEntry(ip1);
+        RoutingTableEntry entry2 = new RoutingTableEntry(ip0);
+        entry.setFeasibleDistance(10);
+        entry1.setFeasibleDistance(121240);
+        entry2.setFeasibleDistance(100);
+
+        controller.getDevice().getTopologyTable().getEntries().add(entry);
+        controller.getDevice().getTopologyTable().getEntries().add(entry1);
+        controller.getDevice().getTopologyTable().getEntries().add(entry2);
+
+        string += entry.getCode() + " " + entry.getIp_address() + "/"
+                + MessageScheduler.getInstance().getNetwork().getMask().getMask()
+                + ", 1 successors, FD is " + entry.getFeasibleDistance() + "\n";
+
+        string += "\tvia " + entry.getIp_address() + " (" + entry.getFeasibleDistance()
+                + "\\" + entry.getReportedDistance() + " Interface 0\n";
+        string += "\tvia " + entry2.getIp_address() + " (" + entry2.getFeasibleDistance()
+                + "\\" + entry2.getReportedDistance() + " Interface 0\n";
+
+        string += entry1.getCode() + " " + entry1.getIp_address() + "/"
+                + MessageScheduler.getInstance().getNetwork().getMask().getMask()
+                + ", 0 successors, FD is " + entry1.getFeasibleDistance() + "\n";
+        string += "\tvia " + entry1.getIp_address() + " (" + entry1.getFeasibleDistance()
+                + "\\" + entry1.getReportedDistance() + " Interface 1\n";
+
+        assertEquals(string, controller.printTopologyTable());
     }
-    //TODO: add some records
+
     @Test
     void printRoutingTable() {
+        init();
         IPAddress ip = Mockito.mock(IPAddress.class);
-        controller.getDevice().setIp_address(ip);
+        RoutingTableEntry entry = new RoutingTableEntry(ip0);
         String string = ip + "\\" + MessageScheduler.getInstance().getNetwork().getMask().getMask() + " isn't variably subnetted, 0 subnets, 1 masks\n";
 
+        assertEquals(string, controller.printRoutingTable());
+
+        int mask = MessageScheduler.getInstance().getNetwork().getMask().getMask();
+        string += controller.getDevice().getIp_address() + "\\" + mask + " isn't  variably subnetted, 0 subnets, 1 masks";
+        string += entry.getCode() + "\t" + entry.getIp_address() + "[" + entry.getReportedDistance() + "\\"
+                + entry.getFeasibleDistance() + "] via " + entry.getPath().get(0).getOtherDevice(controller).getDevice().getIp_address()
+                + ",  Interface 0\n";
         assertEquals(string, controller.printRoutingTable());
     }
 

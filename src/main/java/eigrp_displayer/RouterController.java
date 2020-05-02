@@ -180,6 +180,14 @@ public class RouterController extends DeviceController implements ClockDependent
         this.getDevice().getRoutingTable().update(bestEntry);
     }
 
+    public void formNeighbourship(){}
+
+    public void severNeighbourship(NeighbourTableEntry entry){
+        //usuń wpisy z tablicy routingu i topologii
+        //wyślij Query z tym adresem do sasiadow
+        //w
+
+    }
 
     public List<DeviceController> getAllNeighbourControllers(){
         List<DeviceController> deviceControllers = this.getAllConnectedDeviceControllers();
@@ -230,26 +238,38 @@ public class RouterController extends DeviceController implements ClockDependent
     }
 
     public String printTopologyTable() {
+        List<IPAddress> alreadyPrintedIPs = new ArrayList<>();
         StringBuilder string = new StringBuilder(this.getDevice().getTopologyTable().getDescription() + "\n"
                 + this.getDevice().getTopologyTable().getCodes() + "\n");
 
         for(RoutingTableEntry entry : this.getDevice().getTopologyTable().getEntries()){
+            if(!alreadyPrintedIPs.contains(entry.getIp_address()) ) {
+                string.append(entry.getCode()).append(" ").append(entry.getIp_address()).append("/")
+                        .append(MessageScheduler.getInstance().getNetwork().getMask().getMask()).append(", ")
+                        .append(this.getDevice().getTopologyTable().getSuccessorCount(entry.getIp_address()))
+                        .append(" successors, FD is ").append(entry.getFeasibleDistance()).append("\n");
 
-            string.append(entry.getCode()).append(" ").append(entry.getIp_address()).append("/")
-                    .append(MessageScheduler.getInstance().getNetwork().getMask()).append(", ")
-                    .append(this.getDevice().getTopologyTable().getSuccessorCount(entry.getIp_address()))
-                    .append(" successors, FD is").append(entry.getFeasibleDistance()).append("\n");
+                List<RoutingTableEntry> entriesToShow = new ArrayList<>();
+                RoutingTableEntry bestEntry = this.getDevice().getTopologyTable().getBestEntryForIP(entry.getIp_address());
+                RoutingTableEntry feasibleSuccessorEntry = this.getDevice().getTopologyTable().getFeasibleSuccessorEntry(entry.getIp_address());
+                if(bestEntry != null)
+                    entriesToShow.add(bestEntry);
+                if(feasibleSuccessorEntry != null)
+                    entriesToShow.add(feasibleSuccessorEntry);
 
-            List<RoutingTableEntry> successorEntries = this.getDevice().getTopologyTable().getSuccessorEntriesForIP(entry.getIp_address());
-            for(RoutingTableEntry rtEntry : successorEntries){
-                for(DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()) {
-                    if(rtEntry.getIp_address().equals(
-                            deviceInterface.getConnection().getOtherDevice(this).getDevice().getIp_address()))
-                        string.append("\tvia ").append(rtEntry.getIp_address()).append(" ").append("(")
-                                .append(entry.getFeasibleDistance()).append("\\")
-                                .append(entry.getReportedDistance()).append(" ")
-                                .append(deviceInterface.getName());
+                for (RoutingTableEntry rtEntry : entriesToShow) {
+                    for (DeviceInterface deviceInterface : this.getDevice().getDeviceInterfaces()) {
+                        if (deviceInterface.getConnection() != null &&
+                                rtEntry.getIp_address().equals(
+                                        deviceInterface.getConnection().getOtherDevice(this).getDevice().getIp_address()))
+
+                            string.append("\tvia ").append(rtEntry.getIp_address()).append(" ").append("(")
+                                    .append(rtEntry.getFeasibleDistance()).append("\\")
+                                    .append(rtEntry.getReportedDistance()).append(" ")
+                                    .append(deviceInterface.getName()).append("\n");
+                    }
                 }
+                alreadyPrintedIPs.add(entry.getIp_address());
             }
         }
         return string.toString();

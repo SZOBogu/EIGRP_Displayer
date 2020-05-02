@@ -54,10 +54,25 @@ public class TopologyTable extends RoutingTable{
         return bestEntry;
     }
 
+    public RoutingTableEntry getFeasibleSuccessorEntry(IPAddress ip){
+        long lowestDistance = Long.MAX_VALUE;
+        RoutingTableEntry bestEntry = null;
+        List<RoutingTableEntry> allEntries = getAllEntriesForIP(ip);
+        allEntries.remove(this.getBestEntryForIP(ip));
+
+        for(RoutingTableEntry entry : allEntries){
+            if(entry.getFeasibleDistance() < lowestDistance){
+                bestEntry = entry;
+                lowestDistance = entry.getFeasibleDistance();
+            }
+        }
+        return bestEntry;
+    }
+
     public List<RoutingTableEntry> getSuccessorEntriesForIP(IPAddress targetAddress) {
         List<RoutingTableEntry> suitableEntries = this.getAllEntriesForIP(targetAddress);
+        suitableEntries.removeIf(entry -> entry.getFeasibleDistance() == Long.MAX_VALUE);
         RoutingTableEntry bestEntry = this.getBestEntryForIP(targetAddress);
-
         suitableEntries.remove(bestEntry);
         return suitableEntries;
     }

@@ -109,8 +109,6 @@ class NeighbourTableTest {
         assertFalse(neighbourTable.checkIfPresent(ip2));
     }
 
-
-
     @Test
     void getAllNeighboursAddresses() {
         neighbourTable.formNeighbourship(deviceInterface, ip0);

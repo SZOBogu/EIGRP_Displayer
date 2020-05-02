@@ -39,7 +39,6 @@ public class MessageScheduler implements ClockDependent{
         }
     }
 
-    //TODO: tests
     public int getTicksToAnotherMessage(){
         List<Integer> indexesOfClosestOccurrences = new ArrayList<>();
 

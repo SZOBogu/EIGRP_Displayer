@@ -29,11 +29,9 @@ public class NeighbourTableEntry{
 
     public NeighbourTableEntry(DeviceInterface deviceInterface, IPAddress neighbourAddress){
         this.neighbourAddress = neighbourAddress;
-
-        //fill the rest with bullshit
         Random random = new Random();
-        //TODO: use actual interface
         this.netInterface = deviceInterface.getName();
+        //fill the rest with bullshit
         this.hold = 15;
         this.uptime = LocalTime.of(0, random.nextInt(1), random.nextInt(60));
         this.srtt = random.nextInt(300);

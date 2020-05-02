@@ -20,6 +20,17 @@ class NeighbourTableTest {
     }
 
     @Test
+    void getEntry() {
+        neighbourTable.formNeighbourship(ip0);
+        neighbourTable.formNeighbourship(ip1);
+        neighbourTable.formNeighbourship(ip2);
+
+        assertEquals(ip0, neighbourTable.getEntry(ip0).getNeighbourAddress());
+        assertEquals(ip1, neighbourTable.getEntry(ip1).getNeighbourAddress());
+        assertEquals(ip2, neighbourTable.getEntry(ip2).getNeighbourAddress());
+    }
+
+    @Test
     void getEntries() {
         assertEquals(new ArrayList<>(), neighbourTable.getEntries());
     }
@@ -33,6 +44,22 @@ class NeighbourTableTest {
         neighbourTable.formNeighbourship(ip1);
         neighbourTable.formNeighbourship(ip2);
         assertEquals(3 , neighbourTable.getEntries().size());
+    }
+
+    @Test
+    void removeNeighbourship() {
+        IPAddress ip2 = Mockito.mock(IPAddress.class);
+
+        neighbourTable.formNeighbourship(ip0);
+        neighbourTable.formNeighbourship(ip1);
+
+        assertEquals(2, neighbourTable.getAllNeighboursAddresses().size());
+        neighbourTable.removeNeighbourship(ip0);
+        assertEquals(1, neighbourTable.getAllNeighboursAddresses().size());
+        neighbourTable.removeNeighbourship(ip2);
+        assertEquals(1, neighbourTable.getAllNeighboursAddresses().size());
+        neighbourTable.removeNeighbourship(ip1);
+        assertEquals(0, neighbourTable.getAllNeighboursAddresses().size());
     }
 
     @Test
@@ -82,6 +109,7 @@ class NeighbourTableTest {
     }
 
 
+
     @Test
     void getAllNeighboursAddresses() {
         neighbourTable.formNeighbourship(ip0);
@@ -91,22 +119,5 @@ class NeighbourTableTest {
         assertEquals(2, neighbourIPs.size());
         assertEquals(ip0, neighbourIPs.get(0));
         assertEquals(ip1, neighbourIPs.get(1));
-    }
-
-    @Test
-    void removeNeighbourship() {
-        IPAddress ip2 = Mockito.mock(IPAddress.class);
-
-        neighbourTable.formNeighbourship(ip0);
-        neighbourTable.formNeighbourship(ip1);
-
-        assertEquals(2, neighbourTable.getAllNeighboursAddresses().size());
-        neighbourTable.removeNeighbourship(ip0);
-        assertEquals(1, neighbourTable.getAllNeighboursAddresses().size());
-        neighbourTable.removeNeighbourship(ip2);
-        assertEquals(1, neighbourTable.getAllNeighboursAddresses().size());
-        neighbourTable.removeNeighbourship(ip1);
-        assertEquals(0, neighbourTable.getAllNeighboursAddresses().size());
-
     }
 }

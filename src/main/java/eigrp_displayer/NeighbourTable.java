@@ -22,7 +22,6 @@ public class NeighbourTable implements ClockDependent{
         return entries;
     }
 
-    //TODO: test
     public NeighbourTableEntry getEntry(IPAddress ip) {
         for(NeighbourTableEntry entry : this.entries){
             if(entry.getNeighbourAddress().equals(ip))

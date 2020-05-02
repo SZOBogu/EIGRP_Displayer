@@ -87,7 +87,6 @@ public class RouterController extends DeviceController implements ClockDependent
             }
             if(otherDeviceController.getDevice() instanceof EndDevice ||
                     otherDeviceController.getDevice() instanceof ExternalNetwork) {
-                //TODO: look for unexpected cases of not replying/looping/whatever
                 this.getDevice().getNeighbourTable().formNeighbourship(
                         this.getInterface(helloMessage.getSenderAddress()), helloMessage.getSenderAddress());
 

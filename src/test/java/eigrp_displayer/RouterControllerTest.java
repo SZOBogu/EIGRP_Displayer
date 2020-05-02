@@ -267,7 +267,6 @@ class RouterControllerTest {
                 controller.getInterface(ip0));
     }
 
-    //TODO: add some records
     @Test
     void printTopologyTable() {
         init();

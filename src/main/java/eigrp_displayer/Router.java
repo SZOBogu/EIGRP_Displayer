@@ -10,6 +10,8 @@ public class Router extends Device{
     private boolean k4;
     private boolean k5;
 
+    public Router() {this("Router", 4);}
+
     public Router(String name){
         this(name, 4);
     }

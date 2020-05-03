@@ -57,7 +57,9 @@ public class MessageScheduler implements ClockDependent{
 
     @Override
     public void updateTime() {
-        for(int i = 0; i < this.schedule.size(); i++){
+        Collection<List<RTPMessage>> list = this.schedule.values();
+
+        for(int i = 0; i < list.size(); i++){
             RTPMessage message = this.schedule.get(Clock.getTime()).get(i);
             this.network.getDeviceController(message.getReceiverAddress()).respond(message);
         }

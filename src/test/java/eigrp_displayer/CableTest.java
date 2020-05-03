@@ -2,6 +2,7 @@ package eigrp_displayer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -126,10 +127,22 @@ class CableTest {
 
     @Test
     void linkDevices() {
-       cable.linkDevices(controller, controller0);
+        cable.linkDevices(controller, controller0);
         assertEquals(controller, cable.getDevice1());
         assertEquals(controller0, cable.getDevice2());
         assertEquals(cable, controller.getDevice().getDeviceInterfaces()[0].getConnection());
         assertEquals(cable, controller0.getDevice().getDeviceInterfaces()[0].getConnection());
+    }
+
+    @Test
+    void testToString(){
+        cable.linkDevices(controller, controller0);
+        IPAddress ip = Mockito.mock(IPAddress.class);
+        IPAddress ip0 = Mockito.mock(IPAddress.class);
+        controller.getDevice().setIp_address(ip);
+        controller0.getDevice().setIp_address(ip0);
+        String string = cable.getName()  + " between " + controller.getDevice().toString()
+                + " and " + controller0.getDevice().toString();
+        assertEquals(string, cable.toString());
     }
 }

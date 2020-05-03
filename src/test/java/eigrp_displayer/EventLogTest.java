@@ -90,6 +90,13 @@ class EventLogTest {
     @Test
     void connectionChanged() {
         Connection connection = new Cable();
+
+        connection.linkDevices(controller, controller0);
+        IPAddress ip = Mockito.mock(IPAddress.class);
+        IPAddress ip0 = Mockito.mock(IPAddress.class);
+        controller.getDevice().setIp_address(ip);
+        controller0.getDevice().setIp_address(ip0);
+
         EventLog.connectionChanged(connection, "bandwidth");
         String string = Clock.getTime() + ": " + connection + " bandwidth has been changed.\n";
         assertEquals(string, EventLog.getEventLog());

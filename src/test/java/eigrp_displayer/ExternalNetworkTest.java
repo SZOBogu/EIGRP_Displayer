@@ -3,8 +3,7 @@ package eigrp_displayer;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ExternalNetworkTest {
     ExternalNetwork externalNetwork = new ExternalNetwork();
@@ -36,5 +35,12 @@ class ExternalNetworkTest {
     @Test
     void getDeviceInterfaces() {
         assertEquals(100, externalNetwork.getDeviceInterfaces().length);
+    }
+
+    @Test
+    void testToString(){
+        externalNetwork.setIp_address(ip);
+        String string = "External Network (" + ip + ")";
+        assertEquals(string, externalNetwork.toString());
     }
 }

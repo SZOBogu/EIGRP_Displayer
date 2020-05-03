@@ -96,6 +96,7 @@ public abstract class Connection implements Addable {
 
     @Override
     public String toString() {
-        return "name" + name + " between " + device1 + " and " + device2;
+        return name + " between " + device1.getDevice() + " and "
+                + device2.getDevice();
     }
 }

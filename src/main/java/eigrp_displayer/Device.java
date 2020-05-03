@@ -8,12 +8,12 @@ public abstract class Device implements Addable {
     private DeviceInterface[] deviceInterfaces;
     private Integer messageSendingTimeOffset;
 
-
     public Device(){
         this(4);
     }
 
     public Device(int numberOfInterfaces){
+        this.name = "Device";
         this.deviceInterfaces = new DeviceInterface[numberOfInterfaces];
         for(int i = 0; i < numberOfInterfaces; i++){
             this.deviceInterfaces[i] = new DeviceInterface("Interface " + i);
@@ -50,5 +50,10 @@ public abstract class Device implements Addable {
             this.messageSendingTimeOffset = 0;
         else
             this.messageSendingTimeOffset = messageSendingTimeOffset;
+    }
+
+    @Override
+    public String toString() {
+        return  name + " (" + ip_address + ")";
     }
 }

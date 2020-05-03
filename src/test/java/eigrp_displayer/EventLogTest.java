@@ -1,12 +1,32 @@
 package eigrp_displayer;
 
+import eigrp_displayer.messages.HelloMessage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class EventLogTest {
+    IPAddress ip = Mockito.mock(IPAddress.class);
+    EndDevice device = new EndDevice();
+
+    DeviceController controller = new DeviceController(device);
+    IPAddress ipR = Mockito.mock(IPAddress.class);
+
+    IPAddress ip0 = Mockito.mock(IPAddress.class);
+    EndDevice device0 = new EndDevice();
+    DeviceController controller0 = new DeviceController(device0);
+
+
+    @BeforeEach
+    void setUp() {
+        EventLog.clear();;
+        device.setIp_address(ip);
+        device0.setIp_address(ip0);
+    }
+
     @AfterEach
     void tearDown() {
         EventLog.clear();;
@@ -46,5 +66,67 @@ class EventLogTest {
         assertNotEquals("", EventLog.getEventLog());
         EventLog.clear();
         assertEquals("", EventLog.getEventLog());
+    }
+
+    @Test
+    void messageSent() {
+        HelloMessage helloMessage = new HelloMessage(ip, ipR);
+
+        EventLog.messageSent(controller, helloMessage);
+
+        String string = Clock.getTime() + ": HelloMessage sent from End Device (" + ip + ") to " + ipR + "\n";
+        assertEquals(string, EventLog.getEventLog());
+    }
+
+    @Test
+    void messageReceived() {
+        HelloMessage helloMessage = new HelloMessage(ipR, ip);
+        String string = Clock.getTime() + ": " + controller.getDevice().toString() + " received "
+                + helloMessage.getClass().getSimpleName() + " from " + ipR + "\n";
+        EventLog.messageReceived(controller, helloMessage);
+        assertEquals(string, EventLog.getEventLog());
+    }
+
+    @Test
+    void connectionChanged() {
+        Connection connection = new Cable();
+        EventLog.connectionChanged(connection, "bandwidth");
+        String string = Clock.getTime() + ": " + connection + " bandwidth has been changed.\n";
+        assertEquals(string, EventLog.getEventLog());
+    }
+
+    @Test
+    void deviceChanged() {
+        /*
+        appendLog(Clock.getTime() + ": " + device.getDevice() + " " + whatChanged + " has been changed.");
+         */
+        EventLog.deviceChanged(controller, "pants");
+        String string = Clock.getTime() + ": " + controller.getDevice().toString()
+                + " pants has been changed.\n";
+        assertEquals(string, EventLog.getEventLog());
+
+    }
+
+    @Test
+    void deviceUnreachable() {
+        EventLog.deviceUnreachable(controller);
+        String string = Clock.getTime() + ": " + controller.getDevice() + " became unreachable.\n";
+        assertEquals(string, EventLog.getEventLog());
+    }
+
+    @Test
+    void neighbourshipFormed() {
+        EventLog.neighbourshipFormed(controller, controller0);
+        String string = Clock.getTime() + ": " + controller.getDevice().toString() + " and "
+                + controller0.getDevice().toString() + " became neighbours.\n";
+        assertEquals(string, EventLog.getEventLog());
+    }
+
+    @Test
+    void neighbourshipBroken() {
+        EventLog.neighbourshipBroken(controller, controller0);
+        String string = Clock.getTime() + ": " + "Neighbourship between "
+                + controller.getDevice() + " and " + controller0.getDevice() + " broken.\n";
+        assertEquals(string, EventLog.getEventLog());
     }
 }

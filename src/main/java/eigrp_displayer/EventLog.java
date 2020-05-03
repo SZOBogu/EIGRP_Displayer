@@ -1,5 +1,7 @@
 package eigrp_displayer;
 
+import eigrp_displayer.messages.RTPMessage;
+
 public class EventLog {
     private static String eventLog = "";
 
@@ -13,6 +15,39 @@ public class EventLog {
 
     public static void appendLog(String string){
         eventLog += string + "\n";
+    }
+
+    public static void messageSent(DeviceController controller, RTPMessage message){
+        appendLog(Clock.getTime() + ": " + message.getClass().getSimpleName()
+                + " sent from " + controller.getDevice().toString() + " to " + message.getReceiverAddress());
+    }
+
+    public static void messageReceived(DeviceController controller, RTPMessage message){
+        appendLog(Clock.getTime() + ": " + controller.getDevice().toString()
+                + " received " + message.getClass().getSimpleName()
+                + " from " + message.getSenderAddress());
+    }
+
+    public static void connectionChanged(Connection connection, String whatChanged){
+        appendLog(Clock.getTime() + ": " + connection + " " + whatChanged + " has been changed.");
+    }
+
+    public static void deviceChanged(DeviceController device, String whatChanged){
+        appendLog(Clock.getTime() + ": " + device.getDevice() + " " + whatChanged + " has been changed.");
+    }
+
+    public static void deviceUnreachable(DeviceController device){
+        appendLog(Clock.getTime() + ": " + device.getDevice() + " became unreachable.");
+    }
+
+    public static void neighbourshipFormed(DeviceController device1, DeviceController device2){
+        appendLog(Clock.getTime() + ": " + device1.getDevice() + " and "
+                + device2.getDevice() + " became neighbours.");
+    }
+
+    public static void neighbourshipBroken(DeviceController device1, DeviceController device2){
+        appendLog(Clock.getTime() + ": " + "Neighbourship between "
+                + device1.getDevice() + " and " + device2.getDevice() + " broken.");
     }
 
     public static String getEventLog(){

@@ -93,4 +93,9 @@ public abstract class Connection implements Addable {
     public void setReliability(int reliability) {
         this.reliability = reliability;
     }
+
+    @Override
+    public String toString() {
+        return "name" + name + " between " + device1 + " and " + device2;
+    }
 }

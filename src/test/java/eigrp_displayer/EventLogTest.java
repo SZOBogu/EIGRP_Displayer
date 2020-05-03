@@ -92,10 +92,6 @@ class EventLogTest {
         Connection connection = new Cable();
 
         connection.linkDevices(controller, controller0);
-        IPAddress ip = Mockito.mock(IPAddress.class);
-        IPAddress ip0 = Mockito.mock(IPAddress.class);
-        controller.getDevice().setIp_address(ip);
-        controller0.getDevice().setIp_address(ip0);
 
         EventLog.connectionChanged(connection, "bandwidth");
         String string = Clock.getTime() + ": " + connection + " bandwidth has been changed.\n";
@@ -103,10 +99,19 @@ class EventLogTest {
     }
 
     @Test
+    void deviceConnected() {
+        Connection connection = new Cable();
+
+        connection.linkDevices(controller, controller0);
+
+        String string = Clock.getTime() + ": " + controller.getDevice().toString()
+                + " connected by " + connection.toString() + "\n";
+        EventLog.deviceConnected(controller, connection);
+        assertEquals(string, EventLog.getEventLog());
+    }
+
+    @Test
     void deviceChanged() {
-        /*
-        appendLog(Clock.getTime() + ": " + device.getDevice() + " " + whatChanged + " has been changed.");
-         */
         EventLog.deviceChanged(controller, "pants");
         String string = Clock.getTime() + ": " + controller.getDevice().toString()
                 + " pants has been changed.\n";

@@ -35,7 +35,8 @@ public class DeviceController {
     }
 
     public void addSelfToScheduler(){
-        MessageScheduler.getInstance().getSchedule().put(this, this.messageSchedule);
+        MessageScheduler.getInstance().getMessageSchedules().add(this.messageSchedule);
+        MessageScheduler.getInstance().getControllers().add(this);
     }
 
     public void sendMessage(RTPMessage message, List<Connection> path){
@@ -107,6 +108,7 @@ public class DeviceController {
 
     public void respond(RTPMessage message){
         System.out.println(); //do not reply, only routers are supposed to do so
+        EventLog.messageReceived(this, message);
     }
 
     public List<DeviceController> getAllConnectedDeviceControllers(){

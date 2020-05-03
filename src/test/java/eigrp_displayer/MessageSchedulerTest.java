@@ -52,15 +52,15 @@ class MessageSchedulerTest {
         controller.scheduleHellos();
         scheduler.clear();
 
-        assertEquals(2, scheduler.getSchedule().size());
-        assertEquals(10000, scheduler.getSchedule().get(controller).size());
-        assertEquals(10000, scheduler.getSchedule().get(controller0).size());
+        assertEquals(2, scheduler.getMessageSchedules().size());
+        assertEquals(10000, scheduler.getMessageSchedules().get(0).size());
+        assertEquals(10000, scheduler.getMessageSchedules().get(1).size());
 
-        for(int i = 0; i < scheduler.getSchedule().get(controller).size(); i++){
-            assertNull(scheduler.getSchedule().get(controller).get(i));
+        for(int i = 0; i < scheduler.getMessageSchedules().size(); i++){
+            assertNull(scheduler.getMessageSchedules().get(0).get(i));
         }
-        for(int i = 0; i < scheduler.getSchedule().get(controller0).size(); i++){
-            assertNull(scheduler.getSchedule().get(controller0).get(i));
+        for(int i = 0; i < scheduler.getMessageSchedules().size(); i++){
+            assertNull(scheduler.getMessageSchedules().get(1).get(i));
         }
     }
 
@@ -76,8 +76,8 @@ class MessageSchedulerTest {
     }
 
     @Test
-    void getSchedule() {
-        assertEquals(2, MessageScheduler.getInstance().getSchedule().size());
+    void getMessageSchedules() {
+        assertEquals(2, MessageScheduler.getInstance().getMessageSchedules().size());
     }
 
     @Test
@@ -87,6 +87,10 @@ class MessageSchedulerTest {
 
     @AfterEach
     void tearDown(){
-        scheduler.getSchedule().clear();
+        scheduler.getMessageSchedules().clear();
+    }
+
+    @Test
+    void getControllers() {
     }
 }

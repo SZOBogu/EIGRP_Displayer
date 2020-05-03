@@ -32,6 +32,11 @@ public class EventLog {
         appendLog(Clock.getTime() + ": " + connection + " " + whatChanged + " has been changed.");
     }
 
+    public static void deviceConnected(DeviceController controller, Connection connection){
+        appendLog(Clock.getTime() + ": " + controller.getDevice().toString()
+                + " connected by " + connection.toString());
+    }
+
     public static void deviceChanged(DeviceController device, String whatChanged){
         appendLog(Clock.getTime() + ": " + device.getDevice() + " " + whatChanged + " has been changed.");
     }

@@ -53,13 +53,14 @@ class MessageSchedulerTest {
         scheduler.clear();
 
         assertEquals(2, scheduler.getSchedule().size());
-        assertEquals(10000, scheduler.getSchedule().get(0).size());
-        assertEquals(10000, scheduler.getSchedule().get(1).size());
+        assertEquals(10000, scheduler.getSchedule().get(controller).size());
+        assertEquals(10000, scheduler.getSchedule().get(controller0).size());
 
-        for(int i = 0; i < scheduler.getSchedule().size(); i++){
-            for(int j = 0; j < scheduler.getSchedule().get(i).size(); j++){
-                assertNull(scheduler.getSchedule().get(i).get(j));
-            }
+        for(int i = 0; i < scheduler.getSchedule().get(controller).size(); i++){
+            assertNull(scheduler.getSchedule().get(controller).get(i));
+        }
+        for(int i = 0; i < scheduler.getSchedule().get(controller0).size(); i++){
+            assertNull(scheduler.getSchedule().get(controller0).get(i));
         }
     }
 

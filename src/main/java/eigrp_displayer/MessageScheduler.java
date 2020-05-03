@@ -2,12 +2,10 @@ package eigrp_displayer;
 
 import eigrp_displayer.messages.RTPMessage;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class MessageScheduler implements ClockDependent{
-    private List<List<RTPMessage>> schedule = new ArrayList<>();
+    private HashMap<DeviceController, List<RTPMessage>> schedule = new HashMap<>();
     private Network network = new Network();
 
     private static class MessageSchedulerSingleton{
@@ -18,7 +16,7 @@ public class MessageScheduler implements ClockDependent{
         return MessageSchedulerSingleton.scheduler;
     }
 
-    public List<List<RTPMessage>> getSchedule() {
+    public HashMap<DeviceController, List<RTPMessage>> getSchedule() {
         return schedule;
     }
 
@@ -31,7 +29,7 @@ public class MessageScheduler implements ClockDependent{
     }
 
     public void clear(){
-        for (List<RTPMessage> rtpMessages : this.schedule) {
+        for (List<RTPMessage> rtpMessages : this.schedule.values()) {
             rtpMessages.clear();
             for (int j = 0; j < 10000; j++) {
                 rtpMessages.add(null);
@@ -42,7 +40,7 @@ public class MessageScheduler implements ClockDependent{
     public int getTicksToAnotherMessage(){
         List<Integer> indexesOfClosestOccurrences = new ArrayList<>();
 
-        for(List<RTPMessage> messageList : this.schedule){
+        for(List<RTPMessage> messageList : this.schedule.values()){
             for(int i = Clock.getTime(); i < messageList.size(); i++){
                  if(messageList.get(i) != null){
                      indexesOfClosestOccurrences.add(i);

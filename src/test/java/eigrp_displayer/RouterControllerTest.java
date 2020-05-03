@@ -6,6 +6,7 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -309,15 +310,17 @@ class RouterControllerTest {
         init();
         IPAddress ip = Mockito.mock(IPAddress.class);
         RoutingTableEntry entry = new RoutingTableEntry(ip0);
-        String string = ip + "\\" + MessageScheduler.getInstance().getNetwork().getMask().getMask() + " isn't variably subnetted, 0 subnets, 1 masks\n";
+        entry.setPath(Collections.singletonList(connection0));
+        String string = controller.getDevice().getIp_address()
+                + "\\" + MessageScheduler.getInstance().getNetwork().getMask().getMask()
+                + " isn't variably subnetted, 0 subnets, 1 masks\n";
 
         assertEquals(string, controller.printRoutingTable());
-
+        controller.getDevice().getRoutingTable().getEntries().add(entry);
         int mask = MessageScheduler.getInstance().getNetwork().getMask().getMask();
-        string += controller.getDevice().getIp_address() + "\\" + mask + " isn't  variably subnetted, 0 subnets, 1 masks";
         string += entry.getCode() + "\t" + entry.getIp_address() + "[" + entry.getReportedDistance() + "\\"
                 + entry.getFeasibleDistance() + "] via " + entry.getPath().get(0).getOtherDevice(controller).getDevice().getIp_address()
-                + ",  Interface 0\n";
+                + ", Interface 0\n";
         assertEquals(string, controller.printRoutingTable());
     }
 

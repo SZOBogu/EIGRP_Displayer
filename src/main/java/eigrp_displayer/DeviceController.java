@@ -35,7 +35,11 @@ public class DeviceController {
     }
 
     public void addSelfToScheduler(){
-        MessageScheduler.getInstance().getSchedule().add(this.messageSchedule);
+        MessageScheduler.getInstance().getSchedule().put(this, this.messageSchedule);
+    }
+
+    public void sendMessage(RTPMessage message, List<Connection> path){
+
     }
 
     public void sendMessage(RTPMessage message, int offset) {
@@ -102,11 +106,11 @@ public class DeviceController {
 
 
     public void respond(RTPMessage message){
-        System.out.println(""); //do not reply, only routers are supposed to do so
+        System.out.println(); //do not reply, only routers are supposed to do so
     }
 
     public List<DeviceController> getAllConnectedDeviceControllers(){
-        List<DeviceInterface> deviceInterfaces = new ArrayList(
+        List<DeviceInterface> deviceInterfaces = new ArrayList<>(
                 Arrays.asList(this.device.getDeviceInterfaces()));
         Iterator<DeviceInterface> iterator = deviceInterfaces.iterator() ;
         List<DeviceController> controllers = new ArrayList<>();

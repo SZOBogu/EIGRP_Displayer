@@ -2,7 +2,7 @@ package eigrp_displayer;
 
 import eigrp_displayer.messages.CyclicMessage;
 import eigrp_displayer.messages.HelloMessage;
-import eigrp_displayer.messages.RTPMessage;
+import eigrp_displayer.messages.Message;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -58,7 +58,7 @@ class DeviceControllerTest {
     @Test
     void getMessageSchedule() {
         assertEquals(10000, controller0.getMessageSchedule().size());
-        for(RTPMessage message : controller0.getMessageSchedule()){
+        for(Message message : controller0.getMessageSchedule()){
             if(message  != null)
                 fail();
         }
@@ -94,7 +94,7 @@ class DeviceControllerTest {
         HelloMessage message1 = new HelloMessage(ip0, ip1);
         HelloMessage message2 = new HelloMessage(ip0, ip1);
 
-        List<RTPMessage> messageList = new ArrayList<>(Arrays.asList(message0, message1, message2));
+        List<Message> messageList = new ArrayList<>(Arrays.asList(message0, message1, message2));
         controller0.sendMessages(messageList);
         assertEquals(message0, controller0.getMessageSchedule().get(Clock.getTime()));
         assertEquals(message1, controller0.getMessageSchedule().get(Clock.getTime() + 1));
@@ -114,7 +114,7 @@ class DeviceControllerTest {
         HelloMessage message2 = new HelloMessage(ip0, ip1);
         int offset = 20;
 
-        List<RTPMessage> messageList = new ArrayList<>(Arrays.asList(message0, message1, message2));
+        List<Message> messageList = new ArrayList<>(Arrays.asList(message0, message1, message2));
         controller0.sendMessages(messageList, offset);
         assertEquals(message0, controller0.getMessageSchedule().get(Clock.getTime() + offset));
         assertEquals(message1, controller0.getMessageSchedule().get(Clock.getTime() + offset + 1));

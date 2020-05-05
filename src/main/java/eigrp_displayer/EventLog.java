@@ -1,6 +1,6 @@
 package eigrp_displayer;
 
-import eigrp_displayer.messages.RTPMessage;
+import eigrp_displayer.messages.Message;
 
 public class EventLog {
     private static String eventLog = "";
@@ -17,12 +17,12 @@ public class EventLog {
         eventLog += string + "\n";
     }
 
-    public static void messageSent(DeviceController controller, RTPMessage message){
+    public static void messageSent(DeviceController controller, Message message){
         appendLog(Clock.getTime() + ": " + message.getClass().getSimpleName()
                 + " sent from " + controller.getDevice().toString() + " to " + message.getReceiverAddress());
     }
 
-    public static void messageReceived(DeviceController controller, RTPMessage message){
+    public static void messageReceived(DeviceController controller, Message message){
         appendLog(Clock.getTime() + ": " + controller.getDevice().toString()
                 + " received " + message.getClass().getSimpleName()
                 + " from " + message.getSenderAddress());

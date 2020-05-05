@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 public class RouterController extends DeviceController implements ClockDependent {
-    private HashMap<RTPMessage, Integer> messagesSentWaitingForReply;
-    private HashMap<RTPMessage, Integer> messagesToTryToSendAgain;
+    private HashMap<Message, Integer> messagesSentWaitingForReply;
+    private HashMap<Message, Integer> messagesToTryToSendAgain;
 
     public RouterController() {
         super();
@@ -24,7 +24,7 @@ public class RouterController extends DeviceController implements ClockDependent
     }
 
     @Override
-    public void respond(RTPMessage message){
+    public void respond(Message message){
         if(message.getReceiverAddress().equals(this.getDevice().getIp_address())) {
             if (message instanceof QueryMessage) {
                 this.respondQuery((QueryMessage) message);
@@ -43,7 +43,7 @@ public class RouterController extends DeviceController implements ClockDependent
         }
     }
 
-    public void passMessageFurther(RTPMessage message){
+    public void passMessageFurther(Message message){
         /**sprawdz wpisy w tablicy routingu
          * jak jest wpis dotyczacy ip to sendnij message dalej w nastepnym kroku schedula
          *
@@ -51,8 +51,8 @@ public class RouterController extends DeviceController implements ClockDependent
     }
 
     public void respondACK(ACKMessage ack){
-        RTPMessage messageToRemove = null;
-        for(RTPMessage message : this.messagesToTryToSendAgain.keySet()){
+        Message messageToRemove = null;
+        for(Message message : this.messagesToTryToSendAgain.keySet()){
             if(message instanceof ReplyMessage || message instanceof UpdateMessage){
                 if(message.getReceiverAddress().equals(ack.getSenderAddress())) {
                     messageToRemove = message;
@@ -113,9 +113,9 @@ public class RouterController extends DeviceController implements ClockDependent
     public void respondQuery(QueryMessage queryMessage){
         this.sendMessage(new ACKMessage(this.getDevice().getIp_address(), queryMessage.getSenderAddress()));
         boolean isLoopedBack = false;
-        RTPMessage messageToRemove = null;
+        Message messageToRemove = null;
         //if query for the same ip address that was queried from this.router then delete, and send back empty reply
-        for(RTPMessage message : messagesSentWaitingForReply.keySet()){
+        for(Message message : messagesSentWaitingForReply.keySet()){
             if(message instanceof QueryMessage){
                 if(((QueryMessage) message).getQueriedDeviceAddress()
                         .equals(queryMessage.getQueriedDeviceAddress())){
@@ -149,7 +149,7 @@ public class RouterController extends DeviceController implements ClockDependent
         //ack, delete query from messages waiting for reply, update routing tables
         this.sendMessage(new ACKMessage(this.getDevice().getIp_address(), replyMessage.getSenderAddress()));
 
-        for(RTPMessage message : this.messagesSentWaitingForReply.keySet()){
+        for(Message message : this.messagesSentWaitingForReply.keySet()){
             if(message instanceof QueryMessage){
                 if(((QueryMessage) message).getQueriedDeviceAddress().equals(
                         replyMessage.getRoutingTableEntry().getIp_address())){
@@ -315,7 +315,7 @@ public class RouterController extends DeviceController implements ClockDependent
         while(this.messagesSentWaitingForReply.containsValue(17)){
             this.messagesSentWaitingForReply.values().removeIf(val -> 17 == val);
         }
-        for(Map.Entry<RTPMessage, Integer> record : this.messagesToTryToSendAgain.entrySet()) {
+        for(Map.Entry<Message, Integer> record : this.messagesToTryToSendAgain.entrySet()) {
             if(record.getValue() >= 15){
                 record.setValue(0);
                 this.sendMessage(record.getKey());
@@ -331,19 +331,19 @@ public class RouterController extends DeviceController implements ClockDependent
         super.setDevice(router);
     }
 
-    public HashMap<RTPMessage, Integer> getMessagesToTryToSendAgain() {
+    public HashMap<Message, Integer> getMessagesToTryToSendAgain() {
         return messagesToTryToSendAgain;
     }
 
-    public void setMessagesToTryToSendAgain(HashMap<RTPMessage, Integer> messagesToTryToSendAgain) {
+    public void setMessagesToTryToSendAgain(HashMap<Message, Integer> messagesToTryToSendAgain) {
         this.messagesToTryToSendAgain = messagesToTryToSendAgain;
     }
 
-    public HashMap<RTPMessage, Integer> getMessagesSentWaitingForReply() {
+    public HashMap<Message, Integer> getMessagesSentWaitingForReply() {
         return messagesSentWaitingForReply;
     }
 
-    public void setMessagesSentWaitingForReply(HashMap<RTPMessage, Integer> messagesSentWaitingForReply) {
+    public void setMessagesSentWaitingForReply(HashMap<Message, Integer> messagesSentWaitingForReply) {
         this.messagesSentWaitingForReply = messagesSentWaitingForReply;
     }
 }

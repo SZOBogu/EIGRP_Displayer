@@ -49,9 +49,9 @@ class RouterControllerTest {
         ReplyMessage replyGoodIP = new ReplyMessage(ip0, ip, Mockito.mock(RoutingTableEntry.class));
         UpdateMessage updateGoodIP = new UpdateMessage(ip0, ip, Mockito.mock(TopologyTable.class));
         ReplyMessage replyWrongIP = new ReplyMessage(ip0, ip1, Mockito.mock(RoutingTableEntry.class));
-        RTPMessage outOfPlaceMsg = Mockito.mock(RTPMessage.class);
+        Message outOfPlaceMsg = Mockito.mock(Message.class);
 
-        HashMap<RTPMessage, Integer> messageMap = new HashMap<>();
+        HashMap<Message, Integer> messageMap = new HashMap<>();
         messageMap.put(replyGoodIP, 0);
         messageMap.put(updateGoodIP, 0);
         messageMap.put(replyWrongIP, 0);
@@ -124,7 +124,7 @@ class RouterControllerTest {
         QueryMessage loopedBackQueryMessage = new QueryMessage(ip0, ip, ip1);
         QueryMessage supposedToStayQueryMessage = new QueryMessage(ip0, ip, Mockito.mock(IPAddress.class));
 
-        HashMap<RTPMessage, Integer> messageMap = new HashMap<>();
+        HashMap<Message, Integer> messageMap = new HashMap<>();
         messageMap.put(loopedBackQueryMessage, 0);
         messageMap.put(supposedToStayQueryMessage, 0);
         controller0.setMessagesSentWaitingForReply(messageMap);
@@ -193,7 +193,7 @@ class RouterControllerTest {
 
     @Test
     void getMessagesSentWaitingForReply() {
-        assertEquals(new HashMap<RTPMessage, Integer>(), controller.getMessagesSentWaitingForReply());
+        assertEquals(new HashMap<Message, Integer>(), controller.getMessagesSentWaitingForReply());
     }
 
     @Test

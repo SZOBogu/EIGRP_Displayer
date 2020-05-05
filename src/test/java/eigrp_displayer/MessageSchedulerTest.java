@@ -1,7 +1,7 @@
 package eigrp_displayer;
 
 import eigrp_displayer.messages.CyclicMessage;
-import eigrp_displayer.messages.RTPMessage;
+import eigrp_displayer.messages.Message;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 
@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class MessageSchedulerTest {
-    RTPMessage message = Mockito.mock(RTPMessage.class);
+    Message message = Mockito.mock(Message.class);
     Network network = Mockito.mock(Network.class);
     CyclicMessage cyclicMessage = new CyclicMessage(message, 10);
     Device device = new EndDevice();

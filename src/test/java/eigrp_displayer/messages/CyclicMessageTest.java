@@ -6,7 +6,7 @@ import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CyclicMessageTest {
-    RTPMessage message = Mockito.mock(RTPMessage.class);
+    Message message = Mockito.mock(Message.class);
     CyclicMessage cyclicMessage = new CyclicMessage(message, 10);
 
     @Test

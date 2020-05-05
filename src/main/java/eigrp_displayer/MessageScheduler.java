@@ -1,11 +1,11 @@
 package eigrp_displayer;
 
-import eigrp_displayer.messages.RTPMessage;
+import eigrp_displayer.messages.Message;
 
 import java.util.*;
 
 public class MessageScheduler implements ClockDependent{
-    private List<List<RTPMessage>> messageSchedules = new ArrayList<>();
+    private List<List<Message>> messageSchedules = new ArrayList<>();
     private List<DeviceController> controllers = new ArrayList<>();
     private Network network = new Network();
 
@@ -17,7 +17,7 @@ public class MessageScheduler implements ClockDependent{
         return MessageSchedulerSingleton.scheduler;
     }
 
-    public List<List<RTPMessage>> getMessageSchedules() {
+    public List<List<Message>> getMessageSchedules() {
         return messageSchedules;
     }
 
@@ -34,10 +34,10 @@ public class MessageScheduler implements ClockDependent{
     }
 
     public void clear(){
-        for (List<RTPMessage> rtpMessages : this.messageSchedules) {
-            rtpMessages.clear();
+        for (List<Message> messages : this.messageSchedules) {
+            messages.clear();
             for (int j = 0; j < 10000; j++) {
-                rtpMessages.add(null);
+                messages.add(null);
             }
         }
     }
@@ -45,7 +45,7 @@ public class MessageScheduler implements ClockDependent{
     public int getTicksToAnotherMessage(){
         List<Integer> indexesOfClosestOccurrences = new ArrayList<>();
 
-        for(List<RTPMessage> messageList : this.messageSchedules){
+        for(List<Message> messageList : this.messageSchedules){
             for(int i = Clock.getTime(); i < messageList.size(); i++){
                  if(messageList.get(i) != null){
                      indexesOfClosestOccurrences.add(i);
@@ -63,7 +63,7 @@ public class MessageScheduler implements ClockDependent{
     @Override
     public void updateTime() {
         for(int i = 0; i < this.messageSchedules.size(); i++){
-            RTPMessage message = this.messageSchedules.get(Clock.getTime()).get(i);
+            Message message = this.messageSchedules.get(Clock.getTime()).get(i);
             EventLog.messageSent(this.controllers.get(i), message);
             this.network.getDeviceController(message.getReceiverAddress()).respond(message);
         }

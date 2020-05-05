@@ -2,7 +2,7 @@ package eigrp_displayer;
 
 import eigrp_displayer.messages.CyclicMessage;
 import eigrp_displayer.messages.HelloMessage;
-import eigrp_displayer.messages.RTPMessage;
+import eigrp_displayer.messages.Message;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public class DeviceController {
     private Device device;
-    private List<RTPMessage> messageSchedule;
+    private List<Message> messageSchedule;
 
     public DeviceController() {
         this.clearSchedule();
@@ -30,7 +30,7 @@ public class DeviceController {
         this.device = device;
     }
 
-    public List<RTPMessage> getMessageSchedule() {
+    public List<Message> getMessageSchedule() {
         return messageSchedule;
     }
 
@@ -39,11 +39,11 @@ public class DeviceController {
         MessageScheduler.getInstance().getControllers().add(this);
     }
 
-    public void sendMessage(RTPMessage message, List<Connection> path){
+    public void sendMessage(Message message, List<Connection> path){
 
     }
 
-    public void sendMessage(RTPMessage message, int offset) {
+    public void sendMessage(Message message, int offset) {
         for (DeviceInterface deviceInterface : new ArrayList<>(Arrays.asList(this.getDevice().getDeviceInterfaces()))) {
             DeviceController deviceController = deviceInterface.getOtherDeviceController(this);
 
@@ -59,17 +59,17 @@ public class DeviceController {
         }
     }
 
-    public void sendMessage(RTPMessage message) {
+    public void sendMessage(Message message) {
         this.sendMessage(message, 0);
     }
 
-    public void sendMessages(List<RTPMessage> messages, int offset){
+    public void sendMessages(List<Message> messages, int offset){
         for(int i = 0; i < messages.size(); i++){
             this.sendMessage(messages.get(i), offset + i);
         }
     }
 
-    public void sendMessages(List<RTPMessage> messages){
+    public void sendMessages(List<Message> messages){
         this.sendMessages(messages, 0);
     }
 
@@ -106,7 +106,7 @@ public class DeviceController {
     }
 
 
-    public void respond(RTPMessage message){
+    public void respond(Message message){
         System.out.println(); //do not reply, only routers are supposed to do so
         EventLog.messageReceived(this, message);
     }

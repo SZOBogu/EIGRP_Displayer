@@ -156,4 +156,17 @@ class RoutingTableEntryTest {
         entry.setFeasibleDistance(1);
         assertEquals(1, entry.getFeasibleDistance());
     }
+
+
+    @Test
+    void getDevicePath() {
+    }
+
+    @Test
+    void getIPAddressPath() {
+    }
+
+    @Test
+    void getStringPath() {
+    }
 }

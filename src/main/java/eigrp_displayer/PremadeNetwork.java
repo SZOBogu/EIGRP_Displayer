@@ -7,7 +7,7 @@ public class PremadeNetwork {
         ExternalNetwork externalNetwork = new ExternalNetwork();
         externalNetwork.setMask(new Mask(8));
         externalNetwork.setIp_address(new IPAddress(10,0,0,1));
-        DeviceController externalNetworkController = new DeviceController(externalNetwork);
+        ExternalNetworkController externalNetworkController = new ExternalNetworkController(externalNetwork);
 
         EndDevice endDevice0 = new EndDevice();
         EndDevice endDevice1 = new EndDevice();

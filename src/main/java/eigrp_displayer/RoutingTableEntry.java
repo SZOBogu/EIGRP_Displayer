@@ -64,7 +64,6 @@ public class RoutingTableEntry {
         this.path = path;
     }
 
-
     public int getTicksSinceLastHelloMessage() {
         return this.ticksSinceLastHelloMessage;
     }
@@ -112,12 +111,12 @@ public class RoutingTableEntry {
         return reliabilities.get(0);
     }
 
-    public List<DeviceController> getDevicePath(RouterController routerController){
+    public List<DeviceController> getDevicePath(DeviceController thisDeviceController){
         List<DeviceController> devicePath = new ArrayList<>();
         List<IPAddress> usedIPs = new ArrayList<>();
 
-        devicePath.add(routerController);
-        usedIPs.add(routerController.getDevice().getIp_address());
+        devicePath.add(thisDeviceController);
+        usedIPs.add(thisDeviceController.getDevice().getIp_address());
 
         for(int i = 0 ; i < this.path.size() ; i++){
             Connection connection = this.path.get(i);
@@ -128,8 +127,8 @@ public class RoutingTableEntry {
         return devicePath;
     }
 
-    public List<IPAddress> getIPAddressPath(RouterController routerController){
-        List<DeviceController> devices = this.getDevicePath(routerController);
+    public List<IPAddress> getIPAddressPath(DeviceController deviceController){
+        List<DeviceController> devices = this.getDevicePath(deviceController);
         List<IPAddress> ips = new ArrayList<>();
 
         for(DeviceController device : devices){

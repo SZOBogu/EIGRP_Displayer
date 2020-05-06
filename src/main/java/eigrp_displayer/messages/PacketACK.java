@@ -1,10 +1,14 @@
 package eigrp_displayer.messages;
 
 public class PacketACK extends Message {
-    int packetNumber;
+    private int packetNumber;
 
+    //TODO: test
     public PacketACK(Packet packet) {
         super(packet.getTargetAddress(), packet.getReceiverAddress(), packet.getSenderAddress());
         this.packetNumber = packet.getPacketNumber();
+    }
+    public int getPacketNumber() {
+        return packetNumber;
     }
 }

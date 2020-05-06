@@ -1,8 +1,6 @@
 package eigrp_displayer;
 
-import eigrp_displayer.messages.CyclicMessage;
-import eigrp_displayer.messages.HelloMessage;
-import eigrp_displayer.messages.Message;
+import eigrp_displayer.messages.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,10 +35,6 @@ public class DeviceController {
     public void addSelfToScheduler(){
         MessageScheduler.getInstance().getMessageSchedules().add(this.messageSchedule);
         MessageScheduler.getInstance().getControllers().add(this);
-    }
-
-    public void sendMessage(Message message, List<Connection> path){
-
     }
 
     public void sendMessage(Message message, int offset) {
@@ -107,8 +101,11 @@ public class DeviceController {
 
 
     public void respond(Message message){
-        System.out.println(); //do not reply, only routers are supposed to do so
         EventLog.messageReceived(this, message);
+
+        if(message instanceof Packet){
+            this.sendMessage(new PacketACK((Packet) message));
+        }
     }
 
     public List<DeviceController> getAllConnectedDeviceControllers(){

@@ -25,7 +25,7 @@ public class RouterController extends DeviceController implements ClockDependent
 
     @Override
     public void respond(Message message){
-        if(message.getReceiverAddress().equals(this.getDevice().getIp_address())) {
+        if(message.getTargetAddress().equals(this.getDevice().getIp_address())) {
             if (message instanceof QueryMessage) {
                 this.respondQuery((QueryMessage) message);
             } else if (message instanceof HelloMessage) {
@@ -44,10 +44,12 @@ public class RouterController extends DeviceController implements ClockDependent
     }
 
     public void passMessageFurther(Message message){
-        /**sprawdz wpisy w tablicy routingu
-         * jak jest wpis dotyczacy ip to sendnij message dalej w nastepnym kroku schedula
-         *
-        */
+        RoutingTableEntry entry = this.getDevice().getRoutingTable().getEntry(message.getTargetAddress());
+        List<IPAddress> ips = entry.getIPAddressPath(this);
+        if(entry != null && ips.size() > 1){
+            message.setReceiverAddress(ips.get(1));
+            this.sendMessage(message);
+        }
     }
 
     public void respondACK(ACKMessage ack){
@@ -161,6 +163,7 @@ public class RouterController extends DeviceController implements ClockDependent
                 replyMessage.getSenderAddress());
     }
 
+    //TODO: test
     public void sendQueryMessages(List<QueryMessage> messages){
         for(int i = 0; i < messages.size(); i++) {
             this.sendMessage(messages.get(i), i);
@@ -181,11 +184,23 @@ public class RouterController extends DeviceController implements ClockDependent
 
     public void formNeighbourship(){}
 
+    //TODO:test
     public void severNeighbourship(NeighbourTableEntry entry){
-        //usuń wpisy z tablicy routingu i topologii
-        //wyślij Query z tym adresem do sasiadow
-        //w
+        Router router = this.getDevice();
+        IPAddress ipOfFormerNeighbour = entry.getNeighbourAddress();
+        router.getNeighbourTable().removeNeighbourship(ipOfFormerNeighbour);
+        router.getTopologyTable().deleteNeighbourEntries(this, ipOfFormerNeighbour);
+        List<RoutingTableEntry> routingTableEntries = router.getRoutingTable().getEntries();
+        routingTableEntries.remove(this.getDevice().getRoutingTable().getEntry(ipOfFormerNeighbour));
 
+        List<QueryMessage> queryMessageList = new ArrayList<>();
+        for(DeviceController controller : this.getAllNeighbourControllers()){
+            QueryMessage queryMessage = new QueryMessage(router.getIp_address(),
+                    controller.getDevice().getIp_address(), ipOfFormerNeighbour);
+            queryMessageList.add(queryMessage);
+        }
+
+        this.sendQueryMessages(queryMessageList);
     }
 
     public List<DeviceController> getAllNeighbourControllers(){

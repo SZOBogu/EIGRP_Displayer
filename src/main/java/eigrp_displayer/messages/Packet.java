@@ -4,18 +4,16 @@ import eigrp_displayer.IPAddress;
 
 public class Packet extends Message{
     private Integer packetNumber;
-    private static int packetCount = 0;
 
-    public Packet(IPAddress senderAddress, IPAddress receiverAddress){
+    //TODO:tests
+    public Packet(IPAddress senderAddress, IPAddress receiverAddress, int packetNumber){
         super(senderAddress, receiverAddress);
-        this.packetNumber = packetCount;
-        packetCount++;
+        this.packetNumber = packetNumber;
     }
 
-    public Packet(IPAddress senderAddress, IPAddress receiverAddress, IPAddress targetAddress) {
+    public Packet(IPAddress senderAddress, IPAddress receiverAddress, IPAddress targetAddress, int packetNumber) {
         super(senderAddress, receiverAddress, targetAddress);
-        this.packetNumber = packetCount;
-        packetCount++;
+        this.packetNumber = packetNumber;
     }
 
     public Integer getPacketNumber() {

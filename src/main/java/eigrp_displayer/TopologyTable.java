@@ -135,4 +135,13 @@ public class TopologyTable extends RoutingTable{
         path.add(0, connection);
         updatedRoutingTableEntry.setPath(path);
     }
+
+    public void deleteNeighbourEntries(DeviceController controller, IPAddress ipToDelete) {
+        List<RoutingTableEntry> entriesToDelete = new ArrayList<>();
+        for(RoutingTableEntry entry : this.getEntries()){
+            if(entry.getPath().get(0).getOtherDevice(controller).getDevice().getIp_address().equals(ipToDelete))
+                entriesToDelete.add(entry);
+        }
+        this.getEntries().removeAll(entriesToDelete);
+    }
 }

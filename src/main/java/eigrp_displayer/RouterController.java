@@ -25,6 +25,7 @@ public class RouterController extends DeviceController implements ClockDependent
 
     @Override
     public void respond(Message message){
+        //logging
         if(message.getTargetAddress().equals(this.getDevice().getIp_address())) {
             if (message instanceof QueryMessage) {
                 this.respondQuery((QueryMessage) message);
@@ -48,7 +49,7 @@ public class RouterController extends DeviceController implements ClockDependent
         List<IPAddress> ips = entry.getIPAddressPath(this);
         if(entry != null && ips.size() > 1){
             message.setReceiverAddress(ips.get(1));
-            this.sendMessage(message);
+            this.sendMessage(message, 1);
         }
     }
 
@@ -84,14 +85,13 @@ public class RouterController extends DeviceController implements ClockDependent
 
                     UpdateMessage updateMessage = new UpdateMessage(this.getDevice().getIp_address(),
                             helloMessage.getSenderAddress(), this.getDevice().getTopologyTable());
-                    this.sendMessage(updateMessage);
+                    this.sendMessage(updateMessage, 1);
                 }
             }
             if(otherDeviceController.getDevice() instanceof EndDevice ||
                     otherDeviceController.getDevice() instanceof ExternalNetwork) {
                 this.getDevice().getNeighbourTable().formNeighbourship(
                         this.getInterface(helloMessage.getSenderAddress()), helloMessage.getSenderAddress());
-
                 //AND make new record in routing and topology tables
                 RoutingTableEntry entry = new RoutingTableEntry(
                         otherDeviceController.getDevice().getIp_address());
@@ -122,10 +122,10 @@ public class RouterController extends DeviceController implements ClockDependent
                 if(((QueryMessage) message).getQueriedDeviceAddress()
                         .equals(queryMessage.getQueriedDeviceAddress())){
                     messageToRemove = message;
-                    isLoopedBack =true;
+                    isLoopedBack = true;
                     ReplyMessage emptyReply = new ReplyMessage(this.getDevice().getIp_address(),
                             queryMessage.getSenderAddress(), null);
-                    this.sendMessage(emptyReply);
+                    this.sendMessage(emptyReply, 1);
                 }
             }
         }
@@ -135,21 +135,21 @@ public class RouterController extends DeviceController implements ClockDependent
                 if (entry.getIp_address().equals(
                         queryMessage.getQueriedDeviceAddress())) {
                     this.sendMessage(new ReplyMessage(this.getDevice().getIp_address(),
-                            queryMessage.getSenderAddress(), entry));
+                            queryMessage.getSenderAddress(), entry), 1);
                 }
             }
         }
     }
 
     public void respondUpdate(UpdateMessage updateMessage){
-        this.sendMessage(new ACKMessage(this.getDevice().getIp_address(), updateMessage.getSenderAddress()));
+        this.sendMessage(new ACKMessage(this.getDevice().getIp_address(), updateMessage.getSenderAddress()), 1);
         this.update(updateMessage.getTopologyTable(),
                 updateMessage.getSenderAddress());
     }
 
     public void respondReply(ReplyMessage replyMessage){
         //ack, delete query from messages waiting for reply, update routing tables
-        this.sendMessage(new ACKMessage(this.getDevice().getIp_address(), replyMessage.getSenderAddress()));
+        this.sendMessage(new ACKMessage(this.getDevice().getIp_address(), replyMessage.getSenderAddress()), 1);
 
         for(Message message : this.messagesSentWaitingForReply.keySet()){
             if(message instanceof QueryMessage){
@@ -163,10 +163,9 @@ public class RouterController extends DeviceController implements ClockDependent
                 replyMessage.getSenderAddress());
     }
 
-    //TODO: test
     public void sendQueryMessages(List<QueryMessage> messages){
-        for(int i = 0; i < messages.size(); i++) {
-            this.sendMessage(messages.get(i), i);
+        for (QueryMessage message : messages) {
+            super.sendMessage(message, 1);
         }
     }
 
@@ -181,8 +180,6 @@ public class RouterController extends DeviceController implements ClockDependent
         RoutingTableEntry bestEntry = this.getDevice().getTopologyTable().getBestEntryForIP(entry.getIp_address());
         this.getDevice().getRoutingTable().update(bestEntry);
     }
-
-    public void formNeighbourship(){}
 
     //TODO:test
     public void severNeighbourship(NeighbourTableEntry entry){

@@ -99,12 +99,12 @@ public class DeviceController {
         }
     }
 
-
+    //TODO: test
     public void respond(Message message){
         EventLog.messageReceived(this, message);
 
         if(message instanceof Packet){
-            this.sendMessage(new PacketACK((Packet) message));
+            this.sendMessage(new PacketACK((Packet) message), 1);
         }
     }
 

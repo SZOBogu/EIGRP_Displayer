@@ -4,10 +4,7 @@ import eigrp_displayer.messages.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -92,7 +89,7 @@ class RouterControllerTest {
         controller0.respondHello(hello);
         assertEquals(1, controller0.getDevice().getNeighbourTable().getAllNeighboursAddresses().size());
         assertEquals(ip, controller0.getDevice().getNeighbourTable().getAllNeighboursAddresses().get(0));
-        assertTrue(controller0.getMessageSchedule().get(Clock.getTime()) instanceof UpdateMessage);
+        assertTrue(controller0.getMessageSchedule().get(Clock.getTime() + 1) instanceof UpdateMessage);
     }
 
     @Test
@@ -172,7 +169,7 @@ class RouterControllerTest {
         assertNotEquals(initialEntry, controller0.getDevice().getRoutingTable().getEntry(ip1));
         long bestEntryMetric = controller0.getDevice().getTopologyTable().getBestEntryForIP(ip1).getFeasibleDistance();
         assertTrue(initialBestPathMetric > bestEntryMetric);
-        assertTrue(controller0.getMessageSchedule().get(Clock.getTime()) instanceof ACKMessage);
+        assertTrue(controller0.getMessageSchedule().get(Clock.getTime() + 1) instanceof ACKMessage);
     }
 
     @Test
@@ -185,7 +182,7 @@ class RouterControllerTest {
         assertTrue(controller0.getDevice().getTopologyTable().getAllEntriesForIP(ip1).isEmpty());
 
         controller0.respond(replyMessage);
-        assertTrue(controller0.getMessageSchedule().get(Clock.getTime()) instanceof ACKMessage);
+        assertTrue(controller0.getMessageSchedule().get(Clock.getTime() + 1) instanceof ACKMessage);
 
         assertNotNull(controller0.getDevice().getRoutingTable().getEntry(ip1));
         assertFalse(controller0.getDevice().getTopologyTable().getAllEntriesForIP(ip1).isEmpty());
@@ -378,5 +375,20 @@ class RouterControllerTest {
         routerController3.getDevice().getRoutingTable().getEntries().add(bestEntry);
 
         assertEquals(ip1, routerController3.getAddressOfNextDeviceOnPath(ip));
+    }
+
+    @Test
+    void sendQueryMessages() {
+        init();
+        QueryMessage q0 = new QueryMessage(ip, ip0, ip1);
+        QueryMessage q1 = new QueryMessage(ip, ip0, ip1);
+        QueryMessage q2 = new QueryMessage(ip, ip0, ip1);
+
+        List<QueryMessage> qList = new ArrayList<>(Arrays.asList(q0, q1, q2));
+
+        controller.sendQueryMessages(qList);
+        assertEquals(q0, controller.getMessageSchedule().get(Clock.getTime() + 1));
+        assertEquals(q1, controller.getMessageSchedule().get(Clock.getTime() + 2));
+        assertEquals(q2, controller.getMessageSchedule().get(Clock.getTime() + 3));
     }
 }

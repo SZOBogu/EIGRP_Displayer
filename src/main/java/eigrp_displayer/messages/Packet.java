@@ -5,7 +5,6 @@ import eigrp_displayer.IPAddress;
 public class Packet extends Message{
     private Integer packetNumber;
 
-    //TODO:tests
     public Packet(IPAddress senderAddress, IPAddress receiverAddress, int packetNumber){
         super(senderAddress, receiverAddress);
         this.packetNumber = packetNumber;

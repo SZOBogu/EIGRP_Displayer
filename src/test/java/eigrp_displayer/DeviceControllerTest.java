@@ -1,8 +1,6 @@
 package eigrp_displayer;
 
-import eigrp_displayer.messages.CyclicMessage;
-import eigrp_displayer.messages.HelloMessage;
-import eigrp_displayer.messages.Message;
+import eigrp_displayer.messages.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -189,7 +187,85 @@ class DeviceControllerTest {
     }
 
     @Test
-    void respond() {
+    void respondPacket() {
+        init();
+        Packet packet = new Packet(ip0, ip1, 0);
+
+        controller0.respond(packet);
+        Message packetACK = controller0.getMessageSchedule().get(Clock.getTime() + 1);
+
+        assertTrue(packetACK instanceof PacketACK, "class: " + packetACK.getClass());
+        assertEquals(ip1, packetACK.getSenderAddress());
+        assertEquals(ip1, packetACK.getReceiverAddress());
+        assertEquals(ip0, packetACK.getTargetAddress());
+        assertEquals(0, ((PacketACK) packetACK).getPacketNumber());
+    }
+
+    @Test
+    void respondPacketAck() {
+        init();
+        Packet packet = new Packet(ip0, ip1, 0);
+        PacketACK packetAck = new PacketACK(packet);
+        controller0.respond(packetAck);
+
+        for(int i = 0; i < controller0.getMessageSchedule().size(); i++) {
+            assertNull(controller0.getMessageSchedule().get(i));
+        }
+    }
+
+    @Test
+    void respondAck() {
+        init();
+        ACKMessage ack = new ACKMessage(ip0, ip1);
+        controller0.respond(ack);
+
+        for(int i = 0; i < controller0.getMessageSchedule().size(); i++) {
+            assertNull(controller0.getMessageSchedule().get(i));
+        }
+    }
+
+    @Test
+    void respondHello() {
+        init();
+        HelloMessage hello = new HelloMessage(ip0, ip1);
+        controller0.respond(hello);
+
+        for(int i = 0; i < controller0.getMessageSchedule().size(); i++) {
+            assertNull(controller0.getMessageSchedule().get(i));
+        }
+    }
+
+    @Test
+    void respondQuery() {
+        init();
+        QueryMessage query = new QueryMessage(ip0, ip1, ip2);
+        controller0.respond(query);
+
+        for(int i = 0; i < controller0.getMessageSchedule().size(); i++) {
+            assertNull(controller0.getMessageSchedule().get(i));
+        }
+    }
+
+    @Test
+    void respondReply() {
+        init();
+        ReplyMessage reply = new ReplyMessage(ip0, ip1, Mockito.mock(RoutingTableEntry.class));
+        controller0.respond(reply);
+
+        for(int i = 0; i < controller0.getMessageSchedule().size(); i++) {
+            assertNull(controller0.getMessageSchedule().get(i));
+        }
+    }
+
+    @Test
+    void respondUpdate() {
+        init();
+        UpdateMessage update = new UpdateMessage(ip0, ip1, Mockito.mock(TopologyTable.class));
+        controller0.respond(update);
+
+        for(int i = 0; i < controller0.getMessageSchedule().size(); i++) {
+            assertNull(controller0.getMessageSchedule().get(i));
+        }
     }
 
     @Test

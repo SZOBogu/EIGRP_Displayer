@@ -48,4 +48,17 @@ public class ExternalNetworkController extends DeviceController{
             }
         }
     }
+
+    public PacketTargetModel getPacketTargetModel(int i){
+        return this.packetTargetModelList.get(i);
+    }
+
+    public void addPacketTargetModel(PacketTargetModel packetTargetModel){
+        this.packetTargetModelList.add(packetTargetModel);
+    }
+
+
+    public void removePacketTargetModel(PacketTargetModel packetTargetModel){
+        this.packetTargetModelList.remove(packetTargetModel);
+    }
 }

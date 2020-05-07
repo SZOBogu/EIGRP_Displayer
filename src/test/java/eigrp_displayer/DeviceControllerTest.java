@@ -156,7 +156,6 @@ class DeviceControllerTest {
 
     @Test
     void scheduleHellos() {
-        //sometimes doesn't work, randomness comes from random offset in device
         init();
         List<IPAddress> ips = new ArrayList<>();
         for(DeviceController controller : controller0.getAllConnectedDeviceControllers()){
@@ -291,10 +290,6 @@ class DeviceControllerTest {
     }
 
     @Test
-    void updateMetric() {
-    }
-
-    @Test
     void setConnection(){
         controller0.setConnection(connection0);
         assertEquals(connection0, controller0.getDevice().getDeviceInterfaces()[0].getConnection());
@@ -326,5 +321,13 @@ class DeviceControllerTest {
 
     @Test
     void addSelfToScheduler() {
+        init();
+        MessageScheduler messageScheduler = MessageScheduler.getInstance();
+        messageScheduler.clear();
+        messageScheduler.getControllers().clear();
+
+        this.controller0.addSelfToScheduler();
+        assertEquals(this.controller0.getMessageSchedule(),
+                messageScheduler.getMessageSchedules().get(0));
     }
 }

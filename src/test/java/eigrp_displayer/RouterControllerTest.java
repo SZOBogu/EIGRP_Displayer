@@ -305,7 +305,6 @@ class RouterControllerTest {
     @Test
     void printRoutingTable() {
         init();
-        IPAddress ip = Mockito.mock(IPAddress.class);
         RoutingTableEntry entry = new RoutingTableEntry(ip0);
         entry.setPath(Collections.singletonList(connection0));
         String string = controller.getDevice().getIp_address()
@@ -314,7 +313,6 @@ class RouterControllerTest {
 
         assertEquals(string, controller.printRoutingTable());
         controller.getDevice().getRoutingTable().getEntries().add(entry);
-        int mask = MessageScheduler.getInstance().getNetwork().getMask().getMask();
         string += entry.getCode() + "\t" + entry.getIp_address() + "[" + entry.getReportedDistance() + "\\"
                 + entry.getFeasibleDistance() + "] via " + entry.getPath().get(0).getOtherDevice(controller).getDevice().getIp_address()
                 + ", Interface 0\n";

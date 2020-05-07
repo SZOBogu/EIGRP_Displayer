@@ -24,7 +24,6 @@ public class ExternalNetworkController extends DeviceController{
     }
 
 
-    //TODO: tests
     @Override
     public void scheduleHellos() {
         super.scheduleHellos();
@@ -37,7 +36,6 @@ public class ExternalNetworkController extends DeviceController{
         }
     }
 
-    //TODO: tests
     @Override
     public void respond(Message message){
         if(message instanceof PacketACK){

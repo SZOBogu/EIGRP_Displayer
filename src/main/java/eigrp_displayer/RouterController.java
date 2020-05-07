@@ -181,14 +181,13 @@ public class RouterController extends DeviceController implements ClockDependent
         this.getDevice().getRoutingTable().update(bestEntry);
     }
 
-    //TODO:test
-    public void severNeighbourship(NeighbourTableEntry entry){
+
+    public void severNeighbourship(IPAddress ipOfFormerNeighbour){
         Router router = this.getDevice();
-        IPAddress ipOfFormerNeighbour = entry.getNeighbourAddress();
         router.getNeighbourTable().removeNeighbourship(ipOfFormerNeighbour);
         router.getTopologyTable().deleteNeighbourEntries(this, ipOfFormerNeighbour);
         List<RoutingTableEntry> routingTableEntries = router.getRoutingTable().getEntries();
-        routingTableEntries.remove(this.getDevice().getRoutingTable().getEntry(ipOfFormerNeighbour));
+        routingTableEntries.remove(router.getRoutingTable().getEntry(ipOfFormerNeighbour));
 
         List<QueryMessage> queryMessageList = new ArrayList<>();
         for(DeviceController controller : this.getAllNeighbourControllers()){

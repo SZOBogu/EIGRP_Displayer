@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,7 +30,7 @@ class TopologyTableTest {
         topologyTable.getEntries().add(entry1);
         topologyTable.getEntries().add(entry2);
         topologyTable.getEntries().add(entry3);
-
+        router.setIp_address(ip0);
         device.setIp_address(ip1);
         connection0.linkDevices(controller, deviceController);
     }
@@ -56,7 +57,6 @@ class TopologyTableTest {
         topologyTable.setCodes("D - dummy");
         assertEquals("D - dummy", topologyTable.getCodes());
     }
-
 
     @Test
     void updateTable() {
@@ -124,5 +124,21 @@ class TopologyTableTest {
     void getSuccessorCount() {
         assertEquals(1, topologyTable.getSuccessorCount(ip0));
         assertEquals(0, topologyTable.getSuccessorCount(ip1));
+    }
+
+    @Test
+    void deleteNeighbourEntries() {
+        List<Connection> path = new ArrayList<>();
+        path.add(connection0);
+        RoutingTableEntry entry4 = new RoutingTableEntry(ip1);
+        entry0.setPath(path);
+        entry1.setPath(path);
+        entry2.setPath(path);
+        entry3.setPath(path);
+        entry4.setPath(path);
+        topologyTable.getEntries().add(entry4);
+        assertEquals(2, topologyTable.getAllEntriesForIP(ip1).size());
+        topologyTable.deleteNeighbourEntries(controller, ip1);
+        assertEquals(0, topologyTable.getAllEntriesForIP(ip1).size());
     }
 }

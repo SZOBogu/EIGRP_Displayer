@@ -224,7 +224,7 @@ class RouterControllerTest {
     }
 
     @Test
-    void testUpdateTable() {
+    void updateTable() {
         init();
         RoutingTableEntry entry0 = new RoutingTableEntry(ip0);
         RoutingTableEntry betterEntry = new RoutingTableEntry(ip0);
@@ -388,5 +388,24 @@ class RouterControllerTest {
         assertEquals(q0, controller.getMessageSchedule().get(Clock.getTime() + 1));
         assertEquals(q1, controller.getMessageSchedule().get(Clock.getTime() + 2));
         assertEquals(q2, controller.getMessageSchedule().get(Clock.getTime() + 3));
+    }
+
+    @Test
+    void severNeighbourship() {
+        init();
+        controller.getDevice().getNeighbourTable().formNeighbourship(controller.getInterface(ip0), ip0);
+
+        RoutingTableEntry entry = new RoutingTableEntry(ip0);
+        List<Connection> path =  new ArrayList<>();
+        entry.setPath(path);
+        controller.update(entry, ip0);
+
+        assertEquals(1, controller.getDevice().getNeighbourTable().getEntries().size());
+        assertEquals(1, controller.getDevice().getRoutingTable().getEntries().size());
+        assertEquals(1, controller.getDevice().getTopologyTable().getEntries().size());
+        controller.severNeighbourship(ip0);
+        assertEquals(0, controller.getDevice().getNeighbourTable().getEntries().size());
+        assertEquals(0, controller.getDevice().getRoutingTable().getEntries().size());
+        assertEquals(0, controller.getDevice().getTopologyTable().getEntries().size());
     }
 }

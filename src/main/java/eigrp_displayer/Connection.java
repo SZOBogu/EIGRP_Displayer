@@ -96,7 +96,14 @@ public abstract class Connection implements Addable {
 
     @Override
     public String toString() {
-        return name + " between " + device1.getDevice() + " and "
+        if(device1 == null && device2 == null)
+            return "Unconnected connection";
+        else if(device1 != null && device2 == null)
+            return "Connection connected to " + device1;
+        else if(device1 == null)
+            return "Connection connected to " + device2;
+        else
+            return name + " between " + device1.getDevice() + " and "
                 + device2.getDevice();
     }
 }

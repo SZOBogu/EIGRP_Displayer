@@ -1,12 +1,145 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
-<html lang="en">
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css">
     <title>Display - EIGRP Displayer</title>
 </head>
 <body>
     <h1>Network displayer</h1>
+    <div id="network">
+        <!--not really proud of this one-->
+        <table>
+            <!-- edc0           -->
+            <tr>
+                <td>
+                    <img class="largeIcon" src="/large%20placeholder.png" alt="-"/>
+                </td>
+                <td>
+                    <img class="largeIcon" src="/large%20placeholder.png" alt="-"/>
+                </td>
+                <td>
+                    <img class="largeIcon" src="/large%20placeholder.png" alt="-"/>
+                </td>
+                <td>
+                    <a href="/displayer/deviceForm/0">
+                        <img class="largeIcon" src="/enddev.png" alt="dev0"/>
+                    </a>
+                </td>
+                <td>
+                    <img class="largeIcon" src="/large%20placeholder.png"  alt="-"/>
+                </td>
+                <td>
+                    <img class="smallIcon" src="/large%20placeholder.png" alt="-"/>
+                </td>
+                <td>
+                    <img class="largeIcon" src="/large%20placeholder.png" alt="-"/>
+                </td>
+            </tr>
+            <!-- con 3 vertical           -->
+            <tr>
+                <td>
+                    <img class="largeIcon" src="/large%20placeholder.png" alt="-"/>
+                </td>
+                <td>
+                    <img class="smallIcon" src="/large%20placeholder.png" alt="-"/>
+                </td>
+                <td>
+                    <img class="largeIcon" src="/large%20placeholder.png" alt="-"/>
+                </td>
+                <td>
+                    <a href="/displayer/connectionForm/3">
+                        <img class="largeIcon" src="/vertical%20connection.png" alt="conn3"/>
+                    </a>
+                </td>
+                <td>
+                    <img class="largeIcon" src="/large%20placeholder.png" alt="-"/>
+                </td>
+                <td>
+                    <img class="smallIcon" src="/large%20placeholder.png" alt="-"/>
+                </td>
+                <td>
+                    <img class="largeIcon" src="/large%20placeholder.png" alt="-"/>
+                </td>
+            </tr>
+            <!-- con 1 & con 4 vertical         -->
+            <tr>
+                <td>
+                    <img class="largeIcon" src="/large%20placeholder.png"  alt="-"/>
+                </td>
+
+                <td>
+                    <img class="largeIcon" src="/large%20placeholder.png" alt="-"/>
+                </td>
+                <td>
+                    <a href="/displayer/connectionForm/1">
+                        <img class="largeIcon" src="/right%20turn%20connection.png" alt="conn1"/>
+                    </a>
+                </td>
+                <td>
+                    <a href="/displayer/routerForm/1">
+                        <img class="largeIcon" src="/router.png" alt="r1"/>
+                    </a>
+                </td>
+                <td>
+                    <a href="/displayer/connectionForm/4">
+                        <img class="largeIcon" src="/left%20turn%20connection.png" alt="conn4"/>
+                    </a>
+                </td>
+                <td>
+                    <img class="smallIcon" src="/large%20placeholder.png" alt="-"/>
+                </td>
+                <td>
+                    <img class="largeIcon" src="/large%20placeholder.png" alt="-"/>
+                </td>
+            </tr>
+
+            <!-- netcont, con0, rcon0, con2, rcont2, con5, edc1           -->
+            <tr>
+                <td>
+                    <a href="/displayer/extNetworkForm/0">
+                        <img class="largeIcon" src="/cloud+network-131964743785433404.png" height="100px" width="100px" alt="extNet"/>
+                    </a>
+                </td>
+                <td>
+                    <a href="/displayer/connectionForm/0">
+                        <img class="smallIcon" src="/horizontal%20connection.png" alt="con0"/>
+                    </a>
+                </td>
+                <td>
+                    <a href="/displayer/routerForm/0">
+                        <img class="largeIcon" src="/router.png" alt="r0"/>
+                    </a>
+                </td>
+                <td>
+                    <a href="/displayer/connectionForm/2">
+                        <img class="smallIcon" src="/horizontal%20connection.png" alt="con2"/>
+                    </a>
+                </td>
+                <td>
+                    <a href="/displayer/routerForm/2">
+                        <img class="largeIcon" src="/router.png" alt="r2"/>
+                    </a>
+                </td>
+                <td>
+                    <a href="/displayer/connectionForm/5">
+                        <img class="smallIcon" src="/horizontal%20connection.png" alt="con5"/>
+                    </a>
+                </td>
+                <td>
+                    <a href="/displayer/deviceForm/1">
+                        <img class="largeIcon" src="/enddev.png" alt="dev1"/>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="eigrp-tables">
+
+    </div>
+    <div id="event-log">
+
+    </div>
     <a href="/displayer/netForm">Go to network form</a><br>
     <a href="/displayer/">Go back to home page</a><br>
 </body>

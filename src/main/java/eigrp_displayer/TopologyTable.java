@@ -105,7 +105,7 @@ public class TopologyTable extends RoutingTable{
         for (DeviceInterface deviceInterface : routerController.getDevice().getDeviceInterfaces()) {
             if (deviceInterface.getOtherDeviceController(routerController).
                     getDevice().getIp_address().equals(sender)) {
-
+                        connection = deviceInterface.getConnection();
                 metricForConnectionWithSender = calculator.calculateMetric(
                         routerController.getDevice(), connection);
                 break;
@@ -139,7 +139,12 @@ public class TopologyTable extends RoutingTable{
     public void deleteNeighbourEntries(DeviceController controller, IPAddress ipToDelete) {
         List<RoutingTableEntry> entriesToDelete = new ArrayList<>();
         for(RoutingTableEntry entry : this.getEntries()){
-            if(entry.getPath().get(0).getOtherDevice(controller).getDevice().getIp_address().equals(ipToDelete))
+            List<Connection> path = entry.getPath();
+            Connection connection = path.get(0);
+            DeviceController controller1 = connection.getOtherDevice(controller);
+            Device device = controller1.getDevice();
+            IPAddress ip = device.getIp_address();
+            if(ip.equals(ipToDelete))
                 entriesToDelete.add(entry);
         }
         this.getEntries().removeAll(entriesToDelete);

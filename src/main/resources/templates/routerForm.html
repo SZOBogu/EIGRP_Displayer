@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Router form - EIGRP Displayer<</title>
+</head>
+<body>
+    <h1>Router form</h1>
+    <form action="#" th:action="@{/displayer/processRouterForm}" th:object="${router}" method="post">
+        <table>
+            <tr>
+                <td><label>Name</label></td>
+                <td><input type="text" th:field="*{name}" /></td>
+            </tr>
+            <tr>
+                <td><label>IP Address</label></td>
+                <td><input type="text" th:field="*{ip_address.getFirstOctet()}" /></td>
+                <p th:if="${#fields.hasErrors('ip_address')}" th:errors="*{ip_address}"></p>
+                <td><input type="text" th:field="*{ip_address.getSecondOctet()}" /></td>
+                <p th:if="${#fields.hasErrors('ip_address')}" th:errors="*{ip_address}"></p>
+                <td><input type="text" th:field="*{ip_address.getThirdOctet()}" /></td>
+                <p th:if="${#fields.hasErrors('ip_address')}" th:errors="*{ip_address}"></p>
+                <td><input type="text" th:field="*{ip_address.getFourthOctet()}" /></td>
+                <p th:if="${#fields.hasErrors('ip_address')}" th:errors="*{ip_address}"></p>
+            </tr>
+            <tr>
+                <td><label>Hello Sending Time Offset</label></td>
+                <td><input type="number" th:field="*{messageSendingTimeOffset}" /></td>
+                <p th:if="${#fields.hasErrors('messageSendingTimeOffset')}" th:errors="*{messageSendingTimeOffset}"></p>
+            </tr>
+            <tr>
+                <td><label>K1</label></td>
+                <td><input type="checkbox" th:field="*{k1}" /></td>
+            </tr>
+            <tr>
+                <td><label>K2</label></td>
+                <td><input type="checkbox" th:field="*{k2}" /></td>
+            </tr>
+            <tr>
+                <td><label>K3</label></td>
+                <td><input type="checkbox" th:field="*{k3}" /></td>
+            </tr>
+            <tr>
+                <td><label>K4</label></td>
+                <td><input type="checkbox" th:field="*{k4}" /></td>
+            </tr>
+            <tr>
+                <td><label>K5</label></td>
+                <td><input type="checkbox" th:field="*{k5}" /></td>
+            </tr>
+        </table>
+    </form>
+
+    <a href="/displayer/netForm">Go back to network form</a><br>
+    <a href="/displayer/">Go back to home page</a><br>
+</body>
+</html>

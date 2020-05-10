@@ -9,6 +9,7 @@ public class Network {
     private Mask mask;
     private PoolOfIPAddresses pool;
     private List<DeviceController> deviceControllers;
+    private List<Connection> connections;
 
     public Network(){
         this(
@@ -25,6 +26,7 @@ public class Network {
         this.pool = new PoolOfIPAddresses();
         this.pool.init(networkAddress, mask);
         this.deviceControllers = new ArrayList<>();
+        this.connections = new ArrayList<>();
     }
 
     public void addDeviceController(DeviceController controller){
@@ -36,7 +38,6 @@ public class Network {
         this.pool.releaseIPAddress(controller.getDevice().getIp_address());
         controller.getDevice().setIp_address(null);
         this.deviceControllers.remove(controller);
-
     }
 
     public void connectDevices(DeviceController deviceController1, DeviceController deviceController2){
@@ -44,6 +45,7 @@ public class Network {
         deviceController1.setConnection(cable);
         deviceController2.setConnection(cable);
         cable.linkDevices(deviceController1, deviceController2);
+        this.connections.add(cable);
     }
 
     public DeviceController getDeviceController(IPAddress ipAddress){
@@ -84,5 +86,9 @@ public class Network {
 
     public void setDeviceControllers(List<DeviceController> deviceControllers) {
         this.deviceControllers = deviceControllers;
+    }
+
+    public List<Connection> getConnections() {
+        return connections;
     }
 }

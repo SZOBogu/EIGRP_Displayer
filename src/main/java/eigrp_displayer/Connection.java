@@ -1,12 +1,16 @@
 package eigrp_displayer;
 
+import org.hibernate.validator.constraints.Range;
+
 public abstract class Connection implements Addable {
     private String name;
     private DeviceController device1;
     private DeviceController device2;
     private int bandwidth;
+    @Range(min = 1, max = 255)
     private int delay;
     private int load;
+    @Range(min = 1, max = 255)
     private int reliability;
 
     public String getName() {
@@ -62,6 +66,10 @@ public abstract class Connection implements Addable {
             return null;
     }
 
+    public void addSelfToNetwork(){
+        MessageScheduler.getInstance().getNetwork().getConnections().add(this);
+    }
+
     public int getBandwidth() {
         return bandwidth;
     }
@@ -97,11 +105,11 @@ public abstract class Connection implements Addable {
     @Override
     public String toString() {
         if(device1 == null && device2 == null)
-            return "Unconnected connection";
+            return name;
         else if(device1 != null && device2 == null)
-            return "Connection connected to " + device1;
+            return name + " connected to " + device1;
         else if(device1 == null)
-            return "Connection connected to " + device2;
+            return name + " connected to " + device2;
         else
             return name + " between " + device1.getDevice() + " and "
                 + device2.getDevice();

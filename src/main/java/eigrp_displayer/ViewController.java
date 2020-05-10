@@ -20,11 +20,11 @@ public class ViewController {
     public String index(){
         return "index";
     }
+
     @GetMapping("/netForm")
     public String showNetForm(@ModelAttribute("network") Network network, Model model){
         return "networkForm";
     }
-
     @PostMapping("/processNetForm")
     public String processNetForm(@ModelAttribute("network") Network network, Model model){
         return "index";
@@ -34,7 +34,6 @@ public class ViewController {
     public String showDeviceForm(@ModelAttribute("device") EndDevice device, Model model){
         return "device";
     }
-
     @PostMapping("/processDeviceForm")
     public String processDeviceForm(@ModelAttribute("device") EndDevice device, Model model){
         return "index";
@@ -42,9 +41,8 @@ public class ViewController {
 
     @GetMapping("/routerForm")
     public String showRouterForm(@ModelAttribute("router") Router router, Model model){
-        return "router";
+        return "routerForm";
     }
-
     @PostMapping("/processRouterForm")
     public String processRouterForm(@ModelAttribute("router") Router router, Model model){
         return "index";
@@ -54,7 +52,6 @@ public class ViewController {
     public String showExtNetworkForm(@ModelAttribute("extNetwork") ExternalNetwork externalNetwork, Model model){
         return "externalNetwork";
     }
-
     @PostMapping("/processExtNetworkForm")
     public String processExtNetworkForm(@ModelAttribute("extNetwork") ExternalNetwork externalNetwork, Model model){
         return "index";
@@ -64,7 +61,6 @@ public class ViewController {
     public String showConnectionForm(@ModelAttribute("connection") Cable connection, Model model){
         return "connection";
     }
-
     @PostMapping("/processConnectionForm")
     public String processConnectionForm(@ModelAttribute("connection") Cable connection, Model model){
         return "index";

@@ -8,6 +8,7 @@ public class PremadeNetwork {
         externalNetwork.setMask(new Mask(8));
         externalNetwork.setIp_address(new IPAddress(10,0,0,1));
         ExternalNetworkController externalNetworkController = new ExternalNetworkController(externalNetwork);
+        network.getDeviceControllers().add(externalNetworkController);
 
         EndDevice endDevice0 = new EndDevice();
         EndDevice endDevice1 = new EndDevice();
@@ -42,6 +43,13 @@ public class PremadeNetwork {
         con3.linkDevices(routerController1, endDeviceController0);
         con4.linkDevices(routerController1, routerController2);
         con5.linkDevices(routerController2, endDeviceController1);
+
+        network.getConnections().add(con0);
+        network.getConnections().add(con1);
+        network.getConnections().add(con2);
+        network.getConnections().add(con3);
+        network.getConnections().add(con4);
+        network.getConnections().add(con5);
 
         return network;
     }

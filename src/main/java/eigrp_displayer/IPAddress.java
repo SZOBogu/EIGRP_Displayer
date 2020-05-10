@@ -1,12 +1,18 @@
 package eigrp_displayer;
 
+import org.hibernate.validator.constraints.Range;
+
 import java.util.Objects;
 
 //IPv4 for simplicity's sake
 public class IPAddress implements Comparable{
+    @Range(min = 0, max = 255)
     private Integer firstOctet;
+    @Range(min = 0, max = 255)
     private Integer secondOctet;
+    @Range(min = 0, max = 255)
     private Integer thirdOctet;
+    @Range(min = 0, max = 255)
     private Integer fourthOctet;
 
     public IPAddress(int firstOctet, int secondOctet,

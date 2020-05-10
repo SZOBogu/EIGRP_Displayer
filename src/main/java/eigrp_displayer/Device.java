@@ -1,11 +1,14 @@
 package eigrp_displayer;
 
+import org.hibernate.validator.constraints.Range;
+
 import java.util.Random;
 
 public abstract class Device implements Addable {
     private String name;
     private IPAddress ip_address;
     private DeviceInterface[] deviceInterfaces;
+    @Range(min = 0, max = 255)
     private Integer messageSendingTimeOffset;
 
     public Device(){

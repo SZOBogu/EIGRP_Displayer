@@ -5,9 +5,10 @@ import eigrp_displayer.MessageScheduler;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Vector;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class ConnectionForm extends JFrame{
+public class ConnectionForm extends JFrame implements ActionListener {
     private Connection connection;
 
     private JLabel connectionLabel;
@@ -52,8 +53,8 @@ public class ConnectionForm extends JFrame{
         this.device1Label = new JLabel(connection.getDevice1().toString());
         this.device2Label = new JLabel(connection.getDevice2().toString());
 
-        this.device1ComboBox = new JComboBox((Vector) MessageScheduler.getInstance().getControllers());
-        this.device2ComboBox = new JComboBox((Vector) MessageScheduler.getInstance().getControllers());
+        this.device1ComboBox = new JComboBox(MessageScheduler.getInstance().getControllers().toArray());
+        this.device2ComboBox = new JComboBox(MessageScheduler.getInstance().getControllers().toArray());
 
         this.goBackButton = new JButton("Go Back");
         this.editConnectionButton = new JButton("Edit Connection");
@@ -125,5 +126,23 @@ public class ConnectionForm extends JFrame{
         add(goBackButton, gbc);
         gbc.gridx++;
         add(editConnectionButton, gbc);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        JButton clickedButton = (JButton) actionEvent.getSource();
+
+        if (clickedButton == this.editConnectionButton) {
+            this.connection.setBandwidth((int)this.bandwidthSpinner.getValue());
+            this.connection.setDelay((int)this.delaySpinner.getValue());
+            this.connection.setLoad((int)this.loadSpinner.getValue());
+            this.connection.setReliability((int)this.reliabilitySpinner.getValue());
+//            this.connection.setDevice1(this.device1ComboBox.getSelectedItem());
+//            this.connection.setDevice2(this.device2ComboBox.getSelectedItem());
+        }
+        else if (clickedButton == this.goBackButton) {
+            new DisplayFrame();
+            this.dispose();
+        }
     }
 }

@@ -39,6 +39,8 @@ public class NetworkFormPanel extends JPanel implements ActionListener {
 
         this.backButton = new JButton("Go Back");
         this.editButton = new JButton("Edit");
+        this.backButton.addActionListener(this);
+        this.editButton.addActionListener(this);
 
         this.editDeviceButtons = new ArrayList<>();
         for(DeviceController controller : network.getDeviceControllers()){
@@ -98,16 +100,19 @@ public class NetworkFormPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         JButton clickedButton = (JButton)actionEvent.getSource();
         List<DeviceController> controllers = MessageScheduler.getInstance().getControllers();
+        List<Connection> connections = MessageScheduler.getInstance().getNetwork().getConnections();
         for(int i = 0; i < controllers.size(); i++){
             if(clickedButton == this.editDeviceButtons.get(i)){
-                if(controllers instanceof ExternalNetworkController){
-                    new ExternalNetworkForm((ExternalNetworkController) controllers.get(i));
-                }
-                else if(controllers instanceof RouterController){
-                    new RouterForm((RouterController) controllers.get(i));
-                }
-                else
-                    new DeviceForm(controllers.get(i));
+                new DeviceFormFrame(controllers.get(i));
+                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                topFrame.dispose();
+            }
+        }
+        for(int i = 0; i < connections.size(); i++){
+            if(clickedButton == this.editConnectionButtons.get(i)){
+                new ConnectionForm(connections.get(i));
+                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                topFrame.dispose();
             }
         }
         if(clickedButton == backButton){

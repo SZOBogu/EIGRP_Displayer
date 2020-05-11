@@ -14,11 +14,20 @@ public class IPAddressPanel extends JPanel {
     private JSpinner fourthOctetAddressSpinner;
 
     public IPAddressPanel(){
-        this(new IPAddress(192, 169, 0 ,1));
+        this(new IPAddress(192, 169, 0 ,1), "IP Address");
     }
 
-    public IPAddressPanel(IPAddress ipAddress){
-        this.addressLabel = new JLabel("IP Address: ");
+    public IPAddressPanel(String name){
+        this(new IPAddress(192, 169, 0 ,1), name);
+    }
+
+    public IPAddressPanel(IPAddress ip){
+        this(ip, "IP Address");
+    }
+
+
+    public IPAddressPanel(IPAddress ipAddress, String name){
+        this.addressLabel = new JLabel(name + ": ");
 
         SpinnerNumberModel firstOctetAddressSpinnerModel =
                 new SpinnerNumberModel(ipAddress.getFirstOctet(), 0, 255, 1);

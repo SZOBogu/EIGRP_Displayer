@@ -1,6 +1,7 @@
 package eigrp_displayer.SwingGUI;
 
 import eigrp_displayer.DeviceController;
+import eigrp_displayer.IPAddress;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,5 +74,21 @@ public class DeviceForm extends JPanel {
         add(offsetSpinner, gbc);
         gbc.gridx = 0;
         gbc.gridy++;
+    }
+
+    public String getName(){
+        return this.nameField.getText();
+    }
+
+    public IPAddress getIP(){
+        return this.ipPanel.getIPAddress();
+    }
+
+    public int getInterfacesCount(){
+        return (int)this.interfacesSpinner.getValue();
+    }
+
+    public int getOffset(){
+        return (int)this.offsetSpinner.getValue();
     }
 }

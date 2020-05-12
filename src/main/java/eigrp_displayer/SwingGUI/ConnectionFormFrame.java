@@ -51,12 +51,19 @@ public class ConnectionFormFrame extends JFrame implements ActionListener {
         this.loadSpinner = new JSpinner(loadSpinnerModel);
         this.reliabilitySpinner = new JSpinner(reliabilitySpinnerModel);
 
-        this.device1Label = new JLabel(connection.getDevice1().toString());
-        this.device2Label = new JLabel(connection.getDevice2().toString());
+        this.device1Label = new JLabel("Connected device 1:");
+        this.device2Label = new JLabel("Connected device 2:");
 
-        DeviceController[] controllersArray = MessageScheduler.getInstance().getControllers().toArray(new DeviceController[MessageScheduler.getInstance().getControllers().size()]);
-        this.device1ComboBox = new JComboBox(controllersArray);
-        this.device2ComboBox = new JComboBox(controllersArray);
+        ArrayList<String> deviceNames = new ArrayList<>();
+        MessageScheduler dupa = MessageScheduler.getInstance();
+        for(int i = 0; i < MessageScheduler.getInstance().getNetwork().getDeviceControllers().size(); i++){
+            deviceNames.add(MessageScheduler.getInstance().getNetwork().getDeviceControllers().get(i).getDevice().toString());
+        }
+
+        this.device1ComboBox = new JComboBox(deviceNames.toArray());
+        this.device2ComboBox = new JComboBox(deviceNames.toArray());
+        this.device1ComboBox.setSelectedItem(connection.getDevice1().getDevice().getName());
+        this.device2ComboBox.setSelectedItem(connection.getDevice2().getDevice().getName());
 
         this.goBackButton = new JButton("Go Back");
         this.editConnectionButton = new JButton("Edit Connection");
@@ -142,8 +149,9 @@ public class ConnectionFormFrame extends JFrame implements ActionListener {
             connection.setDelay((int)this.delaySpinner.getValue());
             connection.setLoad((int)this.loadSpinner.getValue());
             connection.setReliability((int)this.reliabilitySpinner.getValue());
-//            this.connection.setDevice1(this.device1ComboBox.getSelectedItem());
-//            this.connection.setDevice2(this.device2ComboBox.getSelectedItem());
+            this.connection.setDevice1(MessageScheduler.getInstance().getNetwork().getDeviceControllers().get(this.device1ComboBox.getSelectedIndex()));
+            this.connection.setDevice2(MessageScheduler.getInstance().getNetwork().getDeviceControllers().get(this.device2ComboBox.getSelectedIndex()));
+
             if(connection.equals(this.connection)){
                 assert true;
             }

@@ -5,7 +5,7 @@ import eigrp_displayer.EventLog;
 import javax.swing.*;
 import java.awt.*;
 
-public class LogPanel extends JPanel {
+public class LogPanel extends JPanel implements Refreshable{
     private JLabel textLabel;
 
     public LogPanel(){

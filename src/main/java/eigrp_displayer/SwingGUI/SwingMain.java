@@ -8,6 +8,7 @@ import javax.swing.*;
 public class SwingMain {
     public static void main(String[] args){
         MessageScheduler.getInstance().setNetwork(PremadeNetwork.getNetwork());
+        MessageScheduler.getInstance().init();
         SwingUtilities.invokeLater(DisplayFrame::new);
     }
 }

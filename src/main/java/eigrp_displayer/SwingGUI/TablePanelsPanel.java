@@ -9,7 +9,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TablePanelsPanel extends JPanel {
+public class TablePanelsPanel extends JPanel implements Refreshable{
     private List<TablesPanel> tablePanels;
 
     public TablePanelsPanel(){
@@ -36,6 +36,13 @@ public class TablePanelsPanel extends JPanel {
         for(TablesPanel tablesPanel : this.tablePanels){
             add(tablesPanel, gbc);
             gbc.gridy++;
+        }
+    }
+
+    @Override
+    public void refresh() {
+        for(TablesPanel panel : this.tablePanels){
+            panel.refresh();
         }
     }
 }

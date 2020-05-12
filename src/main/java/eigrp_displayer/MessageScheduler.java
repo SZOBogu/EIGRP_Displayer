@@ -60,12 +60,21 @@ public class MessageScheduler implements ClockDependent{
             return indexesOfClosestOccurrences.get(1) - indexesOfClosestOccurrences.get(0);
     }
 
+    public void init(){
+        for(DeviceController controller : this.getNetwork().getDeviceControllers()){
+            controller.addSelfToScheduler();
+            controller.scheduleHellos();
+        }
+    }
+
     @Override
     public void updateTime() {
         for(int i = 0; i < this.messageSchedules.size(); i++){
-            Message message = this.messageSchedules.get(Clock.getTime()).get(i);
-            EventLog.messageSent(this.controllers.get(i), message);
-            this.network.getDeviceController(message.getReceiverAddress()).respond(message);
+            Message message = this.messageSchedules.get(i).get(Clock.getTime());
+            if(message != null) {
+                EventLog.messageSent(this.controllers.get(i), message);
+                this.network.getDeviceController(message.getReceiverAddress()).respond(message);
+            }
         }
         Clock.incrementClock(this.getTicksToAnotherMessage());
     }

@@ -1,6 +1,7 @@
 package eigrp_displayer.SwingGUI;
 
 import eigrp_displayer.Clock;
+import eigrp_displayer.MessageScheduler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,7 +79,10 @@ public class DisplayFrame extends JFrame implements ActionListener {
         JButton clickedButton = (JButton)actionEvent.getSource();
 
         if(clickedButton == this.goButton){
-            //TODO: make some sort of go on method
+            MessageScheduler.getInstance().updateTime();
+            this.logPanel.refresh();
+            this.tablePanelsPanel.refresh();
+            this.timeLabel.setText("Current time: " + Clock.getTime());
         }
         else if(clickedButton == this.editNetworkButton){
             new NetworkForm();

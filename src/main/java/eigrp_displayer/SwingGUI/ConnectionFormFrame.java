@@ -1,5 +1,6 @@
 package eigrp_displayer.SwingGUI;
 
+import eigrp_displayer.Cable;
 import eigrp_displayer.Connection;
 import eigrp_displayer.MessageScheduler;
 
@@ -136,10 +137,11 @@ public class ConnectionFormFrame extends JFrame implements ActionListener {
         JButton clickedButton = (JButton) actionEvent.getSource();
 
         if (clickedButton == this.editConnectionButton) {
-            this.connection.setBandwidth((int)this.bandwidthSpinner.getValue());
-            this.connection.setDelay((int)this.delaySpinner.getValue());
-            this.connection.setLoad((int)this.loadSpinner.getValue());
-            this.connection.setReliability((int)this.reliabilitySpinner.getValue());
+            Connection connection = new Cable();
+            connection.setBandwidth((int)this.bandwidthSpinner.getValue());
+            connection.setDelay((int)this.delaySpinner.getValue());
+            connection.setLoad((int)this.loadSpinner.getValue());
+            connection.setReliability((int)this.reliabilitySpinner.getValue());
 //            this.connection.setDevice1(this.device1ComboBox.getSelectedItem());
 //            this.connection.setDevice2(this.device2ComboBox.getSelectedItem());
         }

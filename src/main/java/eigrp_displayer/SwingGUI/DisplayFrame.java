@@ -1,16 +1,11 @@
 package eigrp_displayer.SwingGUI;
 
 import eigrp_displayer.Clock;
-import eigrp_displayer.DeviceController;
-import eigrp_displayer.MessageScheduler;
-import eigrp_displayer.RouterController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DisplayFrame extends JFrame implements ActionListener {
     private JLabel titleLabel;
@@ -18,7 +13,7 @@ public class DisplayFrame extends JFrame implements ActionListener {
 
     private DisplayPanel displayPanel;
     private LogPanel logPanel;
-    private List<TablesPanel> tablePanels;
+    private TablePanelsPanel tablePanelsPanel;
 
     private JButton goButton;
     private JButton editNetworkButton;
@@ -26,24 +21,18 @@ public class DisplayFrame extends JFrame implements ActionListener {
     public DisplayFrame(){
         super("Displayer Main Window");
         this.titleLabel = new JLabel("Main Displayer Window");
-        this.timeLabel = new JLabel(String.valueOf(Clock.getTime()));
+        this.timeLabel = new JLabel("Current time: " + String.valueOf(Clock.getTime()));
         this.displayPanel = new DisplayPanel();
         this.logPanel = new LogPanel();
-        this.tablePanels = new ArrayList<>();
-        List<DeviceController> controllers = MessageScheduler.getInstance().getNetwork().getDeviceControllers();
-        for(int i = 0; i < controllers.size(); i++){
-            if(controllers.get(i) instanceof RouterController){
-                this.tablePanels.add(new TablesPanel((RouterController)controllers.get(i)));
-            }
-        }
+        this.tablePanelsPanel = new TablePanelsPanel();
         this.logPanel = new LogPanel();
         this.editNetworkButton = new JButton("Edit Network");
         this.editNetworkButton.addActionListener(this);
         this.goButton = new JButton("Go with the simulation");
         this.goButton.addActionListener(this);
 
-        setMinimumSize(new Dimension(600, 400));
-        setSize(600, 400);
+        setMinimumSize(new Dimension(1080, 640));
+        setSize(1080, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
 
@@ -70,14 +59,14 @@ public class DisplayFrame extends JFrame implements ActionListener {
         gbc.gridy++;
         add(displayPanel, gbc);
 
+        gbc.gridx++;
+        add(tablePanelsPanel, gbc);
+
+        gbc.gridx = 0;
         gbc.gridy++;
-        add(logPanel, gbc);
 
         gbc.gridy++;
-        for(TablesPanel panel : this.tablePanels){
-            add(panel, gbc);
-            gbc.gridy++;
-        }
+        add(logPanel, gbc);
 
         add(goButton, gbc);
         gbc.gridy++;

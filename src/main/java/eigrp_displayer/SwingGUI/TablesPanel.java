@@ -22,7 +22,9 @@ public class TablesPanel extends JPanel {
 
         Border border = BorderFactory.createLineBorder(Color.BLACK, 1);
         this.routerLabel.setBorder(border);
-
+        this.routingTableLabel.setBorder(border);
+        this.topologyTableLabel.setBorder(border);
+        this.neighbourTableLabel.setBorder(border);
         this.routingTableLabel.setFont(new Font("Serif", Font.PLAIN, 8));
         this.topologyTableLabel.setFont(new Font("Serif", Font.PLAIN, 8));
         this.neighbourTableLabel.setFont(new Font("Serif", Font.PLAIN, 8));

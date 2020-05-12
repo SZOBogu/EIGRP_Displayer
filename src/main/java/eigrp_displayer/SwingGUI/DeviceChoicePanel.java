@@ -30,21 +30,21 @@ public class DeviceChoicePanel extends JPanel implements ActionListener {
     public DeviceChoicePanel(){
         super();
         this.network = PremadeNetwork.getNetwork();
-        this.endDevice0Button = new JButton(network.getDeviceControllers().get(1).toString());
+        this.endDevice0Button = new JButton(network.getDeviceControllers().get(1).getDevice().toString());
 
         this.connection3Button = new JButton(network.getConnections().get(3).toString());
 
         this.connection1Button = new JButton(network.getConnections().get(1).toString());
-        this.router1Button = new JButton(network.getDeviceControllers().get(4).toString());
+        this.router1Button = new JButton(network.getDeviceControllers().get(4).getDevice().toString());
         this.connection4Button = new JButton(network.getConnections().get(4).toString());
 
-        this.externalNetworkButton = new JButton(network.getDeviceControllers().get(0).toString());
+        this.externalNetworkButton = new JButton(network.getDeviceControllers().get(0).getDevice().toString());
         this.connection0Button = new JButton(network.getConnections().get(0).toString());
-        this.router0Button = new JButton(network.getDeviceControllers().get(3).toString());
+        this.router0Button = new JButton(network.getDeviceControllers().get(3).getDevice().toString());
         this.connection2Button = new JButton(network.getConnections().get(2).toString());
-        this.router2Button = new JButton(network.getDeviceControllers().get(5).toString());
+        this.router2Button = new JButton(network.getDeviceControllers().get(5).getDevice().toString());
         this.connection5Button = new JButton(network.getConnections().get(5).toString());
-        this.endDevice1Button = new JButton(network.getDeviceControllers().get(2).toString());
+        this.endDevice1Button = new JButton(network.getDeviceControllers().get(2).getDevice().toString());
 
         this.endDevice0Button.addActionListener(this);
         this.connection3Button.addActionListener(this);

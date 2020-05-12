@@ -65,20 +65,76 @@ public class DisplayPanel extends JPanel {
         this.emptyLabel = new JLabel(new ImageIcon(scaledEmptyImage));
 
         this.connection0Label = new JLabel(new ImageIcon(scaledHorConnImage));
+        this.connection0Label.setText("Con0");
+        this.connection0Label.setHorizontalTextPosition(JLabel.CENTER);
+        this.connection0Label.setVerticalTextPosition(JLabel.CENTER);
+        this.connection0Label.setForeground(Color.RED);
+
         this.connection1Label = new JLabel(new ImageIcon(scaledRightConnImage));
+        this.connection1Label.setText("Con1");
+        this.connection1Label.setHorizontalTextPosition(JLabel.CENTER);
+        this.connection1Label.setVerticalTextPosition(JLabel.CENTER);
+        this.connection1Label.setForeground(Color.RED);
+
         this.connection2Label = new JLabel(new ImageIcon(scaledHorConnImage));
+        this.connection2Label.setText("Con2");
+        this.connection2Label.setHorizontalTextPosition(JLabel.CENTER);
+        this.connection2Label.setVerticalTextPosition(JLabel.CENTER);
+        this.connection2Label.setForeground(Color.RED);
+
         this.connection3Label = new JLabel(new ImageIcon(scaledVertConnImage));
+        this.connection3Label.setText("Con3");
+        this.connection3Label.setHorizontalTextPosition(JLabel.CENTER);
+        this.connection3Label.setVerticalTextPosition(JLabel.CENTER);
+        this.connection3Label.setForeground(Color.RED);
+
         this.connection4Label = new JLabel(new ImageIcon(scaledLeftConnImage));
+        this.connection4Label.setText("Con4");
+        this.connection4Label.setHorizontalTextPosition(JLabel.CENTER);
+        this.connection4Label.setVerticalTextPosition(JLabel.CENTER);
+        this.connection4Label.setForeground(Color.RED);
+
         this.connection5Label = new JLabel(new ImageIcon(scaledHorConnImage));
+        this.connection5Label.setText("Con5");
+        this.connection5Label.setHorizontalTextPosition(JLabel.CENTER);
+        this.connection5Label.setVerticalTextPosition(JLabel.CENTER);
+        this.connection5Label.setForeground(Color.RED);
 
         this.externalNetworkLabel = new JLabel(new ImageIcon(scaledExtNetImage));
+        this.externalNetworkLabel.setText("ExtNet");
+        this.externalNetworkLabel.setHorizontalTextPosition(JLabel.CENTER);
+        this.externalNetworkLabel.setVerticalTextPosition(JLabel.CENTER);
+        this.externalNetworkLabel.setForeground(Color.RED);
 
         this.endDevice0Label = new JLabel(new ImageIcon(scaledDeviceImage));
+        this.endDevice0Label.setText("Device0");
+        this.endDevice0Label.setHorizontalTextPosition(JLabel.CENTER);
+        this.endDevice0Label.setVerticalTextPosition(JLabel.CENTER);
+        this.endDevice0Label.setForeground(Color.RED);
+
         this.endDevice1Label = new JLabel(new ImageIcon(scaledDeviceImage));
+        this.endDevice1Label.setText("Device1");
+        this.endDevice1Label.setHorizontalTextPosition(JLabel.CENTER);
+        this.endDevice1Label.setVerticalTextPosition(JLabel.CENTER);
+        this.endDevice1Label.setForeground(Color.RED);
 
         this.router0Label = new JLabel(new ImageIcon(scaledRouterImage));
+        this.router0Label.setText("Router0");
+        this.router0Label.setHorizontalTextPosition(JLabel.CENTER);
+        this.router0Label.setVerticalTextPosition(JLabel.CENTER);
+        this.router0Label.setForeground(Color.RED);
+
         this.router1Label = new JLabel(new ImageIcon(scaledRouterImage));
+        this.router1Label.setText("Router1");
+        this.router1Label.setHorizontalTextPosition(JLabel.CENTER);
+        this.router1Label.setVerticalTextPosition(JLabel.CENTER);
+        this.router1Label.setForeground(Color.RED);
+
         this.router2Label = new JLabel(new ImageIcon(scaledRouterImage));
+        this.router2Label.setText("Router2");
+        this.router2Label.setHorizontalTextPosition(JLabel.CENTER);
+        this.router2Label.setVerticalTextPosition(JLabel.CENTER);
+        this.router2Label.setForeground(Color.RED);
 
         this.layoutComponents();
     }

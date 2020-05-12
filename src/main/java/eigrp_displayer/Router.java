@@ -1,5 +1,7 @@
 package eigrp_displayer;
 
+import java.util.Objects;
+
 public class Router extends Device{
     private RoutingTable routingTable;
     private NeighbourTable neighbourTable;
@@ -80,5 +82,23 @@ public class Router extends Device{
 
     public TopologyTable getTopologyTable() {
         return topologyTable;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Router router = (Router) o;
+        return isK1() == router.isK1() &&
+                isK2() == router.isK2() &&
+                isK3() == router.isK3() &&
+                isK4() == router.isK4() &&
+                isK5() == router.isK5();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), isK1(), isK2(), isK3(), isK4(), isK5());
     }
 }

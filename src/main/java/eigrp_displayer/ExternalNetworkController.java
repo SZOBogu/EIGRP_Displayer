@@ -55,7 +55,6 @@ public class ExternalNetworkController extends DeviceController{
         this.packetTargetModelList.add(packetTargetModel);
     }
 
-
     public void removePacketTargetModel(PacketTargetModel packetTargetModel){
         this.packetTargetModelList.remove(packetTargetModel);
     }

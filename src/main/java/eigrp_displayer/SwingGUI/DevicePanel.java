@@ -6,7 +6,7 @@ import eigrp_displayer.IPAddress;
 import javax.swing.*;
 import java.awt.*;
 
-public class DeviceForm extends JPanel {
+public class DevicePanel extends JPanel {
     protected DeviceController controller;
 
     protected JLabel titleLabel;
@@ -19,21 +19,23 @@ public class DeviceForm extends JPanel {
     protected JSpinner interfacesSpinner;
     protected JSpinner offsetSpinner;
 
-    public DeviceForm(DeviceController controller){
+    public DevicePanel(DeviceController controller){
         this.controller = controller;
 
         this.titleLabel = new JLabel(controller.getDevice().toString());
-        this.nameLabel = new JLabel(controller.getDevice().getName());
-        this.interfacesLabel = new JLabel(String.valueOf(controller.getDevice().getDeviceInterfaces().length));
-        this.messageOffsetLabel = new JLabel(String.valueOf(controller.getDevice().getMessageSendingTimeOffset()));
+        this.nameLabel = new JLabel("Name: ");
+        this.interfacesLabel = new JLabel("Number of available interfaces: ");
+        this.messageOffsetLabel = new JLabel("Message sending offset: ");
 
-        this.nameField = new JTextField();
+        this.nameField = new JTextField(controller.getDevice().getName(), 20);
         this.ipPanel = new IPAddressPanel(controller.getDevice().getIp_address());
 
         SpinnerNumberModel interfacesModel =
-                new SpinnerNumberModel(4, 1, 100, 1);
+                new SpinnerNumberModel(controller.getDevice().getDeviceInterfaces().length,
+                        1, 100, 1);
         SpinnerNumberModel offsetModel =
-                new SpinnerNumberModel(4, 1, 100, 1);
+                new SpinnerNumberModel(controller.getDevice().getMessageSendingTimeOffset(),
+                        1, 1000, 1);
 
         this.interfacesSpinner = new JSpinner(interfacesModel);
         this.offsetSpinner = new JSpinner(offsetModel);
@@ -53,6 +55,7 @@ public class DeviceForm extends JPanel {
 
         add(titleLabel, gbc);
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        gbc.gridy++;
 
         add(nameLabel, gbc);
         gbc.gridx++;

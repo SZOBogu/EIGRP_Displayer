@@ -3,6 +3,7 @@ package eigrp_displayer.SwingGUI;
 import eigrp_displayer.RouterController;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 public class TablesPanel extends JPanel {
@@ -18,6 +19,13 @@ public class TablesPanel extends JPanel {
         this.routingTableLabel = new JLabel(controller.printRoutingTable());
         this.topologyTableLabel = new JLabel(controller.printTopologyTable());
         this.neighbourTableLabel = new JLabel(controller.getDevice().getNeighbourTable().toString());
+
+        Border border = BorderFactory.createLineBorder(Color.BLACK, 1);
+        this.routerLabel.setBorder(border);
+
+        this.routingTableLabel.setFont(new Font("Serif", Font.PLAIN, 8));
+        this.topologyTableLabel.setFont(new Font("Serif", Font.PLAIN, 8));
+        this.neighbourTableLabel.setFont(new Font("Serif", Font.PLAIN, 8));
 
         this.layoutComponents();
     }

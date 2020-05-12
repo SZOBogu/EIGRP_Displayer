@@ -1,13 +1,13 @@
 package eigrp_displayer.SwingGUI;
 
-import eigrp_displayer.*;
+import eigrp_displayer.Mask;
+import eigrp_displayer.Network;
+import eigrp_displayer.PremadeNetwork;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class NetworkFormPanel extends JPanel implements ActionListener {
     private Network network;
@@ -20,11 +20,10 @@ public class NetworkFormPanel extends JPanel implements ActionListener {
 
     private JSpinner maskSpinner;
 
+    private DeviceChoicePanel deviceChoicePanel;
+
     private JButton editButton;
     private JButton backButton;
-
-    private List<JButton> editDeviceButtons;
-    private List<JButton> editConnectionButtons;
 
     public NetworkFormPanel(){
         this.network = PremadeNetwork.getNetwork();
@@ -37,23 +36,12 @@ public class NetworkFormPanel extends JPanel implements ActionListener {
         SpinnerNumberModel maskSpinnerModel = new SpinnerNumberModel(24, 0, 31, 1);
         this.maskSpinner = new JSpinner(maskSpinnerModel);
 
+        this.deviceChoicePanel = new DeviceChoicePanel();
+
         this.backButton = new JButton("Go Back");
         this.editButton = new JButton("Edit");
         this.backButton.addActionListener(this);
         this.editButton.addActionListener(this);
-
-        this.editDeviceButtons = new ArrayList<>();
-        for(DeviceController controller : network.getDeviceControllers()){
-            JButton button = new JButton("Edit: " + controller.getDevice().toString());
-            this.editDeviceButtons.add(button);
-            button.addActionListener(this);
-        }
-        this.editConnectionButtons = new ArrayList<>();
-        for(Connection connection : network.getConnections()){
-            JButton button = new JButton("Edit: " + connection.toString());
-            this.editConnectionButtons.add(button);
-            button.addActionListener(this);
-        }
 
         this.layoutComponents();
     }
@@ -82,14 +70,9 @@ public class NetworkFormPanel extends JPanel implements ActionListener {
         gbc.gridx = 0;
         gbc.gridy++;
 
-        for(JButton button : this.editDeviceButtons){
-            add(button, gbc);
-            gbc.gridy++;
-        }
-        for(JButton button : this.editConnectionButtons){
-            add(button, gbc);
-            gbc.gridy++;
-        }
+        add(deviceChoicePanel, gbc);
+        gbc.gridy++;
+
         gbc.gridy++;
         add(this.backButton, gbc);
         gbc.gridy++;
@@ -99,22 +82,7 @@ public class NetworkFormPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         JButton clickedButton = (JButton)actionEvent.getSource();
-        List<DeviceController> controllers = MessageScheduler.getInstance().getControllers();
-        List<Connection> connections = MessageScheduler.getInstance().getNetwork().getConnections();
-        for(int i = 0; i < controllers.size(); i++){
-            if(clickedButton == this.editDeviceButtons.get(i)){
-                new DeviceFormFrame(controllers.get(i));
-                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-                topFrame.dispose();
-            }
-        }
-        for(int i = 0; i < connections.size(); i++){
-            if(clickedButton == this.editConnectionButtons.get(i)){
-                new ConnectionForm(connections.get(i));
-                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-                topFrame.dispose();
-            }
-        }
+
         if(clickedButton == backButton){
             new DisplayFrame();
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);

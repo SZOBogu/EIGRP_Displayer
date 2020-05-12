@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ConnectionForm extends JFrame implements ActionListener {
+public class ConnectionFormFrame extends JFrame implements ActionListener {
     private Connection connection;
 
     private JLabel connectionLabel;
@@ -30,7 +30,8 @@ public class ConnectionForm extends JFrame implements ActionListener {
     private JButton editConnectionButton;
     private JButton goBackButton;
 
-    public ConnectionForm(Connection connection){
+    public ConnectionFormFrame(Connection connection){
+        super();
         this.connection = connection;
 
         this.connectionLabel = new JLabel(connection.toString());
@@ -58,6 +59,8 @@ public class ConnectionForm extends JFrame implements ActionListener {
 
         this.goBackButton = new JButton("Go Back");
         this.editConnectionButton = new JButton("Edit Connection");
+        this.goBackButton.addActionListener(this);
+        this.editConnectionButton.addActionListener(this);
 
         setMinimumSize(new Dimension(600, 400));
         setSize(600, 400);
@@ -141,7 +144,7 @@ public class ConnectionForm extends JFrame implements ActionListener {
 //            this.connection.setDevice2(this.device2ComboBox.getSelectedItem());
         }
         else if (clickedButton == this.goBackButton) {
-            new DisplayFrame();
+            new NetworkForm();
             this.dispose();
         }
     }

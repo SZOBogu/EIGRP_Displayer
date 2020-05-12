@@ -1,6 +1,5 @@
 package eigrp_displayer.SwingGUI;
 
-import eigrp_displayer.DeviceController;
 import eigrp_displayer.Network;
 import eigrp_displayer.PremadeNetwork;
 
@@ -8,9 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
-public class NetworkEditMenu extends JFrame implements ActionListener {
+public class DeviceChoicePanel extends JPanel implements ActionListener {
+    private Network network;
+
     private JButton endDevice0Button;
 
     private JButton connection3Button;
@@ -27,12 +27,12 @@ public class NetworkEditMenu extends JFrame implements ActionListener {
     private JButton connection5Button;
     private JButton endDevice1Button;
 
-    public NetworkEditMenu(){
-        Network network = PremadeNetwork.getNetwork();
+    public DeviceChoicePanel(){
+        super();
+        this.network = PremadeNetwork.getNetwork();
         this.endDevice0Button = new JButton(network.getDeviceControllers().get(1).toString());
 
         this.connection3Button = new JButton(network.getConnections().get(3).toString());
-
 
         this.connection1Button = new JButton(network.getConnections().get(1).toString());
         this.router1Button = new JButton(network.getDeviceControllers().get(4).toString());
@@ -45,7 +45,6 @@ public class NetworkEditMenu extends JFrame implements ActionListener {
         this.router2Button = new JButton(network.getDeviceControllers().get(5).toString());
         this.connection5Button = new JButton(network.getConnections().get(5).toString());
         this.endDevice1Button = new JButton(network.getDeviceControllers().get(2).toString());
-
 
         this.endDevice0Button.addActionListener(this);
         this.connection3Button.addActionListener(this);
@@ -102,40 +101,61 @@ public class NetworkEditMenu extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         JButton clickedButton = (JButton)actionEvent.getSource();
-        List<DeviceController> controllers = PremadeNetwork.getNetwork().getDeviceControllers();
 
         if(clickedButton == this.endDevice0Button){
-
+            new DeviceFormFrame(network.getDeviceControllers().get(1));
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.dispose();
         }
         else if(clickedButton == this.connection3Button){
-
+            new ConnectionFormFrame(network.getConnections().get(3));
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.dispose();
         }
         else if(clickedButton == this.connection1Button){
-
+            new ConnectionFormFrame(network.getConnections().get(1));
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.dispose();
         }
         else if(clickedButton == this.router1Button){
-
+            new DeviceFormFrame(network.getDeviceControllers().get(4));
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.dispose();
         }
         else if(clickedButton == this.externalNetworkButton){
-
+            new DeviceFormFrame(network.getDeviceControllers().get(0));
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.dispose();
         }
         else if(clickedButton == this.connection0Button){
-
+            new ConnectionFormFrame(network.getConnections().get(0));
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.dispose();
         }
         else if(clickedButton == this.router0Button){
-
+            new DeviceFormFrame(network.getDeviceControllers().get(3));
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.dispose();
         }
         else if(clickedButton == this.connection2Button){
-
+            new ConnectionFormFrame(network.getConnections().get(2));
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.dispose();
         }
         else if(clickedButton == this.router2Button){
-
+            new DeviceFormFrame(network.getDeviceControllers().get(5));
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.dispose();
         }
         else if(clickedButton == this.connection5Button){
-
+            new ConnectionFormFrame(network.getConnections().get(5));
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.dispose();
         }
         else if(clickedButton == this.endDevice1Button){
-
+            new DeviceFormFrame(network.getDeviceControllers().get(2));
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.dispose();
         }
     }
 }

@@ -2,6 +2,8 @@ package eigrp_displayer;
 
 import org.hibernate.validator.constraints.Range;
 
+import java.util.Objects;
+
 public abstract class Connection implements Addable {
     private String name;
     private DeviceController device1;
@@ -113,5 +115,23 @@ public abstract class Connection implements Addable {
         else
             return name + " between " + device1.getDevice() + " and "
                 + device2.getDevice();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Connection that = (Connection) o;
+        return getBandwidth() == that.getBandwidth() &&
+                getDelay() == that.getDelay() &&
+                getLoad() == that.getLoad() &&
+                getReliability() == that.getReliability() &&
+                Objects.equals(getDevice1(), that.getDevice1()) &&
+                Objects.equals(getDevice2(), that.getDevice2());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getDevice1(), getDevice2(), getBandwidth(), getDelay(), getLoad(), getReliability());
     }
 }

@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 
 public class DeviceFormFrame extends JFrame implements ActionListener {
     private DeviceController controller;
-    private DeviceForm devicePanel;
+    private DevicePanel devicePanel;
     private RouterForm routerPanel;
     private JLabel maskLabel;
     private JSpinner maskSpinner;       //network only gets mask, which is covered by spinner
@@ -19,8 +19,9 @@ public class DeviceFormFrame extends JFrame implements ActionListener {
 
 
     public DeviceFormFrame(DeviceController controller){
+        super();
         this.controller = controller;
-        this.devicePanel = new DeviceForm(controller);
+        this.devicePanel = new DevicePanel(controller);
         if(controller instanceof RouterController){
             this.routerPanel = new RouterForm((RouterController) controller);
         }
@@ -33,6 +34,8 @@ public class DeviceFormFrame extends JFrame implements ActionListener {
 
         this.editButton = new JButton("Edit Device");
         this.backButton = new JButton("Back Button");
+        this.editButton.addActionListener(this);
+        this.backButton.addActionListener(this);
 
         setLayout(new GridBagLayout());
         this.gbc = new GridBagConstraints();
@@ -41,6 +44,11 @@ public class DeviceFormFrame extends JFrame implements ActionListener {
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.gridy = 0;
         gbc.gridx = 0;
+
+        setMinimumSize(new Dimension(600, 400));
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
 
         if(controller instanceof RouterController) {
             this.layoutRouter();
@@ -51,11 +59,6 @@ public class DeviceFormFrame extends JFrame implements ActionListener {
         else{
             this.layoutDevice();
         }
-
-        setMinimumSize(new Dimension(600, 400));
-        setSize(600, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
     }
 
     private void layoutDevice(){
@@ -64,6 +67,7 @@ public class DeviceFormFrame extends JFrame implements ActionListener {
         add(editButton, gbc);
         gbc.gridy++;
         add(backButton, gbc);
+        gbc.gridy++;
     }
 
     private void layoutRouter(){
@@ -101,7 +105,7 @@ public class DeviceFormFrame extends JFrame implements ActionListener {
             }
         }
         else if (clickedButton == this.backButton) {
-            new DisplayFrame();
+            new NetworkForm();
             this.dispose();
         }
     }

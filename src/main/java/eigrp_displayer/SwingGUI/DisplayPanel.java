@@ -25,42 +25,42 @@ public class DisplayPanel extends JPanel {
         ImageIcon emptyIcon = new ImageIcon(
                 "/home/bogu/NetBeansProjects/EIGRP Displayer/src/main/resources/static/large placeholder.png");
         Image emptyImage = emptyIcon.getImage();
-        Image scaledEmptyImage = emptyImage.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+        Image scaledEmptyImage = emptyImage.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
 
         ImageIcon extNetIcon = new ImageIcon(
                 "/home/bogu/NetBeansProjects/EIGRP Displayer/src/main/resources/static/cloud network.png");
         Image extNetImage = extNetIcon.getImage();
-        Image scaledExtNetImage = extNetImage.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+        Image scaledExtNetImage = extNetImage.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
 
         ImageIcon deviceIcon = new ImageIcon(
                 "/home/bogu/NetBeansProjects/EIGRP Displayer/src/main/resources/static/enddev.png");
         Image deviceImage = deviceIcon.getImage();
-        Image scaledDeviceImage = deviceImage.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+        Image scaledDeviceImage = deviceImage.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
 
         ImageIcon routerIcon = new ImageIcon(
                 "/home/bogu/NetBeansProjects/EIGRP Displayer/src/main/resources/static/router.png");
         Image routerImage = routerIcon.getImage();
-        Image scaledRouterImage = routerImage.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+        Image scaledRouterImage = routerImage.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
 
         ImageIcon vertConnIcon = new ImageIcon(
                 "/home/bogu/NetBeansProjects/EIGRP Displayer/src/main/resources/static/vertical connection.png");
         Image verConnImage = vertConnIcon.getImage();
-        Image scaledVertConnImage = verConnImage.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+        Image scaledVertConnImage = verConnImage.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
 
         ImageIcon horConnIcon = new ImageIcon(
                 "/home/bogu/NetBeansProjects/EIGRP Displayer/src/main/resources/static/horizontal connection.png");
         Image horConnImage = horConnIcon.getImage();
-        Image scaledHorConnImage = horConnImage.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+        Image scaledHorConnImage = horConnImage.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
 
         ImageIcon rightConnIcon = new ImageIcon(
                 "/home/bogu/NetBeansProjects/EIGRP Displayer/src/main/resources/static/right turn connection.png");
         Image rightConnImage = rightConnIcon.getImage();
-        Image scaledRightConnImage = rightConnImage.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+        Image scaledRightConnImage = rightConnImage.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
 
         ImageIcon leftConnIcon = new ImageIcon(
                 "/home/bogu/NetBeansProjects/EIGRP Displayer/src/main/resources/static/left turn connection.png");
         Image leftConnImage = leftConnIcon.getImage();
-        Image scaledLeftConnImage = leftConnImage.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+        Image scaledLeftConnImage = leftConnImage.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
 
         this.emptyLabel = new JLabel(new ImageIcon(scaledEmptyImage));
 
@@ -95,56 +95,29 @@ public class DisplayPanel extends JPanel {
         gbc.gridx = 0;
 
         //1 row
-        add(emptyLabel, gbc);
         gbc.gridx++;
-        add(emptyLabel, gbc);
         gbc.gridx++;
-        add(emptyLabel, gbc);
         gbc.gridx++;
         add(endDevice0Label, gbc);
-        gbc.gridx++;
-        add(emptyLabel, gbc);
-        gbc.gridx++;
-        add(emptyLabel, gbc);
-        gbc.gridx++;
-        add(emptyLabel, gbc);
-        gbc.gridx++;
 
         //2 row
         gbc.gridy++;
         gbc.gridx = 0;
-        add(emptyLabel, gbc);
         gbc.gridx++;
-        add(emptyLabel, gbc);
         gbc.gridx++;
-        add(emptyLabel, gbc);
         gbc.gridx++;
         add(connection3Label, gbc);
-        gbc.gridx++;
-        add(emptyLabel, gbc);
-        gbc.gridx++;
-        add(emptyLabel, gbc);
-        gbc.gridx++;
-        add(emptyLabel, gbc);
-        gbc.gridx++;
 
         //3rd row
         gbc.gridy++;
         gbc.gridx = 0;
-        add(emptyLabel, gbc);
         gbc.gridx++;
-        add(emptyLabel, gbc);
         gbc.gridx++;
         add(connection1Label, gbc);
         gbc.gridx++;
         add(router1Label, gbc);
         gbc.gridx++;
         add(connection4Label, gbc);
-        gbc.gridx++;
-        add(emptyLabel, gbc);
-        gbc.gridx++;
-        add(emptyLabel, gbc);
-        gbc.gridx++;
 
         //4th row
         gbc.gridy++;

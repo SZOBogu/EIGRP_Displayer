@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class DeviceFormFrame extends JFrame implements ActionListener {
     private DeviceController controller;
@@ -86,22 +87,62 @@ public class DeviceFormFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         JButton clickedButton = (JButton) actionEvent.getSource();
+        ArrayList<DeviceController> controllerArrayList = new ArrayList<>(MessageScheduler.getInstance().getNetwork().getDeviceControllers());
 
         if (clickedButton == this.editButton) {
-            this.controller.getDevice().setName(this.devicePanel.getName());
-            this.controller.getDevice().setIp_address(this.devicePanel.getIP());
-            this.controller.getDevice().setMessageSendingTimeOffset(this.devicePanel.getOffset());
+            System.out.println("edit klikniet");
             if(this.routerPanel != null){
-                Router router = (Router)this.controller.getDevice();
+                System.out.println("jest ruter");
+
+                Router router = new Router(this.devicePanel.getName());
+                router.setName(this.devicePanel.getName());
+                router.setIp_address(this.devicePanel.getIP());
+                router.setMessageSendingTimeOffset(this.devicePanel.getOffset());
                 router.setK1(this.routerPanel.getK1());
                 router.setK2(this.routerPanel.getK2());
                 router.setK3(this.routerPanel.getK3());
                 router.setK4(this.routerPanel.getK4());
                 router.setK5(this.routerPanel.getK5());
+
+                if(!router.equals(this.controller.getDevice())) {
+                    System.out.println("nie jest taki sam jak w kontorlerze");
+
+                    controllerArrayList.set(controllerArrayList.indexOf(this.controller), this.controller);
+                    EventLog.deviceChanged(this.controller);
+                    this.controller.setDevice(router);
+
+                    JOptionPane.showMessageDialog(new JFrame(), "Router changed", "Dialog",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
             }
-            if(this.maskSpinner != null){
-                ExternalNetwork externalNetwork = (ExternalNetwork) this.controller.getDevice();
+            else if(this.maskSpinner != null){
+                ExternalNetwork externalNetwork = new ExternalNetwork();
+                externalNetwork.setName(this.devicePanel.getName());
+                externalNetwork.setIp_address(this.devicePanel.getIP());
+                externalNetwork.setMessageSendingTimeOffset(this.devicePanel.getOffset());
                 externalNetwork.setMask(new Mask((int)this.maskSpinner.getValue()));
+                if(!externalNetwork.equals(this.controller.getDevice())) {
+                    controllerArrayList.set(controllerArrayList.indexOf(this.controller), this.controller);
+                    EventLog.deviceChanged(this.controller);
+                    this.controller.setDevice(externalNetwork);
+
+                    JOptionPane.showMessageDialog(new JFrame(), "External network edited", "Dialog",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+            else{
+                EndDevice device = new EndDevice();
+                device.setName(this.devicePanel.getName());
+                device.setIp_address(this.devicePanel.getIP());
+                device.setMessageSendingTimeOffset(this.devicePanel.getOffset());
+                if(!device.equals(this.controller.getDevice())) {
+                    controllerArrayList.set(controllerArrayList.indexOf(this.controller), this.controller);
+                    EventLog.deviceChanged(this.controller);
+                    this.controller.setDevice(device);
+
+                    JOptionPane.showMessageDialog(new JFrame(), "Device edited", "Dialog",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
             }
         }
         else if (clickedButton == this.backButton) {

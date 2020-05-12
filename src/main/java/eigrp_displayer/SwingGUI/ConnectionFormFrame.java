@@ -1,13 +1,12 @@
 package eigrp_displayer.SwingGUI;
 
-import eigrp_displayer.Cable;
-import eigrp_displayer.Connection;
-import eigrp_displayer.MessageScheduler;
+import eigrp_displayer.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class ConnectionFormFrame extends JFrame implements ActionListener {
     private Connection connection;
@@ -55,8 +54,9 @@ public class ConnectionFormFrame extends JFrame implements ActionListener {
         this.device1Label = new JLabel(connection.getDevice1().toString());
         this.device2Label = new JLabel(connection.getDevice2().toString());
 
-        this.device1ComboBox = new JComboBox(MessageScheduler.getInstance().getControllers().toArray());
-        this.device2ComboBox = new JComboBox(MessageScheduler.getInstance().getControllers().toArray());
+        DeviceController[] controllersArray = MessageScheduler.getInstance().getControllers().toArray(new DeviceController[MessageScheduler.getInstance().getControllers().size()]);
+        this.device1ComboBox = new JComboBox(controllersArray);
+        this.device2ComboBox = new JComboBox(controllersArray);
 
         this.goBackButton = new JButton("Go Back");
         this.editConnectionButton = new JButton("Edit Connection");
@@ -144,6 +144,17 @@ public class ConnectionFormFrame extends JFrame implements ActionListener {
             connection.setReliability((int)this.reliabilitySpinner.getValue());
 //            this.connection.setDevice1(this.device1ComboBox.getSelectedItem());
 //            this.connection.setDevice2(this.device2ComboBox.getSelectedItem());
+            if(connection.equals(this.connection)){
+                assert true;
+            }
+            else{
+                ArrayList<Connection> connectionList = new ArrayList<>(MessageScheduler.getInstance().getNetwork().getConnections());
+                connectionList.set(connectionList.indexOf(this.connection), connection);
+                EventLog.connectionChanged(this.connection);
+                this.connection = connection;
+                JOptionPane.showMessageDialog(new JFrame(), "Connection changed", "Dialog",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
         }
         else if (clickedButton == this.goBackButton) {
             new NetworkForm();

@@ -28,8 +28,8 @@ public class EventLog {
                 + " from " + message.getSenderAddress());
     }
 
-    public static void connectionChanged(Connection connection, String whatChanged){
-        appendLog(Clock.getTime() + ": " + connection + " " + whatChanged + " has been changed.");
+    public static void connectionChanged(Connection connection){
+        appendLog(Clock.getTime() + ": " + connection + " has been changed.");
     }
 
     public static void deviceConnected(DeviceController controller, Connection connection){
@@ -37,8 +37,8 @@ public class EventLog {
                 + " connected by " + connection.toString());
     }
 
-    public static void deviceChanged(DeviceController device, String whatChanged){
-        appendLog(Clock.getTime() + ": " + device.getDevice() + " " + whatChanged + " has been changed.");
+    public static void deviceChanged(DeviceController device){
+        appendLog(Clock.getTime() + ": " + device.getDevice() + " has been changed.");
     }
 
     public static void deviceUnreachable(DeviceController device){
@@ -53,6 +53,10 @@ public class EventLog {
     public static void neighbourshipBroken(DeviceController device1, DeviceController device2){
         appendLog(Clock.getTime() + ": " + "Neighbourship between "
                 + device1.getDevice() + " and " + device2.getDevice() + " broken.");
+    }
+
+    public static void appendTimeSeparator(){
+        appendLog("time: " + Clock.getTime() + " =============================");
     }
 
     public static String getEventLog(){

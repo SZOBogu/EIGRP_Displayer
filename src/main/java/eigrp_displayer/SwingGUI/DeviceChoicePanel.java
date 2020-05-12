@@ -1,7 +1,7 @@
 package eigrp_displayer.SwingGUI;
 
+import eigrp_displayer.MessageScheduler;
 import eigrp_displayer.Network;
-import eigrp_displayer.PremadeNetwork;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +29,7 @@ public class DeviceChoicePanel extends JPanel implements ActionListener {
 
     public DeviceChoicePanel(){
         super();
-        this.network = PremadeNetwork.getNetwork();
+        this.network = MessageScheduler.getInstance().getNetwork();
         this.endDevice0Button = new JButton(network.getDeviceControllers().get(1).getDevice().toString());
 
         this.connection3Button = new JButton(network.getConnections().get(3).toString());

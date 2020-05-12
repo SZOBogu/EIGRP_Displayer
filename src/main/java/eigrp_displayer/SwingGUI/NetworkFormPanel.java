@@ -89,11 +89,17 @@ public class NetworkFormPanel extends JPanel implements ActionListener {
             topFrame.dispose();
         }
         else if(clickedButton == editButton){
-            this.network.setNetworkAddress(this.networkIPPanel.getIPAddress());
-            this.network.setBroadcastAddress(this.broadcastIPPanel.getIPAddress());
-            this.network.setMask(new Mask((int)this.maskSpinner.getValue()));
+            if(this.network.getNetworkAddress() != this.networkIPPanel.getIPAddress() ||
+                    this.network.getBroadcastAddress() != this.broadcastIPPanel.getIPAddress() ||
+                    this.network.getMask().getMask() != (int)this.maskSpinner.getValue()) {
+                this.network.setNetworkAddress(this.networkIPPanel.getIPAddress());
+                this.network.setBroadcastAddress(this.broadcastIPPanel.getIPAddress());
+                this.network.setMask(new Mask((int) this.maskSpinner.getValue()));
 
-            JOptionPane.showMessageDialog(new JFrame(), "Network edited", "Dialog",
+                JOptionPane.showMessageDialog(new JFrame(), "Network edited", "Dialog",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+            JOptionPane.showMessageDialog(new JFrame(), "Nothing changed", "Dialog",
                     JOptionPane.INFORMATION_MESSAGE);
         }
     }

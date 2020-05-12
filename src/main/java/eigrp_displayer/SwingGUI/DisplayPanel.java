@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DisplayPanel extends JPanel {
-    private JLabel emptyLabel;
     private JLabel endDevice0Label;
 
     private JLabel connection3Label;
@@ -22,11 +21,6 @@ public class DisplayPanel extends JPanel {
     private JLabel endDevice1Label;
 
     public DisplayPanel(){
-        ImageIcon emptyIcon = new ImageIcon(
-                "/home/bogu/NetBeansProjects/EIGRP Displayer/src/main/resources/static/large placeholder.png");
-        Image emptyImage = emptyIcon.getImage();
-        Image scaledEmptyImage = emptyImage.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
-
         ImageIcon extNetIcon = new ImageIcon(
                 "/home/bogu/NetBeansProjects/EIGRP Displayer/src/main/resources/static/cloud network.png");
         Image extNetImage = extNetIcon.getImage();
@@ -61,8 +55,6 @@ public class DisplayPanel extends JPanel {
                 "/home/bogu/NetBeansProjects/EIGRP Displayer/src/main/resources/static/left turn connection.png");
         Image leftConnImage = leftConnIcon.getImage();
         Image scaledLeftConnImage = leftConnImage.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
-
-        this.emptyLabel = new JLabel(new ImageIcon(scaledEmptyImage));
 
         this.connection0Label = new JLabel(new ImageIcon(scaledHorConnImage));
         this.connection0Label.setText("Con0");

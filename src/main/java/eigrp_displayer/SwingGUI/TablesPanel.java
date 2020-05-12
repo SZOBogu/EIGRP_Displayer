@@ -6,7 +6,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 
-public class TablesPanel extends JPanel {
+public class TablesPanel extends JPanel implements Refreshable{
     RouterController controller;
     private JLabel routerLabel;
     private JLabel routingTableLabel;
@@ -51,5 +51,15 @@ public class TablesPanel extends JPanel {
         add(this.topologyTableLabel, gbc);
         gbc.gridy++;
         add(this.neighbourTableLabel, gbc);
+    }
+
+    public void refresh(){
+        this.routingTableLabel.setText(this.controller.printRoutingTable());
+        this.topologyTableLabel.setText(this.controller.printTopologyTable());
+        this.neighbourTableLabel.setText(this.controller.getDevice().getNeighbourTable().toString());
+
+        this.layoutComponents();
+        this.revalidate();
+        this.repaint();
     }
 }

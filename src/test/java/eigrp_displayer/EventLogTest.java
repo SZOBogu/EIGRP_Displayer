@@ -93,8 +93,8 @@ class EventLogTest {
 
         connection.linkDevices(controller, controller0);
 
-        EventLog.connectionChanged(connection, "bandwidth");
-        String string = Clock.getTime() + ": " + connection + " bandwidth has been changed.\n";
+        EventLog.connectionChanged(connection);
+        String string = Clock.getTime() + ": " + connection + " has been changed.\n";
         assertEquals(string, EventLog.getEventLog());
     }
 
@@ -112,9 +112,9 @@ class EventLogTest {
 
     @Test
     void deviceChanged() {
-        EventLog.deviceChanged(controller, "pants");
+        EventLog.deviceChanged(controller);
         String string = Clock.getTime() + ": " + controller.getDevice().toString()
-                + " pants has been changed.\n";
+                + " has been changed.\n";
         assertEquals(string, EventLog.getEventLog());
 
     }

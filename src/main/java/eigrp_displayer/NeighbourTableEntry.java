@@ -31,8 +31,7 @@ public class NeighbourTableEntry{
         this.neighbourAddress = neighbourAddress;
         Random random = new Random();
         this.netInterface = deviceInterface.getName();
-        //fill the rest with bullshit
-        this.hold = 15;
+        this.hold = 65;
         this.uptime = LocalTime.of(0, random.nextInt(1), random.nextInt(60));
         this.srtt = random.nextInt(300);
         this.rto = random.nextInt(10);
@@ -75,5 +74,9 @@ public class NeighbourTableEntry{
 
     public void setTicksSinceLastHello(int ticksSinceLastHello) {
         this.ticksSinceLastHello = ticksSinceLastHello;
+    }
+
+    public void incrementTime(){
+        this.uptime = this.uptime.plusSeconds(1);
     }
 }

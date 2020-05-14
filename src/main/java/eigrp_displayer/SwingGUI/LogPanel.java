@@ -6,15 +6,18 @@ import javax.swing.*;
 import java.awt.*;
 
 public class LogPanel extends JPanel implements Refreshable{
-    private JLabel textLabel;
+    private JTextArea textArea;
 
     public LogPanel(){
-        textLabel = new JLabel();
+        //TODO: wymiary
+        this.textArea = new JTextArea(EventLog.getEventLog(),200, 50);
+        textArea.setLineWrap(true);
         setLayout(new BorderLayout());
-        add(new JScrollPane(textLabel), BorderLayout.CENTER);
+        setMinimumSize(new Dimension(400, 100));
+        add(new JScrollPane(textArea), BorderLayout.CENTER);
     }
 
     public void refresh(){
-        textLabel.setText(EventLog.getEventLog());
+        this.textArea.setText(EventLog.getEventLog());
     }
 }

@@ -23,7 +23,6 @@ public class ExternalNetworkController extends DeviceController{
         this.sentPacketsCount = 0;
     }
 
-
     @Override
     public void scheduleHellos() {
         super.scheduleHellos();
@@ -32,7 +31,7 @@ public class ExternalNetworkController extends DeviceController{
                     targetModel.getNextHopAddress(),
                     targetModel.getTargetAddress(), Clock.getTime());
             CyclicMessage cyclicMessage = new CyclicMessage(packet, 10);
-            this.sendCyclicMessage(cyclicMessage, 100);
+            this.sendCyclicMessage(cyclicMessage, 1000);
         }
     }
 

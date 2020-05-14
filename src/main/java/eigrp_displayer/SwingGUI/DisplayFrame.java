@@ -1,6 +1,5 @@
 package eigrp_displayer.SwingGUI;
 
-import eigrp_displayer.Clock;
 import eigrp_displayer.MessageScheduler;
 
 import javax.swing.*;
@@ -10,7 +9,7 @@ import java.awt.event.ActionListener;
 
 public class DisplayFrame extends JFrame implements ActionListener {
     private JLabel titleLabel;
-    private JLabel timeLabel;
+    private TimeLabel timeLabel;
 
     private DisplayPanel displayPanel;
     private LogPanel logPanel;
@@ -22,7 +21,7 @@ public class DisplayFrame extends JFrame implements ActionListener {
     public DisplayFrame(){
         super("Displayer Main Window");
         this.titleLabel = new JLabel("Main Displayer Window");
-        this.timeLabel = new JLabel("Current time: " + String.valueOf(Clock.getTime()));
+        this.timeLabel = new TimeLabel();
         this.displayPanel = new DisplayPanel();
         this.logPanel = new LogPanel();
         this.tablePanelsPanel = new TablePanelsPanel();
@@ -66,8 +65,8 @@ public class DisplayFrame extends JFrame implements ActionListener {
         gbc.gridx = 0;
         gbc.gridy++;
 
-        gbc.gridy++;
         add(logPanel, gbc);
+        gbc.gridy++;
 
         add(goButton, gbc);
         gbc.gridy++;
@@ -82,7 +81,6 @@ public class DisplayFrame extends JFrame implements ActionListener {
             MessageScheduler.getInstance().updateTime();
             this.logPanel.refresh();
             this.tablePanelsPanel.refresh();
-            this.timeLabel.setText("Current time: " + Clock.getTime());
         }
         else if(clickedButton == this.editNetworkButton){
             new NetworkForm();

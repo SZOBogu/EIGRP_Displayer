@@ -9,25 +9,27 @@ import java.awt.*;
 public class TablesPanel extends JPanel implements Refreshable{
     RouterController controller;
     private JLabel routerLabel;
-    private JLabel routingTableLabel;
-    private JLabel topologyTableLabel;
-    private JLabel neighbourTableLabel;
+    private JTextArea routingTableTextArea;
+    private JTextArea topologyTableTextArea;
+    private JTextArea neighbourTableTextArea;
 
     public TablesPanel(RouterController controller){
         this.controller = controller;
         this.routerLabel = new JLabel(controller.getDevice().toString());
-        this.routingTableLabel = new JLabel(controller.printRoutingTable());
-        this.topologyTableLabel = new JLabel(controller.printTopologyTable());
-        this.neighbourTableLabel = new JLabel(controller.getDevice().getNeighbourTable().toString());
+
+        //TODO: wymiary
+        this.routingTableTextArea = new JTextArea(controller.printRoutingTable(),200, 20);
+        this.topologyTableTextArea = new JTextArea(controller.printTopologyTable(),200, 20);
+        this.neighbourTableTextArea = new JTextArea(controller.getDevice().getNeighbourTable().toString(),200, 20);
 
         Border border = BorderFactory.createLineBorder(Color.BLACK, 1);
         this.routerLabel.setBorder(border);
-        this.routingTableLabel.setBorder(border);
-        this.topologyTableLabel.setBorder(border);
-        this.neighbourTableLabel.setBorder(border);
-        this.routingTableLabel.setFont(new Font("Serif", Font.PLAIN, 8));
-        this.topologyTableLabel.setFont(new Font("Serif", Font.PLAIN, 8));
-        this.neighbourTableLabel.setFont(new Font("Serif", Font.PLAIN, 8));
+        this.routingTableTextArea.setBorder(border);
+        this.topologyTableTextArea.setBorder(border);
+        this.neighbourTableTextArea.setBorder(border);
+        this.routingTableTextArea.setFont(new Font("Serif", Font.PLAIN, 8));
+        this.topologyTableTextArea.setFont(new Font("Serif", Font.PLAIN, 8));
+        this.neighbourTableTextArea.setFont(new Font("Serif", Font.PLAIN, 8));
 
         this.layoutComponents();
     }
@@ -43,20 +45,20 @@ public class TablesPanel extends JPanel implements Refreshable{
         gbc.gridy = 0;
         gbc.gridx = 0;
         add(this.routerLabel, gbc);
-        this.routingTableLabel.setHorizontalAlignment(JLabel.CENTER);
+        this.routerLabel.setHorizontalAlignment(JLabel.CENTER);
 
         gbc.gridy++;
-        add(this.routingTableLabel, gbc);
+        add(this.routingTableTextArea, gbc);
         gbc.gridy++;
-        add(this.topologyTableLabel, gbc);
+        add(this.topologyTableTextArea, gbc);
         gbc.gridy++;
-        add(this.neighbourTableLabel, gbc);
+        add(this.neighbourTableTextArea, gbc);
     }
 
     public void refresh(){
-        this.routingTableLabel.setText(this.controller.printRoutingTable());
-        this.topologyTableLabel.setText(this.controller.printTopologyTable());
-        this.neighbourTableLabel.setText(this.controller.getDevice().getNeighbourTable().toString());
+        this.routingTableTextArea.setText(this.controller.printRoutingTable());
+        this.topologyTableTextArea.setText(this.controller.printTopologyTable());
+        this.neighbourTableTextArea.setText(this.controller.getDevice().getNeighbourTable().toString());
 
         this.layoutComponents();
         this.revalidate();

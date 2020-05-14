@@ -76,6 +76,10 @@ public class MessageScheduler implements ClockDependent{
                 this.network.getDeviceController(message.getReceiverAddress()).respond(message);
             }
         }
-        Clock.incrementClock(this.getTicksToAnotherMessage());
+        if(this.getTicksToAnotherMessage() > 0)
+            Clock.incrementClock(this.getTicksToAnotherMessage());
+        else
+            Clock.incrementClock();
+        EventLog.appendTimeSeparator();
     }
 }

@@ -313,8 +313,10 @@ public class RouterController extends DeviceController implements ClockDependent
             string.append(entry.getCode()).append("\t")
                     .append(entry.getIp_address()).append("[").append(entry.getReportedDistance())
                     .append("\\").append(entry.getFeasibleDistance()).append("] via ")
-                    .append(entry.getPath().get(0).getOtherDevice(this).getDevice().getIp_address())
-                    .append(", ").append(this.getInterface(entry).getName()).append("\n");
+                    .append("bullshit ip")
+//                    .append(entry.getPath().get(0).getOtherDevice(this).getDevice().getIp_address())
+                    .append(", ").append("Interface").append("\n");
+            //this.getInterface(entry).getName()
         }
         return string.toString();
     }

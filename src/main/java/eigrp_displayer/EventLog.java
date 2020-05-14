@@ -3,7 +3,7 @@ package eigrp_displayer;
 import eigrp_displayer.messages.Message;
 
 public class EventLog {
-    private static String eventLog = "";
+    private static String eventLog = "Event Log --------------------------------------------------\n";
 
     private static class SingletonHolder{
         private static final EventLog eventLog = new EventLog();

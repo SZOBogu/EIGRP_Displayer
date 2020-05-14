@@ -1,8 +1,11 @@
 package eigrp_displayer;
 
 import eigrp_displayer.messages.CyclicMessage;
+import eigrp_displayer.messages.HelloMessage;
 import eigrp_displayer.messages.Message;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -15,16 +18,18 @@ class MessageSchedulerTest {
     Network network = Mockito.mock(Network.class);
     CyclicMessage cyclicMessage = new CyclicMessage(message, 10);
     Device device = new EndDevice();
+    IPAddress ip = Mockito.mock(IPAddress.class);
     DeviceController controller = new DeviceController(device);
     Router router = new Router("Rtest");
+    IPAddress ip0 = Mockito.mock(IPAddress.class);
     RouterController controller0 = new RouterController(router);
     Connection con = new Cable();
     MessageScheduler scheduler = MessageScheduler.getInstance();
 
     @BeforeEach
     void init(){
-        device.setIp_address(Mockito.mock(IPAddress.class));
-        router.setIp_address(Mockito.mock(IPAddress.class));
+        device.setIp_address(ip);
+        router.setIp_address(ip0);
         con.linkDevices(controller, controller0);
         controller.addSelfToScheduler();
         controller0.addSelfToScheduler();
@@ -66,13 +71,20 @@ class MessageSchedulerTest {
 
     @Test
     void getTicksToAnotherMessage() {
-        controller.getDevice().setMessageSendingTimeOffset(0);
+        controller.getDevice().setMessageSendingTimeOffset(10);
         controller0.getDevice().setMessageSendingTimeOffset(100);
 
         controller.scheduleHellos();
         controller0.scheduleHellos();
 
-        assertEquals(100, MessageScheduler.getInstance().getTicksToAnotherMessage());
+        assertEquals(90, MessageScheduler.getInstance().getTicksToAnotherMessage());
+
+        HelloMessage hC0 = new HelloMessage(ip, ip0);
+        HelloMessage hC1 = new HelloMessage(ip0, ip);
+        controller.sendMessage(hC0);
+        controller0.sendMessage(hC1,1);
+
+        assertEquals(1, MessageScheduler.getInstance().getTicksToAnotherMessage());
     }
 
     @Test

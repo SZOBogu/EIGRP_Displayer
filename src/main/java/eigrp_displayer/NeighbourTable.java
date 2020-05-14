@@ -57,12 +57,17 @@ public class NeighbourTable implements ClockDependent{
 
     @Override
     public void updateTime() {
+        List<NeighbourTableEntry> entriesToDelete = new ArrayList<>();
         for(NeighbourTableEntry entry : this.entries){
             entry.setTicksSinceLastHello(entry.getTicksSinceLastHello() + 1);
             if(entry.getTicksSinceLastHello() > entry.getHold()){
-                this.entries.remove(entry);
+                entriesToDelete.add(entry);
+            }
+            if(Clock.getTime() % 10 == 0){
+                entry.incrementTime();
             }
         }
+        this.entries.removeAll(entriesToDelete);
     }
 
     @Override

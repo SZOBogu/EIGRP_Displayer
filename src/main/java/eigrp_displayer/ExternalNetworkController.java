@@ -31,12 +31,14 @@ public class ExternalNetworkController extends DeviceController{
                     targetModel.getNextHopAddress(),
                     targetModel.getTargetAddress(), Clock.getTime());
             CyclicMessage cyclicMessage = new CyclicMessage(packet, 10);
-            this.sendCyclicMessage(cyclicMessage, 1000);
+            this.sendCyclicMessage(cyclicMessage, 500);
         }
     }
 
     @Override
     public void respond(Message message){
+        EventLog.messageReceived(this, message);
+
         if(message instanceof PacketACK){
             for(PacketTargetModel targetModel : this.packetTargetModelList){
                 if(targetModel.getTargetAddress().equals(message.getSenderAddress())){
@@ -52,6 +54,10 @@ public class ExternalNetworkController extends DeviceController{
 
     public void addPacketTargetModel(PacketTargetModel packetTargetModel){
         this.packetTargetModelList.add(packetTargetModel);
+    }
+
+    public int packetTargetModelSize(){
+        return this.packetTargetModelList.size();
     }
 
     public void removePacketTargetModel(PacketTargetModel packetTargetModel){

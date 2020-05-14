@@ -17,7 +17,6 @@ public class TablesPanel extends JPanel implements Refreshable{
         this.controller = controller;
         this.routerLabel = new JLabel(controller.getDevice().toString());
 
-        //TODO: wymiary
         this.routingTableTextArea = new JTextArea(controller.printRoutingTable(),200, 20);
         this.topologyTableTextArea = new JTextArea(controller.printTopologyTable(),200, 20);
         this.neighbourTableTextArea = new JTextArea(controller.getDevice().getNeighbourTable().toString(),200, 20);

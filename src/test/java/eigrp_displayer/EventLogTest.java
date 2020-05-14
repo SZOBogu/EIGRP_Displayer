@@ -136,9 +136,9 @@ class EventLogTest {
 
     @Test
     void neighbourshipBroken() {
-        EventLog.neighbourshipBroken(controller, controller0);
+        EventLog.neighbourshipBroken(controller, ip0);
         String string = Clock.getTime() + ": " + "Neighbourship between "
-                + controller.getDevice() + " and " + controller0.getDevice() + " broken.\n";
+                + controller.getDevice() + " and " + ip0 + " broken.\n";
         assertEquals(string, EventLog.getEventLog());
     }
 }

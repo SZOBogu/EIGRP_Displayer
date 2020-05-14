@@ -118,9 +118,17 @@ public class RoutingTableEntry {
         devicePath.add(thisDeviceController);
         usedIPs.add(thisDeviceController.getDevice().getIp_address());
 
+        System.out.println("paf: " + this.path);
+
         for(int i = 0 ; i < this.path.size() ; i++){
             Connection connection = this.path.get(i);
-            usedIPs.add(connection.getOtherDevice(devicePath.get(i)).getDevice().getIp_address());
+            System.out.println(connection);
+            DeviceController otherDevice = connection.getOtherDevice(devicePath.get(i));
+            System.out.println(otherDevice);
+
+            Device device = otherDevice.getDevice();
+            IPAddress ip = device.getIp_address();
+            usedIPs.add(ip);
             devicePath.add(connection.getOtherDevice(devicePath.get(i)));
         }
 
@@ -137,13 +145,13 @@ public class RoutingTableEntry {
         return ips;
     }
 
-    public String getStringPath(RouterController routerController){
-        List<IPAddress> ips = this.getIPAddressPath(routerController);
-        String string = "";
-        for(int i = 1 ; i < ips.size(); i++){
-            string += "via " + ips.get(i).toString();
-        }
-        return "dupa";
-    }
+//    public String getStringPath(RouterController routerController){
+//        List<IPAddress> ips = this.getIPAddressPath(routerController);
+//        String string = "";
+//        for(int i = 1 ; i < ips.size(); i++){
+//            string += "via " + ips.get(i).toString();
+//        }
+//        return "cos bardziej odpowiedniego niz dupa";
+//    }
 
 }

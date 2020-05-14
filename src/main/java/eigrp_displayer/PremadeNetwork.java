@@ -51,6 +51,12 @@ public class PremadeNetwork {
         network.getConnections().add(con4);
         network.getConnections().add(con5);
 
+        PacketTargetModel modelForEndDevice0 = new PacketTargetModel(endDevice0.getIp_address(), router0.getIp_address());
+        PacketTargetModel modelForEndDevice1 = new PacketTargetModel(endDevice1.getIp_address(), router0.getIp_address());
+
+        externalNetworkController.addPacketTargetModel(modelForEndDevice0);
+        externalNetworkController.addPacketTargetModel(modelForEndDevice1);
+
         return network;
     }
 }

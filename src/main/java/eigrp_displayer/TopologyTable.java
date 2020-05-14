@@ -101,6 +101,7 @@ public class TopologyTable extends RoutingTable{
         long metricForConnectionWithSender = Long.MAX_VALUE;
         MetricCalculator calculator = new MetricCalculator();
         Connection connection = new Cable();
+        List<RoutingTableEntry> alreadyExistingRoutingTableEntryList = new ArrayList<>();
 
         for (DeviceInterface deviceInterface : routerController.getDevice().getDeviceInterfaces()) {
             if (deviceInterface.getOtherDeviceController(routerController).
@@ -112,12 +113,31 @@ public class TopologyTable extends RoutingTable{
             }
         }
 
-        RoutingTableEntry newEntry = new RoutingTableEntry(receivedRoutingTableEntry.getIp_address());
-        newEntry.setFeasibleDistance(receivedRoutingTableEntry.getFeasibleDistance()
+        for(RoutingTableEntry entry : this.getEntries()){
+            if(entry.getIp_address() == receivedRoutingTableEntry.getIp_address()){
+                alreadyExistingRoutingTableEntryList.add(entry);
+            }
+        }
+
+        RoutingTableEntry alreadyPresentEntryWithSuitablePath = null;
+        for(RoutingTableEntry entry : alreadyExistingRoutingTableEntryList){
+            if(entry.getPath().equals(receivedRoutingTableEntry.getPath())) {
+                alreadyPresentEntryWithSuitablePath = entry;
+            }
+        }
+
+        if(alreadyPresentEntryWithSuitablePath != null){
+            alreadyPresentEntryWithSuitablePath.setReportedDistance(receivedRoutingTableEntry.getFeasibleDistance()
+                    + metricForConnectionWithSender);
+        }
+        else {
+            RoutingTableEntry newEntry = new RoutingTableEntry(receivedRoutingTableEntry.getIp_address());
+            newEntry.setFeasibleDistance(receivedRoutingTableEntry.getFeasibleDistance()
                     + metricForConnectionWithSender);
 
-        buildRoutingTableEntry(receivedRoutingTableEntry, metricForConnectionWithSender,
-                connection, receivedRoutingTableEntry.getPath());
+            buildRoutingTableEntry(receivedRoutingTableEntry, metricForConnectionWithSender,
+                    connection, receivedRoutingTableEntry.getPath());
+        }
     }
 
     private void buildRoutingTableEntry(RoutingTableEntry receivedRoutingTableEntry,

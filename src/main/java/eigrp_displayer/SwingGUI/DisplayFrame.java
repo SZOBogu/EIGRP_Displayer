@@ -1,5 +1,6 @@
 package eigrp_displayer.SwingGUI;
 
+import eigrp_displayer.ExternalNetworkController;
 import eigrp_displayer.MessageScheduler;
 
 import javax.swing.*;
@@ -10,9 +11,8 @@ import java.awt.event.ActionListener;
 public class DisplayFrame extends JFrame implements ActionListener {
     private JLabel titleLabel;
     private TimeLabel timeLabel;
-
+    private PacketInfoLabel packetInfoLabel;
     private DisplayPanel displayPanel;
-    private LogPanel logPanel;
     private TablePanelsPanel tablePanelsPanel;
 
     private JButton goButton;
@@ -22,10 +22,9 @@ public class DisplayFrame extends JFrame implements ActionListener {
         super("Displayer Main Window");
         this.titleLabel = new JLabel("Main Displayer Window");
         this.timeLabel = new TimeLabel();
+        this.packetInfoLabel = new PacketInfoLabel((ExternalNetworkController) MessageScheduler.getInstance().getControllers().get(0));
         this.displayPanel = new DisplayPanel();
-        this.logPanel = new LogPanel();
         this.tablePanelsPanel = new TablePanelsPanel();
-        this.logPanel = new LogPanel();
         this.editNetworkButton = new JButton("Edit Network");
         this.editNetworkButton.addActionListener(this);
         this.goButton = new JButton("Go with the simulation");
@@ -65,9 +64,6 @@ public class DisplayFrame extends JFrame implements ActionListener {
         gbc.gridx = 0;
         gbc.gridy++;
 
-        add(logPanel, gbc);
-        gbc.gridy++;
-
         add(goButton, gbc);
         gbc.gridy++;
         add(editNetworkButton, gbc);
@@ -79,8 +75,9 @@ public class DisplayFrame extends JFrame implements ActionListener {
 
         if(clickedButton == this.goButton){
             MessageScheduler.getInstance().updateTime();
-            this.logPanel.refresh();
+            this.displayPanel.refresh();
             this.tablePanelsPanel.refresh();
+            this.packetInfoLabel.refresh();
         }
         else if(clickedButton == this.editNetworkButton){
             new NetworkForm();

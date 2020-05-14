@@ -25,7 +25,8 @@ public class RouterController extends DeviceController implements ClockDependent
 
     @Override
     public void respond(Message message){
-        //logging
+        EventLog.messageReceived(this, message);
+
         if(message.getTargetAddress().equals(this.getDevice().getIp_address())) {
             if (message instanceof QueryMessage) {
                 this.respondQuery((QueryMessage) message);
@@ -46,10 +47,13 @@ public class RouterController extends DeviceController implements ClockDependent
 
     public void passMessageFurther(Message message){
         RoutingTableEntry entry = this.getDevice().getRoutingTable().getEntry(message.getTargetAddress());
-        List<IPAddress> ips = entry.getIPAddressPath(this);
-        if(entry != null && ips.size() > 1){
-            message.setReceiverAddress(ips.get(1));
-            this.sendMessage(message, 1);
+        if(entry != null) {
+            List<IPAddress> ips = entry.getIPAddressPath(this);
+            if (ips.size() > 1) {
+                System.out.println(ips);
+                message.setReceiverAddress(ips.get(1));
+                this.sendMessage(message, 1);
+            }
         }
     }
 
@@ -83,15 +87,25 @@ public class RouterController extends DeviceController implements ClockDependent
                     this.getDevice().getNeighbourTable().formNeighbourship(
                             this.getInterface(helloMessage.getSenderAddress()), helloMessage.getSenderAddress());
 
+                    EventLog.neighbourshipFormed(this, otherDeviceController);
+
                     UpdateMessage updateMessage = new UpdateMessage(this.getDevice().getIp_address(),
                             helloMessage.getSenderAddress(), this.getDevice().getTopologyTable());
+
+                    CyclicMessage cyclicMessage = new CyclicMessage(updateMessage, 60);
                     this.sendMessage(updateMessage, 1);
+                    //TODO: cleanup updatow po zerwaniu sasiedztwa
+                    this.sendCyclicMessage(cyclicMessage, 100);
                 }
             }
             if(otherDeviceController.getDevice() instanceof EndDevice ||
                     otherDeviceController.getDevice() instanceof ExternalNetwork) {
+
                 this.getDevice().getNeighbourTable().formNeighbourship(
                         this.getInterface(helloMessage.getSenderAddress()), helloMessage.getSenderAddress());
+
+                EventLog.neighbourshipFormed(this, otherDeviceController);
+
                 //AND make new record in routing and topology tables
                 RoutingTableEntry entry = new RoutingTableEntry(
                         otherDeviceController.getDevice().getIp_address());
@@ -102,9 +116,15 @@ public class RouterController extends DeviceController implements ClockDependent
                 long metric = calculator.calculateMetric(this.getDevice(), connection);
                 entry.setFeasibleDistance(metric);
                 entry.setReportedDistance(0);
-                entry.getPath().add(connection);
 
-                this.update(entry, helloMessage.getSenderAddress());
+                List<Connection> connections = new ArrayList<>();
+                connections.add(connection);
+                entry.setPath(connections);
+
+                this.getDevice().getTopologyTable().getEntries().add(entry);
+                RoutingTableEntry bestEntry = this.getDevice().getTopologyTable().getBestEntryForIP(entry.getIp_address());
+                this.getDevice().getRoutingTable().getEntries().add(bestEntry);
+//                this.update(entry, helloMessage.getSenderAddress());
             }
         }
         else{
@@ -188,7 +208,7 @@ public class RouterController extends DeviceController implements ClockDependent
         router.getTopologyTable().deleteNeighbourEntries(this, ipOfFormerNeighbour);
         List<RoutingTableEntry> routingTableEntries = router.getRoutingTable().getEntries();
         routingTableEntries.remove(router.getRoutingTable().getEntry(ipOfFormerNeighbour));
-
+        EventLog.neighbourshipBroken(this, ipOfFormerNeighbour);
         List<QueryMessage> queryMessageList = new ArrayList<>();
         for(DeviceController controller : this.getAllNeighbourControllers()){
             QueryMessage queryMessage = new QueryMessage(router.getIp_address(),
@@ -275,8 +295,8 @@ public class RouterController extends DeviceController implements ClockDependent
 
                             string.append("\tvia ").append(rtEntry.getIp_address()).append(" ").append("(")
                                     .append(rtEntry.getFeasibleDistance()).append("\\")
-                                    .append(rtEntry.getReportedDistance()).append(" ")
-                                    .append(deviceInterface.getName()).append("\n");
+                                    .append(rtEntry.getReportedDistance()).append(") ")
+                                    .append(deviceInterface.getName()).append("\n").append(rtEntry.getPath()).append("\n");
                     }
                 }
                 alreadyPrintedIPs.add(entry.getIp_address());
@@ -313,7 +333,7 @@ public class RouterController extends DeviceController implements ClockDependent
             string.append(entry.getCode()).append("\t")
                     .append(entry.getIp_address()).append("[").append(entry.getReportedDistance())
                     .append("\\").append(entry.getFeasibleDistance()).append("] via ")
-                    .append("bullshit ip")
+                    .append("placeholder ip")
 //                    .append(entry.getPath().get(0).getOtherDevice(this).getDevice().getIp_address())
                     .append(", ").append("Interface").append("\n");
             //this.getInterface(entry).getName()

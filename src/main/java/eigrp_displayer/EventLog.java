@@ -50,13 +50,13 @@ public class EventLog {
                 + device2.getDevice() + " became neighbours.");
     }
 
-    public static void neighbourshipBroken(DeviceController device1, DeviceController device2){
+    public static void neighbourshipBroken(DeviceController device1, IPAddress ipOfFormerNeighbour){
         appendLog(Clock.getTime() + ": " + "Neighbourship between "
-                + device1.getDevice() + " and " + device2.getDevice() + " broken.");
+                + device1.getDevice() + " and " + ipOfFormerNeighbour + " broken.");
     }
 
     public static void appendTimeSeparator(){
-        appendLog("time: " + Clock.getTime() + " =============================");
+        appendLog("time: " + Clock.getTime() + "=============================");
     }
 
     public static String getEventLog(){

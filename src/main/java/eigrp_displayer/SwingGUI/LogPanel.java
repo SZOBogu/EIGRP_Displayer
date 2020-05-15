@@ -9,10 +9,9 @@ public class LogPanel extends JPanel implements Refreshable{
     private JTextArea textArea;
 
     public LogPanel(){
-        this.textArea = new JTextArea(EventLog.getEventLog(),200, 50);
+        this.textArea = new JTextArea(EventLog.getEventLog(),30, 50);
         textArea.setLineWrap(true);
         setLayout(new BorderLayout());
-        setMinimumSize(new Dimension(500, 300));
         add(new JScrollPane(textArea), BorderLayout.CENTER);
     }
 

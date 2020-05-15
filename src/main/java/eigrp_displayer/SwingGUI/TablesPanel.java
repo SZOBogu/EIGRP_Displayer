@@ -17,9 +17,10 @@ public class TablesPanel extends JPanel implements Refreshable{
         this.controller = controller;
         this.routerLabel = new JLabel(controller.getDevice().toString());
 
-        this.routingTableTextArea = new JTextArea(controller.printRoutingTable(),200, 20);
-        this.topologyTableTextArea = new JTextArea(controller.printTopologyTable(),200, 20);
-        this.neighbourTableTextArea = new JTextArea(controller.getDevice().getNeighbourTable().toString(),200, 20);
+        this.routingTableTextArea = new JTextArea(controller.printRoutingTable(),5, 60);
+        this.topologyTableTextArea = new JTextArea(controller.printTopologyTable(),5, 60);
+        this.neighbourTableTextArea = new JTextArea(
+                controller.getDevice().getNeighbourTable().toString(),5, 60);
 
         Border border = BorderFactory.createLineBorder(Color.BLACK, 1);
         this.routerLabel.setBorder(border);
@@ -47,11 +48,17 @@ public class TablesPanel extends JPanel implements Refreshable{
         this.routerLabel.setHorizontalAlignment(JLabel.CENTER);
 
         gbc.gridy++;
-        add(this.routingTableTextArea, gbc);
+        add(new JScrollPane(
+                this.routingTableTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), gbc);
         gbc.gridy++;
-        add(this.topologyTableTextArea, gbc);
+        add(new JScrollPane(
+                this.topologyTableTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), gbc);
         gbc.gridy++;
-        add(this.neighbourTableTextArea, gbc);
+        add(new JScrollPane(
+                this.neighbourTableTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), gbc);
     }
 
     public void refresh(){

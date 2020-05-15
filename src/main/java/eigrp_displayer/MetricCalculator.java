@@ -6,9 +6,9 @@ import java.util.List;
 
 public class MetricCalculator {
 
-    public long calculateMetric(Router router, RoutingTableEntry entry){
+    public static long calculateMetric(Router router, RoutingTableEntry entry){
         //list has 0 element null, other int values are according to k values in router
-        List<Integer> k = this.getKValueInts(router);
+        List<Integer> k = MetricCalculator.getKValueInts(router);
 
         int bandwidth = entry.getLowestBandwidth();
         int delay = entry.getSumOfDelays();
@@ -21,12 +21,12 @@ public class MetricCalculator {
                 k.get(5)/(k.get(4) + reliability) * 256;
     }
 
-    public long calculateMetric(int bandwidth, int delay){
+    public static long calculateMetric(int bandwidth, int delay){
         return (bandwidth + delay) * 256;
     }
 
 
-    public long calculateMetric(int bandwidth, int delay,
+    public static long calculateMetric(int bandwidth, int delay,
                                int load, int reliability){
         return (bandwidth +
                 (bandwidth / (256 - load))
@@ -34,9 +34,9 @@ public class MetricCalculator {
     }
 
 
-    public long calculateMetric(Router router, Connection connection){
+    public static long calculateMetric(Router router, Connection connection){
         //list has 0 element null, other int values are according to k values in router
-        List<Integer> k = this.getKValueInts(router);
+        List<Integer> k = MetricCalculator.getKValueInts(router);
 
         if(k.get(5) == 0){
             return (k.get(1) * connection.getBandwidth() +
@@ -50,7 +50,7 @@ public class MetricCalculator {
                     k.get(5)/(k.get(4) + connection.getReliability()) * 256;
     }
 
-    private List<Integer> getKValueInts(Router router){
+    private static List<Integer> getKValueInts(Router router){
         int k1 = router.isK1() ? 1 : 0;
         int k2 = router.isK2() ? 1 : 0;
         int k3 = router.isK3() ? 1 : 0;

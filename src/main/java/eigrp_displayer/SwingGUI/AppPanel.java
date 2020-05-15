@@ -1,6 +1,5 @@
 package eigrp_displayer.SwingGUI;
 
-import eigrp_displayer.ExternalNetworkController;
 import eigrp_displayer.MessageScheduler;
 
 import javax.swing.*;
@@ -8,21 +7,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class DisplayFrame extends JFrame implements ActionListener {
+public class AppPanel extends JPanel implements ActionListener {
     private JLabel titleLabel;
     private TimeLabel timeLabel;
-    private PacketInfoLabel packetInfoLabel;
+  //  private PacketInfoPanel packetInfoPanel;
     private DisplayPanel displayPanel;
     private TablePanelsPanel tablePanelsPanel;
 
     private JButton goButton;
     private JButton editNetworkButton;
 
-    public DisplayFrame(){
-        super("Displayer Main Window");
+    public AppPanel(){
+        super();
         this.titleLabel = new JLabel("Main Displayer Window");
         this.timeLabel = new TimeLabel();
-        this.packetInfoLabel = new PacketInfoLabel((ExternalNetworkController) MessageScheduler.getInstance().getControllers().get(0));
+    //    this.packetInfoPanel = new PacketInfoPanel((ExternalNetworkController) MessageScheduler.getInstance().getControllers().get(0));
         this.displayPanel = new DisplayPanel();
         this.tablePanelsPanel = new TablePanelsPanel();
         this.editNetworkButton = new JButton("Edit Network");
@@ -32,7 +31,6 @@ public class DisplayFrame extends JFrame implements ActionListener {
 
         setMinimumSize(new Dimension(1080, 640));
         setSize(1080, 800);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
 
         this.layoutComponents();
@@ -54,6 +52,9 @@ public class DisplayFrame extends JFrame implements ActionListener {
         gbc.gridy++;
         add(timeLabel, gbc);
         timeLabel.setHorizontalAlignment(JLabel.CENTER);
+
+//        gbc.gridy++;
+//        add(packetInfoPanel, gbc);
 
         gbc.gridy++;
         add(displayPanel, gbc);
@@ -77,11 +78,12 @@ public class DisplayFrame extends JFrame implements ActionListener {
             MessageScheduler.getInstance().updateTime();
             this.displayPanel.refresh();
             this.tablePanelsPanel.refresh();
-            this.packetInfoLabel.refresh();
+ //           this.packetInfoPanel.refresh();
         }
         else if(clickedButton == this.editNetworkButton){
             new NetworkForm();
-            this.dispose();
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.dispose();
         }
     }
 }

@@ -1,5 +1,7 @@
 package eigrp_displayer;
 
+import eigrp_displayer.messages.UpdateMessage;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,70 +92,61 @@ public class TopologyTable extends RoutingTable{
             return count - 1;
     }
 
-    public void update(RouterController controller, RoutingTable receivedRoutingTable, IPAddress sender){
-        for(RoutingTableEntry entry : receivedRoutingTable.getEntries()){
-            this.update(controller, entry, sender);
+    public void update(RouterController controller, UpdateMessage updateMessage){
+        for(RoutingTableEntry entry : updateMessage.getTopologyTable().getEntries()){
+            this.update(controller, entry, updateMessage.getSenderAddress());
         }
     }
 
     public void update(RouterController routerController, RoutingTableEntry receivedRoutingTableEntry,
                        IPAddress sender) {
-        long metricForConnectionWithSender = Long.MAX_VALUE;
-        MetricCalculator calculator = new MetricCalculator();
-        Connection connection = new Cable();
-        List<RoutingTableEntry> alreadyExistingRoutingTableEntryList = new ArrayList<>();
+        //czemu nie update message zamiast entry i ipsendera?
+        //metryka z kabla od sendera
+        //sprawdzic czy po dodaniu kabla na poczatek (tak jak w buildzie z dolu) daje ta sama sciezke co istniejaca
+        //jesli tak to nowa metryka
+        //jesli nie to to tworzymy nowy rekord zgodnie z builderem
 
-        for (DeviceInterface deviceInterface : routerController.getDevice().getDeviceInterfaces()) {
-            if (deviceInterface.getOtherDeviceController(routerController).
-                    getDevice().getIp_address().equals(sender)) {
-                        connection = deviceInterface.getConnection();
-                metricForConnectionWithSender = calculator.calculateMetric(
-                        routerController.getDevice(), connection);
-                break;
+        long metricOnCableFromSender = Long.MAX_VALUE;
+        Connection connection = null;
+
+        for(DeviceInterface deviceInterface : routerController.getDevice().getDeviceInterfaces()){
+            if(deviceInterface.getConnection() != null && deviceInterface.getConnection().getOtherDevice(routerController).getDevice().getIp_address().equals(sender)){
+                connection = deviceInterface.getConnection();
+                metricOnCableFromSender = MetricCalculator.calculateMetric(routerController.getDevice(), connection);
             }
         }
 
-        for(RoutingTableEntry entry : this.getEntries()){
-            if(entry.getIp_address() == receivedRoutingTableEntry.getIp_address()){
-                alreadyExistingRoutingTableEntryList.add(entry);
+        if(connection != null && metricOnCableFromSender != Long.MAX_VALUE) {
+            List<Connection> targetPath = new ArrayList<>();
+            targetPath.add(connection);
+            targetPath.addAll(receivedRoutingTableEntry.getPath());
+
+            RoutingTableEntry entryWithGoodPath = null;
+
+            for(RoutingTableEntry entry : this.getEntries()){
+                if(entry.getPath().equals(targetPath)){
+                    entryWithGoodPath = entry;
+                }
+            }
+
+            if(entryWithGoodPath != null){
+                entryWithGoodPath.setFeasibleDistance(receivedRoutingTableEntry.getFeasibleDistance() + metricOnCableFromSender);
+                entryWithGoodPath.setReportedDistance(receivedRoutingTableEntry.getFeasibleDistance());
+            }
+            else {
+                RoutingTableEntry newEntry = new RoutingTableEntry(receivedRoutingTableEntry.getIp_address());
+                newEntry.setFeasibleDistance(receivedRoutingTableEntry.getFeasibleDistance() + metricOnCableFromSender);
+                newEntry.setReportedDistance(receivedRoutingTableEntry.getFeasibleDistance());
+                List<Connection> path = new ArrayList<>();
+                path.add(connection);
+                path.addAll(receivedRoutingTableEntry.getPath());
+                newEntry.setPath(path);
+
+                if(path.size() <= 5){
+                    this.getEntries().add(newEntry);
+                }
             }
         }
-
-        RoutingTableEntry alreadyPresentEntryWithSuitablePath = null;
-        for(RoutingTableEntry entry : alreadyExistingRoutingTableEntryList){
-            if(entry.getPath().equals(receivedRoutingTableEntry.getPath())) {
-                alreadyPresentEntryWithSuitablePath = entry;
-            }
-        }
-
-        if(alreadyPresentEntryWithSuitablePath != null){
-            alreadyPresentEntryWithSuitablePath.setReportedDistance(receivedRoutingTableEntry.getFeasibleDistance()
-                    + metricForConnectionWithSender);
-        }
-        else {
-            RoutingTableEntry newEntry = new RoutingTableEntry(receivedRoutingTableEntry.getIp_address());
-            newEntry.setFeasibleDistance(receivedRoutingTableEntry.getFeasibleDistance()
-                    + metricForConnectionWithSender);
-
-            buildRoutingTableEntry(receivedRoutingTableEntry, metricForConnectionWithSender,
-                    connection, receivedRoutingTableEntry.getPath());
-        }
-    }
-
-    private void buildRoutingTableEntry(RoutingTableEntry receivedRoutingTableEntry,
-                                                long metricForConnectionWithSender, Connection connection,
-                                                List<Connection> path) {
-        RoutingTableEntry updatedRoutingTableEntry =
-                new RoutingTableEntry(receivedRoutingTableEntry.getIp_address());
-
-        updatedRoutingTableEntry.setFeasibleDistance(
-                receivedRoutingTableEntry.getFeasibleDistance() + metricForConnectionWithSender);
-
-        updatedRoutingTableEntry.setReportedDistance(receivedRoutingTableEntry.getFeasibleDistance());
-
-        this.getEntries().add(updatedRoutingTableEntry);
-        path.add(0, connection);
-        updatedRoutingTableEntry.setPath(path);
     }
 
     public void deleteNeighbourEntries(DeviceController controller, IPAddress ipToDelete) {

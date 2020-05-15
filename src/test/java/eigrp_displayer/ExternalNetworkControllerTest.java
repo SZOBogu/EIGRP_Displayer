@@ -55,12 +55,12 @@ class ExternalNetworkControllerTest {
 
         assertTrue(messages.get(Clock.getTime() + controller0.getDevice().getMessageSendingTimeOffset())
                 instanceof HelloMessage);
-        assertTrue((messages.get(Clock.getTime() + 100) instanceof Packet) ||
-                (messages.get(Clock.getTime() + 101) instanceof Packet));
-        assertTrue((messages.get(Clock.getTime() + 110) instanceof Packet) ||
-                (messages.get(Clock.getTime() + 111) instanceof Packet));
-        assertTrue((messages.get(Clock.getTime() + 260) instanceof Packet) ||
-                (messages.get(Clock.getTime() + 261) instanceof Packet));
+        assertTrue((messages.get(Clock.getTime() + 500) instanceof Packet) ||
+                (messages.get(Clock.getTime() + 501) instanceof Packet));
+        assertTrue((messages.get(Clock.getTime() + 510) instanceof Packet) ||
+                (messages.get(Clock.getTime() + 511) instanceof Packet));
+        assertTrue((messages.get(Clock.getTime() + 760) instanceof Packet) ||
+                (messages.get(Clock.getTime() + 761) instanceof Packet));
     }
 
     @Test
@@ -92,7 +92,6 @@ class ExternalNetworkControllerTest {
         assertEquals(1, controller0.getPacketTargetModel(1).getAckedMessageNumberSet().size());
         assertFalse(controller0.getPacketTargetModel(0).getAckedMessageNumberSet().contains(0));
         assertTrue(controller0.getPacketTargetModel(1).getAckedMessageNumberSet().contains(0));
-
     }
 
     @Test

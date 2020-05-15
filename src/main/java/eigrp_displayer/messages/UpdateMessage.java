@@ -7,12 +7,12 @@ public class UpdateMessage extends Message implements Sendable {
     private TopologyTable topologyTable;
 
     public UpdateMessage(IPAddress sender, IPAddress receiver, TopologyTable topologyTable){
-        super(sender, receiver, receiver);
+        super(sender, sender, receiver, receiver);
         this.topologyTable = topologyTable;
     }
 
-    public UpdateMessage(IPAddress sender, IPAddress receiver, IPAddress target, TopologyTable topologyTable){
-        super(sender, receiver, target);
+    public UpdateMessage(IPAddress source, IPAddress sender, IPAddress receiver, IPAddress target, TopologyTable topologyTable){
+        super(source, sender, receiver, target);
         this.topologyTable = topologyTable;
     }
 

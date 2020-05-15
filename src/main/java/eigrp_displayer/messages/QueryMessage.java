@@ -6,12 +6,12 @@ public class QueryMessage extends Message implements Sendable {
     private final IPAddress queriedDeviceAddress;
 
     public QueryMessage(IPAddress sender, IPAddress receiver, IPAddress queriedDeviceAddress){
-        super(sender, receiver, receiver);
+        super(sender, sender, receiver, receiver);
         this.queriedDeviceAddress = queriedDeviceAddress;
     }
 
-    public QueryMessage(IPAddress sender, IPAddress receiver, IPAddress target, IPAddress queriedDeviceAddress){
-        super(sender, receiver, target);
+    public QueryMessage(IPAddress source, IPAddress sender, IPAddress receiver, IPAddress target, IPAddress queriedDeviceAddress){
+        super(source, sender, receiver, target);
         this.queriedDeviceAddress = queriedDeviceAddress;
     }
 

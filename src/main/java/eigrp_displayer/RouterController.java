@@ -51,6 +51,7 @@ public class RouterController extends DeviceController implements ClockDependent
             List<IPAddress> ips = entry.getIPAddressPath(this);
             if (ips.size() > 1) {
                 System.out.println(ips);
+                message.setSenderAddress(this.getDevice().getIp_address());
                 message.setReceiverAddress(ips.get(1));
                 this.sendMessage(message, 1);
             }
@@ -163,8 +164,7 @@ public class RouterController extends DeviceController implements ClockDependent
 
     public void respondUpdate(UpdateMessage updateMessage){
         this.sendMessage(new ACKMessage(this.getDevice().getIp_address(), updateMessage.getSenderAddress()), 1);
-        this.update(updateMessage.getTopologyTable(),
-                updateMessage.getSenderAddress());
+        this.update(updateMessage);
     }
 
     public void respondReply(ReplyMessage replyMessage){
@@ -189,9 +189,9 @@ public class RouterController extends DeviceController implements ClockDependent
         }
     }
 
-    public void update(TopologyTable table, IPAddress senderAddress){
-        for(RoutingTableEntry entry : table.getEntries()){
-            this.update(entry, senderAddress);
+    public void update(UpdateMessage updateMessage){
+        for(RoutingTableEntry entry : updateMessage.getTopologyTable().getEntries()){
+            this.update(entry, updateMessage.getSenderAddress());
         }
     }
 

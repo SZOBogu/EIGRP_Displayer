@@ -28,6 +28,7 @@ public class ExternalNetworkController extends DeviceController{
         super.scheduleHellos();
         for(PacketTargetModel targetModel : this.packetTargetModelList) {
             Packet packet = new Packet(this.getDevice().getIp_address(),
+                    this.getDevice().getIp_address(),
                     targetModel.getNextHopAddress(),
                     targetModel.getTargetAddress(), Clock.getTime());
             CyclicMessage cyclicMessage = new CyclicMessage(packet, 10);

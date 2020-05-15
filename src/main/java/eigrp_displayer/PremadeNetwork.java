@@ -51,11 +51,17 @@ public class PremadeNetwork {
         network.getConnections().add(con4);
         network.getConnections().add(con5);
 
-        PacketTargetModel modelForEndDevice0 = new PacketTargetModel(endDevice0.getIp_address(), router0.getIp_address());
-        PacketTargetModel modelForEndDevice1 = new PacketTargetModel(endDevice1.getIp_address(), router0.getIp_address());
+        PacketTargetModel extNetToDev0Model = new PacketTargetModel(endDevice0.getIp_address(), router0.getIp_address());
+        PacketTargetModel extNetToDev1Model = new PacketTargetModel(endDevice1.getIp_address(), router0.getIp_address());
 
-        externalNetworkController.addPacketTargetModel(modelForEndDevice0);
-        externalNetworkController.addPacketTargetModel(modelForEndDevice1);
+        externalNetworkController.addPacketTargetModel(extNetToDev0Model);
+        externalNetworkController.addPacketTargetModel(extNetToDev1Model);
+
+//        PacketTargetModel dev0ToExtNetModel = new PacketTargetModel(externalNetwork.getIp_address(), router1.getIp_address());
+//        PacketTargetModel dev1ToExtNetModel = new PacketTargetModel(externalNetwork.getIp_address(), router2.getIp_address());
+//
+//        endDeviceController0.setPacketTargetModel(dev0ToExtNetModel);
+//        endDeviceController1.setPacketTargetModel(dev1ToExtNetModel);
 
         return network;
     }

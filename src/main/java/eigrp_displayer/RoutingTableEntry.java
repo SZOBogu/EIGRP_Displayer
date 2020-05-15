@@ -9,7 +9,7 @@ public class RoutingTableEntry {
     private IPAddress ip_address;
     private long feasibleDistance;
     private long reportedDistance;
-    private int ticksSinceLastHelloMessage = 0;
+    private int ticksSinceLastHelloMessage;
     private List<Connection> path;
 
     public RoutingTableEntry(IPAddress ip_address){
@@ -21,6 +21,7 @@ public class RoutingTableEntry {
         this.ip_address = ip_address;
         this.feasibleDistance = Long.MAX_VALUE;
         this.reportedDistance = Long.MAX_VALUE;
+        this.ticksSinceLastHelloMessage = 0;
         this.path = new ArrayList<>();
     }
 

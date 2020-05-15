@@ -80,6 +80,7 @@ class NeighbourTableTest {
     @Test
     void updateTime() {
         Clock.getClockDependents().clear();
+        Clock.resetClock();
         neighbourTable = new NeighbourTable();
         neighbourTable.formNeighbourship(deviceInterface, ip0);
         neighbourTable.formNeighbourship(deviceInterface, ip1);
@@ -91,9 +92,9 @@ class NeighbourTableTest {
         Clock.incrementClock();
         assertEquals(1, neighbourTable.getEntries().get(0).getTicksSinceLastHello());
         assertEquals(1, neighbourTable.getEntries().get(1).getTicksSinceLastHello());
-        Clock.incrementClock(14);
-        assertEquals(15, neighbourTable.getEntries().get(0).getTicksSinceLastHello());
-        assertEquals(15, neighbourTable.getEntries().get(1).getTicksSinceLastHello());
+        Clock.incrementClock(19);
+        assertEquals(20, neighbourTable.getEntries().get(0).getTicksSinceLastHello());
+        assertEquals(20, neighbourTable.getEntries().get(1).getTicksSinceLastHello());
         Clock.incrementClock();
         assertEquals(1, neighbourTable.getEntries().size());
         Clock.getClockDependents().clear();

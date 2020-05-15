@@ -10,13 +10,17 @@ class PremadeNetworkTest {
     void getNetwork() {
         Network network = PremadeNetwork.getNetwork();
 
-        DeviceController endDeviceController0 = network.getDeviceControllers().get(0);
-        DeviceController endDeviceController1 = network.getDeviceControllers().get(1);
-        RouterController routerController0 = (RouterController) network.getDeviceControllers().get(2);
-        RouterController routerController1 = (RouterController) network.getDeviceControllers().get(3);
-        RouterController routerController2 = (RouterController) network.getDeviceControllers().get(4);
+        ExternalNetworkController externalNetworkController =
+                (ExternalNetworkController) network.getDeviceControllers(). get(0);
+        DeviceController endDeviceController0 = network.getDeviceControllers().get(1);
+        DeviceController endDeviceController1 = network.getDeviceControllers().get(2);
+        RouterController routerController0 = (RouterController) network.getDeviceControllers().get(3);
+        RouterController routerController1 = (RouterController) network.getDeviceControllers().get(4);
+        RouterController routerController2 = (RouterController) network.getDeviceControllers().get(5);
 
-        assertEquals(5, network.getDeviceControllers().size());
+        assertEquals(6, network.getDeviceControllers().size());
+        assertEquals(new IPAddress(10,0,0,1),
+                externalNetworkController.getDevice().getIp_address());
         assertEquals(new IPAddress(192,168,0,1),
                 endDeviceController0.getDevice().getIp_address());
         assertEquals(new IPAddress(192,168,0,2),

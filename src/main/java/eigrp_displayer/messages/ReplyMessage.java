@@ -7,12 +7,12 @@ public class ReplyMessage extends Message implements Sendable {
     private RoutingTableEntry routingTableEntry;
 
     public ReplyMessage(IPAddress sender, IPAddress receiver, RoutingTableEntry routingTableEntry){
-        super(sender, receiver, receiver);
+        super(sender, sender, receiver, receiver);
         this.routingTableEntry = routingTableEntry;
     }
 
-    public ReplyMessage(IPAddress sender, IPAddress receiver, IPAddress target, RoutingTableEntry routingTableEntry){
-        super(sender, receiver, target);
+    public ReplyMessage(IPAddress source, IPAddress sender, IPAddress receiver, IPAddress target, RoutingTableEntry routingTableEntry){
+        super(source, sender, receiver, target);
         this.routingTableEntry = routingTableEntry;
     }
 

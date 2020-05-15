@@ -15,6 +15,6 @@ public class SwingMain {
         for(DeviceController controller : scheduler.getControllers()){
             System.out.println(controller.getDevice() + " " + controller.getDevice().getMessageSendingTimeOffset());
         }
-        SwingUtilities.invokeLater(DisplayFrame::new);
+        SwingUtilities.invokeLater(AppFrame::new);
     }
 }

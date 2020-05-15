@@ -84,7 +84,7 @@ public class NetworkFormPanel extends JPanel implements ActionListener {
         JButton clickedButton = (JButton)actionEvent.getSource();
 
         if(clickedButton == backButton){
-            new DisplayFrame();
+            new AppPanel();
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.dispose();
         }

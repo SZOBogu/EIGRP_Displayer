@@ -46,7 +46,7 @@ class NeighbourTableEntryTest {
                             splittedEntry[0]);
 
             assertEquals(deviceInterface.getName(), splittedEntry[1]);
-            assertEquals("15", splittedEntry[2]);
+            assertEquals("65", splittedEntry[2]);
 
             assertTrue(splittedEntry[3].matches("^00:0[0-1]:[0-5][0-9]$|00:00"), " " + splittedEntry[3]);
             assertTrue(splittedEntry[4].matches("([0-9]|[1-9][0-9]|[1-2][0-9][0-9])|00:00"), " " + splittedEntry[4]);
@@ -69,7 +69,7 @@ class NeighbourTableEntryTest {
 
     @Test
     void getHold() {
-        assertEquals(15, entry.getHold());
+        assertEquals(65, entry.getHold());
     }
 
     @Test

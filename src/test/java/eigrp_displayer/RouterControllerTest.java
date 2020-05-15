@@ -297,7 +297,7 @@ class RouterControllerTest {
                 + MessageScheduler.getInstance().getNetwork().getMask().getMask()
                 + ", 0 successors, FD is " + entry1.getFeasibleDistance() + "\n";
         string += "\tvia " + entry1.getIp_address() + " (" + entry1.getFeasibleDistance()
-                + "\\" + entry1.getReportedDistance() + " Interface 1\n";
+                + "\\" + entry1.getReportedDistance() + ") Interface 1\n";
 
         assertEquals(string, controller.printTopologyTable());
     }

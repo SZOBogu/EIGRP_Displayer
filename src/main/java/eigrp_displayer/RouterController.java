@@ -50,7 +50,6 @@ public class RouterController extends DeviceController implements ClockDependent
         if(entry != null) {
             List<IPAddress> ips = entry.getIPAddressPath(this);
             if (ips.size() > 1) {
-                System.out.println(ips);
                 message.setSenderAddress(this.getDevice().getIp_address());
                 message.setReceiverAddress(ips.get(1));
                 this.sendMessage(message, 1);
@@ -125,7 +124,6 @@ public class RouterController extends DeviceController implements ClockDependent
                 this.getDevice().getTopologyTable().getEntries().add(entry);
                 RoutingTableEntry bestEntry = this.getDevice().getTopologyTable().getBestEntryForIP(entry.getIp_address());
                 this.getDevice().getRoutingTable().getEntries().add(bestEntry);
-//                this.update(entry, helloMessage.getSenderAddress());
             }
         }
         else{
@@ -296,7 +294,7 @@ public class RouterController extends DeviceController implements ClockDependent
                             string.append("\tvia ").append(rtEntry.getIp_address()).append(" ").append("(")
                                     .append(rtEntry.getFeasibleDistance()).append("\\")
                                     .append(rtEntry.getReportedDistance()).append(") ")
-                                    .append(deviceInterface.getName()).append("\n").append(rtEntry.getPath()).append("\n");
+                                    .append(deviceInterface.getName()).append("\n");
                     }
                 }
                 alreadyPrintedIPs.add(entry.getIp_address());

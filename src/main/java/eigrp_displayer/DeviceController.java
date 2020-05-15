@@ -10,7 +10,6 @@ import java.util.List;
 public class DeviceController {
     private Device device;
     private List<Message> messageSchedule;
-   // private PacketTargetModel packetTargetModel;
 
     public DeviceController() {
         this.clearSchedule();
@@ -28,14 +27,6 @@ public class DeviceController {
     public void setDevice(Device device) {
         this.device = device;
     }
-
-//    public PacketTargetModel getPacketTargetModel() {
-//        return packetTargetModel;
-//    }
-//
-//    public void setPacketTargetModel(PacketTargetModel packetTargetModel) {
-//        this.packetTargetModel = packetTargetModel;
-//    }
 
     public List<Message> getMessageSchedule() {
         return messageSchedule;
@@ -113,7 +104,6 @@ public class DeviceController {
         EventLog.messageReceived(this, message);
 
         if(message instanceof Packet){
-            System.out.println("dostol zech pakieta");
             PacketACK packetACK = new PacketACK((Packet) message);
             this.sendMessage(packetACK, 1);
         }

@@ -100,12 +100,6 @@ public class TopologyTable extends RoutingTable{
 
     public void update(RouterController routerController, RoutingTableEntry receivedRoutingTableEntry,
                        IPAddress sender) {
-        //czemu nie update message zamiast entry i ipsendera?
-        //metryka z kabla od sendera
-        //sprawdzic czy po dodaniu kabla na poczatek (tak jak w buildzie z dolu) daje ta sama sciezke co istniejaca
-        //jesli tak to nowa metryka
-        //jesli nie to to tworzymy nowy rekord zgodnie z builderem
-
         long metricOnCableFromSender = Long.MAX_VALUE;
         Connection connection = null;
 

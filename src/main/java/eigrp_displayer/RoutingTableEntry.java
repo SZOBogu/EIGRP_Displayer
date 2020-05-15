@@ -145,14 +145,4 @@ public class RoutingTableEntry {
         }
         return ips;
     }
-
-//    public String getStringPath(RouterController routerController){
-//        List<IPAddress> ips = this.getIPAddressPath(routerController);
-//        String string = "";
-//        for(int i = 1 ; i < ips.size(); i++){
-//            string += "via " + ips.get(i).toString();
-//        }
-//        return "cos bardziej odpowiedniego niz dupa";
-//    }
-
 }

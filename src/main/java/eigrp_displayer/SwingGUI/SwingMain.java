@@ -1,6 +1,5 @@
 package eigrp_displayer.SwingGUI;
 
-import eigrp_displayer.DeviceController;
 import eigrp_displayer.MessageScheduler;
 import eigrp_displayer.PremadeNetwork;
 
@@ -12,9 +11,6 @@ public class SwingMain {
         scheduler.setNetwork(PremadeNetwork.getNetwork());
         scheduler.init();
 
-        for(DeviceController controller : scheduler.getControllers()){
-            System.out.println(controller.getDevice() + " " + controller.getDevice().getMessageSendingTimeOffset());
-        }
         SwingUtilities.invokeLater(AppFrame::new);
     }
 }

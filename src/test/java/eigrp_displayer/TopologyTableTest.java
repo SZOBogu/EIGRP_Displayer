@@ -1,5 +1,6 @@
 package eigrp_displayer;
 
+import eigrp_displayer.messages.UpdateMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -69,8 +70,10 @@ class TopologyTableTest {
         receivedTopologyTable.getEntries().add(betterEntry);
         receivedTopologyTable.getEntries().add(worseEntry);
 
+        UpdateMessage updateMessage = new UpdateMessage(ip1, ip0, receivedTopologyTable);
+
         assertEquals(1, topologyTable.getAllEntriesForIP(ip1).size());
-        topologyTable.update(controller, receivedTopologyTable, ip1);
+        topologyTable.update(controller, updateMessage);
         assertEquals(3, topologyTable.getAllEntriesForIP(ip1).size());
     }
 

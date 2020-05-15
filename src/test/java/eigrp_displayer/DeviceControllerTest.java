@@ -188,15 +188,16 @@ class DeviceControllerTest {
     @Test
     void respondPacket() {
         init();
-        Packet packet = new Packet(ip0, ip1, 0);
+        Packet packet = new Packet(ip1, ip0, 0);
 
         controller0.respond(packet);
         Message packetACK = controller0.getMessageSchedule().get(Clock.getTime() + 1);
 
         assertTrue(packetACK instanceof PacketACK, "class: " + packetACK.getClass());
-        assertEquals(ip1, packetACK.getSenderAddress());
+        assertEquals(ip0, packetACK.getSourceAddress());
+        assertEquals(ip0, packetACK.getSenderAddress());
         assertEquals(ip1, packetACK.getReceiverAddress());
-        assertEquals(ip0, packetACK.getTargetAddress());
+        assertEquals(ip1, packetACK.getTargetAddress());
         assertEquals(0, ((PacketACK) packetACK).getPacketNumber());
     }
 

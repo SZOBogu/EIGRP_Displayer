@@ -57,12 +57,6 @@ public class PremadeNetwork {
         externalNetworkController.addPacketTargetModel(extNetToDev0Model);
         externalNetworkController.addPacketTargetModel(extNetToDev1Model);
 
-//        PacketTargetModel dev0ToExtNetModel = new PacketTargetModel(externalNetwork.getIp_address(), router1.getIp_address());
-//        PacketTargetModel dev1ToExtNetModel = new PacketTargetModel(externalNetwork.getIp_address(), router2.getIp_address());
-//
-//        endDeviceController0.setPacketTargetModel(dev0ToExtNetModel);
-//        endDeviceController1.setPacketTargetModel(dev1ToExtNetModel);
-
         return network;
     }
 }

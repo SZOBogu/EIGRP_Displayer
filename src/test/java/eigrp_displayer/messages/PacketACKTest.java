@@ -10,16 +10,19 @@ class PacketACKTest {
 
     @Test
     void constructor() {
+        IPAddress ipSource = Mockito.mock(IPAddress.class);
         IPAddress ipSender = Mockito.mock(IPAddress.class);
         IPAddress ipReceiver = Mockito.mock(IPAddress.class);
+        IPAddress ipTarget = Mockito.mock(IPAddress.class);
 
-        Packet packet = new Packet(ipSender, ipReceiver, 0);
+        Packet packet = new Packet(ipSource, ipSender, ipReceiver, ipTarget, 0);
 
         PacketACK packetACK = new PacketACK(packet);
 
-        assertEquals(ipReceiver, packetACK.getSenderAddress());
-        assertEquals(ipReceiver, packetACK.getReceiverAddress());
-        assertEquals(ipSender, packetACK.getTargetAddress());
+        assertEquals(ipTarget, packetACK.getSenderAddress());
+        assertEquals(ipTarget, packetACK.getSenderAddress());
+        assertEquals(ipSender, packetACK.getReceiverAddress());
+        assertEquals(ipSource, packetACK.getTargetAddress());
         assertEquals(0, packetACK.getPacketNumber());
     }
 }

@@ -15,19 +15,15 @@ public class PoolOfIPAddresses {
     }
 
     public void init(IPAddress networkAddress, IPAddress broadcastAddress){
-        CalculatorIP calc = new CalculatorIP();
-
-        for(int i = 1; i < calc.difference(broadcastAddress, networkAddress) - 1; i++){
-            IPAddress ipAddress = calc.incrementAddress(networkAddress, i);
+       for(int i = 1; i < CalculatorIP.difference(broadcastAddress, networkAddress) - 1; i++){
+            IPAddress ipAddress = CalculatorIP.incrementAddress(networkAddress, i);
             this.freeAddresses.add(ipAddress);
         }
     }
 
     public void init(IPAddress networkAddress, Mask mask){
-        CalculatorIP calc = new CalculatorIP();
-
-        for(int i = 1; i < mask.calculateAvailableAddresses() - 1; i++){
-            IPAddress ipAddress = calc.incrementAddress(networkAddress, i);
+      for(int i = 1; i < mask.calculateAvailableAddresses() - 1; i++){
+            IPAddress ipAddress = CalculatorIP.incrementAddress(networkAddress, i);
             this.freeAddresses.add(ipAddress);
         }
     }

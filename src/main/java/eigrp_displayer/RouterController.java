@@ -95,8 +95,7 @@ public class RouterController extends DeviceController implements ClockDependent
 
             assert otherDeviceController != null;
             if(otherDeviceController.getDevice() instanceof Router) {
-                RComparator comparator = new RComparator();
-                if (comparator.compare(this.getDevice(), (Router)otherDeviceController.getDevice())) {
+                if (RComparator.compare(this.getDevice(), (Router)otherDeviceController.getDevice())) {
 
                     this.getDevice().getNeighbourTable().formNeighbourship(
                             this.getInterface(helloMessage.getSenderAddress()), helloMessage.getSenderAddress());
@@ -125,9 +124,8 @@ public class RouterController extends DeviceController implements ClockDependent
                         otherDeviceController.getDevice().getIp_address());
                 entry.setCode("C");
 
-                MetricCalculator calculator = new MetricCalculator();
-                Connection connection = this.getConnectionWithDeviceController(otherDeviceController);
-                long metric = calculator.calculateMetric(this.getDevice(), connection);
+               Connection connection = this.getConnectionWithDeviceController(otherDeviceController);
+                long metric = MetricCalculator.calculateMetric(this.getDevice(), connection);
                 entry.setFeasibleDistance(metric);
                 entry.setReportedDistance(0);
 

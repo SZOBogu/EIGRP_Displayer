@@ -1,7 +1,7 @@
 package eigrp_displayer;
 
 public class CalculatorIP {
-    public IPAddress incrementAddress(IPAddress ip_address){
+    public static IPAddress incrementAddress(IPAddress ip_address){
         IPAddress address = new IPAddress(ip_address);
         if(address.getFourthOctet() == 255){
             address.setFourthOctet(0);
@@ -33,15 +33,15 @@ public class CalculatorIP {
         return address;
     }
 
-    public IPAddress incrementAddress(IPAddress ipAddress, int incrementBy){
+    public static IPAddress incrementAddress(IPAddress ipAddress, int incrementBy){
         IPAddress address = new IPAddress(ipAddress);
         for(int i = 0; i < incrementBy; i++){
-            address = this.incrementAddress(address);
+            address = CalculatorIP.incrementAddress(address);
         }
         return address;
     }
 
-    public int difference(IPAddress address1, IPAddress address2){
+    public static int difference(IPAddress address1, IPAddress address2){
         int firstOctetDifference = address1.getFirstOctet() - address2.getFirstOctet();
         int secondOctetDifference = address1.getSecondOctet() - address2.getSecondOctet();
         int thirdOctetDifference = address1.getThirdOctet() - address2.getThirdOctet();

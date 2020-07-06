@@ -63,7 +63,7 @@ public class MessageScheduler implements ClockDependent{
     public void init(){
         for(DeviceController controller : this.getNetwork().getDeviceControllers()){
             controller.addSelfToScheduler();
-            controller.scheduleHellos();
+            controller.scheduleCyclicMessages();
         }
     }
 

@@ -24,8 +24,7 @@ public class ExternalNetworkController extends DeviceController{
     }
 
     @Override
-    public void scheduleHellos() {
-        super.scheduleHellos();
+    public void scheduleCyclicMessages() {
         for(PacketTargetModel targetModel : this.packetTargetModelList) {
             Packet packet = new Packet(this.getDevice().getIp_address(),
                     this.getDevice().getIp_address(),

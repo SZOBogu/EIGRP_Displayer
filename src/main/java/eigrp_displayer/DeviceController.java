@@ -86,17 +86,8 @@ public class DeviceController {
         this.sendCyclicMessage(message, 0);
     }
 
-    public void scheduleHellos(){
-        List<IPAddress> connectedDevicesAddresses = new ArrayList<>();
+    public void scheduleCyclicMessages(){
 
-        for(DeviceController controller : this.getAllConnectedDeviceControllers()){
-            connectedDevicesAddresses.add(controller.getDevice().getIp_address());
-        }
-        for(IPAddress ip : connectedDevicesAddresses){
-            CyclicMessage message = new CyclicMessage(
-                    new HelloMessage(this.getDevice().getIp_address(), ip), 60);
-            this.sendCyclicMessage(message, this.device.getMessageSendingTimeOffset());
-        }
     }
 
     //TODO: test, and do it without cheating

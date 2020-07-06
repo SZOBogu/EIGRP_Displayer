@@ -24,6 +24,20 @@ public class RouterController extends DeviceController implements ClockDependent
     }
 
     @Override
+    public void scheduleCyclicMessages(){
+        List<IPAddress> connectedDevicesAddresses = new ArrayList<>();
+
+        for(DeviceController controller : this.getAllConnectedDeviceControllers()){
+            connectedDevicesAddresses.add(controller.getDevice().getIp_address());
+        }
+        for(IPAddress ip : connectedDevicesAddresses){
+            CyclicMessage message = new CyclicMessage(
+                    new HelloMessage(this.getDevice().getIp_address(), ip), 60);
+            this.sendCyclicMessage(message, this.getDevice().getMessageSendingTimeOffset());
+        }
+    }
+
+    @Override
     public void respond(Message message){
         EventLog.messageReceived(this, message);
 

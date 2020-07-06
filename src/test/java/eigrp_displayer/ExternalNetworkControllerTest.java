@@ -50,11 +50,9 @@ class ExternalNetworkControllerTest {
         controller0.addPacketTargetModel(packetTargetModel0);
         controller0.addPacketTargetModel(packetTargetModel1);
 
-        controller0.scheduleHellos();
+        controller0.scheduleCyclicMessages();
         List<Message> messages = controller0.getMessageSchedule();
 
-        assertTrue(messages.get(Clock.getTime() + controller0.getDevice().getMessageSendingTimeOffset())
-                instanceof HelloMessage);
         assertTrue((messages.get(Clock.getTime() + 500) instanceof Packet) ||
                 (messages.get(Clock.getTime() + 501) instanceof Packet));
         assertTrue((messages.get(Clock.getTime() + 510) instanceof Packet) ||

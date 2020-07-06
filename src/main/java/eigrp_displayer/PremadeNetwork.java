@@ -30,12 +30,14 @@ public class PremadeNetwork {
         network.addDeviceController(routerController1);
         network.addDeviceController(routerController2);
 
-        Connection con0 = new Cable();
-        Connection con1 = new Cable();
-        Connection con2 = new Cable();
-        Connection con3 = new Cable();
-        Connection con4 = new Cable();
-        Connection con5 = new Cable();
+        Connection con0 = new Cable("Cable 0", 100000, 200, 5, 70);
+        Connection con1 = new Cable("Cable 1", 100000, 100, 10, 30);
+        Connection con2 = new Cable("Cable 2", 200000, 200, 10, 100);
+        Connection con3 = new Cable("Cable 3", 100000, 50, 20, 10);
+        Connection con4 = new Cable("Cable 4", 300000, 200, 10, 50);
+        Connection con5 = new Cable("Cable 5", 100000, 200, 40, 10);
+
+        System.out.println();
 
         con0.linkDevices(externalNetworkController, routerController0);
         con1.linkDevices(routerController0, routerController1);
@@ -56,6 +58,14 @@ public class PremadeNetwork {
 
         externalNetworkController.addPacketTargetModel(extNetToDev0Model);
         externalNetworkController.addPacketTargetModel(extNetToDev1Model);
+
+        RoutingTableEntry R0ExtNetEntry = new RoutingTableEntry(externalNetwork.getIp_address());
+        RoutingTableEntry R1EndDev0Entry = new RoutingTableEntry(endDevice0.getIp_address());
+        RoutingTableEntry R2EndDev1Entry = new RoutingTableEntry(endDevice1.getIp_address());
+
+        routerController0.update(R0ExtNetEntry, externalNetwork.getIp_address());
+        routerController1.update(R1EndDev0Entry, endDevice0.getIp_address());
+        routerController2.update(R2EndDev1Entry, endDevice1.getIp_address());
 
         return network;
     }

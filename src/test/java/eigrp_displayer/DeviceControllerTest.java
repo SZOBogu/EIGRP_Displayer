@@ -155,37 +155,6 @@ class DeviceControllerTest {
     }
 
     @Test
-    void scheduleHellos() {
-        init();
-        List<IPAddress> ips = new ArrayList<>();
-        for(DeviceController controller : controller0.getAllConnectedDeviceControllers()){
-            ips.add(controller.getDevice().getIp_address());
-        }
-        assertEquals(2, ips.size());
-
-        for(int i = 0; i < 120; i++) {
-            int offset;
-
-            if (i == 0)
-                offset = 0;
-            else if(i < 60)
-                offset = i;
-            else
-                offset = i % 60;
-
-            controller0.getDevice().setMessageSendingTimeOffset(i);
-            controller0.scheduleHellos();
-            for (int j = i; j < controller0.getMessageSchedule().size(); j++) {
-                if (((j % 60) == offset || ((j % 60) == offset + 1))) {
-                    assertTrue(controller0.getMessageSchedule().get(j) instanceof HelloMessage,
-                            "Not hello: " + j + " offset: " + offset);
-                }
-            }
-            controller0.clearSchedule();
-        }
-    }
-
-    @Test
     void respondPacket() {
         init();
         Packet packet = new Packet(ip1, ip0, 0);
